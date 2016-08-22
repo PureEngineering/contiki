@@ -106,7 +106,7 @@
 #define CONTIKIMAC_CONF_LISTEN_TIME_AFTER_PACKET_DETECTED  (RTIMER_ARCH_SECOND / 20)
 #define CONTIKIMAC_CONF_SEND_SW_ACK               1
 #define CONTIKIMAC_CONF_AFTER_ACK_DETECTECT_WAIT_TIME (RTIMER_SECOND / 1000)
-#define CONTIKIMAC_CONF_INTER_PACKET_INTERVAL     (RTIMER_SECOND / 250)
+#define CONTIKIMAC_CONF_INTER_PACKET_INTERVAL     (RTIMER_SECOND / 240)
 #else
 #define NETSTACK_CONF_RADIO        ieee_mode_driver
 
@@ -171,10 +171,6 @@
 
 #ifndef RF_BLE_CONF_ENABLED
 #define RF_BLE_CONF_ENABLED                  0 /**< 0 to disable BLE support */
-#endif
-
-#ifndef PROP_MODE_CONF_SNIFFER
-#define PROP_MODE_CONF_SNIFFER               0 /**< 1 to enable sniffer mode */
 #endif
 /** @} */
 /*---------------------------------------------------------------------------*/
@@ -285,6 +281,19 @@
 #if defined(UIP_FALLBACK_INTERFACE) || defined(CMD_CONF_OUTPUT)
 #define SLIP_ARCH_CONF_ENABLED             1
 #endif
+#endif
+/** @} */
+/*---------------------------------------------------------------------------*/
+/**
+ * \name ROM Bootloader configuration
+ *
+ * Enable/Disable the ROM bootloader in your image, if the board supports it.
+ * Look in board.h to choose the DIO and corresponding level that will cause
+ * the chip to enter bootloader mode.
+ * @{
+ */
+#ifndef ROM_BOOTLOADER_ENABLE
+#define ROM_BOOTLOADER_ENABLE              0
 #endif
 /** @} */
 /*---------------------------------------------------------------------------*/
