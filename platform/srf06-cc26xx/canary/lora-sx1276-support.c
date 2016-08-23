@@ -21,7 +21,7 @@ void GpioInit( Gpio_t *obj, int pin, PinModes mode,  PinConfigs config, PinTypes
 
   if(mode == PIN_OUTPUT){
     ti_lib_ioc_pin_type_gpio_output(pin);
-    ti_lib_gpio_pin_write(1<<pin,value);
+    ti_lib_gpio_write_dio(1<<pin,value);
   }
 
 
@@ -39,7 +39,7 @@ void GpioSetInterrupt( Gpio_t *obj, IrqModes irqMode, IrqPriorities irqPriority,
   if(obj->pin==IOID_UNUSED)
     return;
 
-  ti_lib_gpio_event_clear(1 <<(obj->pin));
+  ti_lib_gpio_clear_event_dio(1 <<(obj->pin));
 
   ti_lib_ioc_port_configure_set(obj->pin, IOC_PORT_GPIO, interrupt_config);
 
@@ -53,11 +53,11 @@ void GpioRemoveInterrupt( Gpio_t *obj ){
 }
 
 void GpioWrite( Gpio_t *obj, uint32_t value ){
-  ti_lib_gpio_pin_write(1<<(obj->pin),value);
+  ti_lib_gpio_write_dio(1<<(obj->pin),value);
 }
 
 uint32_t GpioRead( Gpio_t *obj ){
-  return ti_lib_gpio_pin_read(1<<(obj->pin));
+  return ti_lib_gpio_read_dio(1<<(obj->pin));
 }
 
 /* END GPIO ****************************************************************/

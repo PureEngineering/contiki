@@ -104,7 +104,7 @@ configure_unused_pins(void)
 
 
   ti_lib_ioc_pin_type_gpio_output(BOARD_IOID_GPS_RESET); //output
-  ti_lib_gpio_pin_write(1<<BOARD_IOID_GPS_RESET, 1); //high
+  ti_lib_gpio_write_dio(1<<BOARD_IOID_GPS_RESET, 1); //high
   ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_RESET,IOC_PORT_GPIO, IOC_IOPULL_DOWN|
                                                   IOC_IOMODE_OPEN_DRAIN_NORMAL|
                                                   IOC_CURRENT_2MA | IOC_STRENGTH_MIN  );
@@ -116,7 +116,7 @@ configure_unused_pins(void)
   ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_TX, IOC_PORT_GPIO, IOC_IOPULL_UP); //pull up
 
   ti_lib_ioc_pin_type_gpio_output(BOARD_IOID_GPS_ON_OFF); //output
-  ti_lib_gpio_pin_write(1<<BOARD_IOID_GPS_ON_OFF, 0); //low
+  ti_lib_gpio_write_dio(1<<BOARD_IOID_GPS_ON_OFF, 0); //low
   ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_ON_OFF, IOC_PORT_GPIO,
                               IOC_CURRENT_2MA |  IOC_STRENGTH_MIN);
 
@@ -124,7 +124,7 @@ configure_unused_pins(void)
   ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_1PPS, IOC_PORT_GPIO, IOC_IOPULL_DOWN);
 
   ti_lib_ioc_pin_type_gpio_output(BOARD_IOID_GPS_ENABLE); //output
-  ti_lib_gpio_pin_write(1<<BOARD_IOID_GPS_ENABLE, 0); //low
+  ti_lib_gpio_write_dio(1<<BOARD_IOID_GPS_ENABLE, 0); //low
   ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_ENABLE, IOC_PORT_GPIO,
                                   IOC_CURRENT_2MA | IOC_STRENGTH_MIN);
   //end gps

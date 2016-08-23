@@ -54,7 +54,7 @@ leds_arch_init(void)
 
   ti_lib_rom_ioc_pin_type_gpio_output(BOARD_IOID_LED);
 
-  ti_lib_gpio_pin_write(BOARD_LED, 0);
+  ti_lib_gpio_write_dio(BOARD_LED, 0);
 }
 /*---------------------------------------------------------------------------*/
 unsigned char
@@ -67,10 +67,10 @@ void
 leds_arch_set(unsigned char leds)
 {
   c = leds;
-  ti_lib_gpio_pin_write(BOARD_LED, 0);
+  ti_lib_gpio_write_dio(BOARD_LED, 0);
 
   if((leds & LED) == LED) {
-    ti_lib_gpio_pin_write(BOARD_LED, 1);
+    ti_lib_gpio_write_dio(BOARD_LED, 1);
   }
 
 }
