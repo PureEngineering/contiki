@@ -169,7 +169,7 @@ with a single define
 /*--------------/
 ;    LEDs       ;
 ---------------*/
-#define BOARD_LED                   (1 << BOARD_IOID_LED)
+#define BOARD_LED                    BOARD_IOID_LED
 
 
 /*--------------/

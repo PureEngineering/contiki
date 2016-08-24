@@ -55,7 +55,7 @@
 #include "lora-radio.h"
 #include "lora-sx1276-board.h"
 /*---------------------------------------------------------------------------*/
-// PROCESS_NAME(cetic_6lbr_client_process);
+PROCESS_NAME(cetic_6lbr_client_process);
 PROCESS(cc26xx_web_demo_process, "CC26XX Web Demo");
 /*---------------------------------------------------------------------------*/
 /*
@@ -338,8 +338,8 @@ PROCESS_THREAD(cc26xx_web_demo_process, ev, data) {
 
   cc26xx_web_demo_publish_event = process_alloc_event();
 
-  // // start 6lbr process
-  // process_start(&cetic_6lbr_client_process, NULL);
+  // start 6lbr process
+  process_start(&cetic_6lbr_client_process, NULL);
   // start mqtt process
   process_start(&mqtt_client_process, NULL);
 
