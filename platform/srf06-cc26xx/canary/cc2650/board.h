@@ -88,6 +88,18 @@ with a single define
 
 #define PLATFORM_HAS_LEDS        1
 
+//Serialboot loader
+#if ROM_BOOTLOADER_ENABLE
+#define SET_CCFG_BL_CONFIG_BOOTLOADER_ENABLE            0xC5
+#define SET_CCFG_BL_CONFIG_BL_LEVEL                     0x00 // active low
+#define SET_CCFG_BL_CONFIG_BL_PIN_NUMBER                0x0B // dio 11
+#define SET_CCFG_BL_CONFIG_BL_ENABLE                    0xC5
+#else
+#define SET_CCFG_BL_CONFIG_BOOTLOADER_ENABLE            0x00
+#define SET_CCFG_BL_CONFIG_BL_LEVEL                     0x01
+#define SET_CCFG_BL_CONFIG_BL_PIN_NUMBER                0xFF
+#define SET_CCFG_BL_CONFIG_BL_ENABLE                    0xFF
+#endif
 
 /*
   hex value of pin
