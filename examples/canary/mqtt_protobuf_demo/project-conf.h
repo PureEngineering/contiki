@@ -38,6 +38,9 @@
 /*---------------------------------------------------------------------------*/
 /* Enable/Disable Components of this Demo */
 #define CC26XX_WEB_DEMO_CONF_MQTT_CLIENT      1
+
+// Serial/spi bootloader
+#define ROM_BOOTLOADER_ENABLE                 1
 /*---------------------------------------------------------------------------*/
 /*
  * Shrink the size of the uIP buffer, routing table and ND cache.
