@@ -108,8 +108,9 @@
 #define CONTIKIMAC_CONF_AFTER_ACK_DETECTECT_WAIT_TIME (RTIMER_SECOND / 1000)
 #define CONTIKIMAC_CONF_INTER_PACKET_INTERVAL     (RTIMER_SECOND / 240)
 #else
+#ifndef NETSTACK_CONF_RADIO //we can now change the definition on the project-conf file
 #define NETSTACK_CONF_RADIO        ieee_mode_driver
-
+#endif
 #ifndef RF_CORE_CONF_CHANNEL
 #define RF_CORE_CONF_CHANNEL                     25
 #endif
