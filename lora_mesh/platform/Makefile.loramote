@@ -1,0 +1,157 @@
+# User settings -----------------------------------------------------------
+
+VERBOSE = 0		# Verbosity control
+SMALL = 1		# Create small binaries
+REDIRECT_STDIO ?= 1	# Redirect standard I/O to USART/USB
+USER_CFLAGS += 
+
+
+# Target settings -----------------------------------------------------------
+
+STM32_TOOLS = $(CONTIKI)/tools/stm32
+LORA_TOOLS = $(CONTIKI)/tools/loramote
+STLINK = $(STM32_TOOLS)/stlink
+DFU_UTIL = $(STM32_TOOLS)/dfu-util
+OPENOCD = $(STM32_TOOLS)/openocd
+SERIALDUMP = $(STM32_TOOLS)/serialdump
+
+
+CONTIKIVERSIONX:=${shell git --git-dir ${CONTIKI}/.git describe --tags --always}
+ifneq ($(findstring 3.,$(CONTIKIVERSIONX)),)
+  CONTIKI3 = 1
+  CFLAGS += -DCONTIKI3=1
+endif
+
+ifeq ($(strip $(VERBOSE)),1)
+  V ?= 1
+endif
+
+ifneq ($(strip $(CONTIKI_WITH_RIME)),1)
+  UIP_CONF_IPV6 = 1
+  CONTIKI_WITH_IPV6 = 1
+  CFLAGS += -DWITH_UIP6=1 -DUIP_CONF_IPV6=1
+endif
+
+CFLAGS += -DUSE_DEBUGGER -DUSE_NO_TIMER -DLOW_POWER_MODE_ENABLE -DUSE_BAND_868 -DUSE_MODEM_LORA -DUSE_USB_CDC $(USER_CFLAGS)
+
+MODULES += core/net core/net/mac core/net/mac/contikimac
+
+ifdef CONTIKI3
+  MODULES += core/net/llsec
+else
+  MODULES += core/net/ip core/net/ipv6 core/net/rime core/net/rpl
+endif
+
+CONTIKI_TARGET_DIRS = . apps dev LoRaMac net \
+			LoRaMac/board LoRaMac/mac LoRaMac/peripherals LoRaMac/system LoRaMac/system/crypto \
+			LoRaMac/board/usb/cdc/inc LoRaMac/board/usb/cdc/src \
+			LoRaMac/radio LoRaMac/radio/sx1272
+
+CONTIKI_TARGET_MAIN = contiki-loramote-main.c
+
+FULL_TARGET_DIRS = ${wildcard ${addprefix $(CONTIKI)/platform/loramote/, $(CONTIKI_TARGET_DIRS)}}
+CONTIKI_TARGET_SOURCEFILES = altitude-sensor.c battery-sensor.c button-sensor.c leds-arch.c lora-contiki-interface.c pressure-sensor.c radio-sensor.c serial-line-arch.c slip-arch.c temperature-sensor.c \
+				adc-board.c board.c gpio-board.c i2c-board.c spi-board.c rtc-board.c sx1272-board.c timer-board.c uart-board.c uart-usb-board.c usb-cdc-board.c \
+				usb_desc.c usb_endp.c usb_istr.c usb_prop.c usb_pwr.c \
+				gpio-ioe.c mpl3115.c sx1509.c sx9500.c \
+				adc.c fifo.c gpio.c i2c.c loratimer.c uart.c \
+				sx1272.c lora-radio-arch.c
+#CONTIKI_TARGET_SOURCEFILES = ${foreach d, $(FULL_TARGET_DIRS), ${subst ${d}/,,${wildcard $(d)/*.c}}}
+
+include $(CONTIKI)/cpu/arm/stm32l1/Makefile.stm32l151
+CONTIKI_SOURCEFILES += node-id.c $(CONTIKI_TARGET_SOURCEFILES)
+
+
+ifndef MOTELIST
+  USBDEVPREFIX = 
+  MOTELIST = $(LORA_TOOLS)/motelist-lora
+  MOTES = $(shell $(MOTELIST) -c 2>&- | \
+	cut -f 2 -d , | \
+	perl -ne 'print $$1 . " " if(m-(/dev/\w+)-);')
+  CMOTES = $(MOTES)
+endif
+
+
+
+# Build rules -----------------------------------------------------------
+
+CLEAN += *.loramote symbols.c symbols.h
+
+
+# Show connected motes
+motelist:
+	$(Q)$(MOTELIST)
+
+motes:
+	@echo $(CMOTES)
+
+
+# Compile flashable binary
+flash-init:
+	$(Q)[ -f latest_build_dfu~ ] && rm -f ./obj_loramote/lora-contiki-interface.o || :	# Make sure that the previously built DFU object is not used
+	$(Q)rm latest_build_dfu~ -f
+	$(Q)touch latest_build_flash~
+
+%.flash: LDSCRIPT = stm32l1xx_md_flash.ld
+%.flash: | flash-init %.bin
+	$(Q)mv $(@:.flash=.$(TARGET)) $(@:.flash=.flash.$(TARGET))
+	$(Q)cp $(@:.flash=.bin) $(@:.flash=.flash.bin)
+	$(Q)$(MAKE) flash $(@:.flash=.flash.bin)
+
+
+# Compile DFU-uploadable binary
+upload-init:
+	$(Q)[ -f latest_build_flash~ ] && rm -f ./obj_loramote/lora-contiki-interface.o || :	# Make sure that the previously built flash object is not used
+	$(Q)rm latest_build_flash~ -f
+	$(Q)touch latest_build_dfu~
+
+%.upload: LDSCRIPT = stm32l1xx_md_flash_offset.ld
+%.upload: CFLAGS += -DUSE_BOOTLOADER
+%.upload: | upload-init %.bin
+	$(Q)mv $(@:.upload=.$(TARGET)) $(@:.upload=.dfu.$(TARGET))
+	$(Q)cp $(@:.upload=.bin) $(@:.upload=.dfu.bin)
+	$(Q)$(MAKE) upload $(@:.upload=.dfu.bin)
+
+
+# Erase flash memory
+erase-flash:
+	$(Q)$(STLINK)/st-flash erase
+
+# Install bootloader
+install-bootloader:
+	$(Q)$(MAKE) erase-flash
+	$(Q)$(STLINK)/st-flash --reset write $(LORA_TOOLS)/loramote-bootloader/loramote_bootloader.bin 0x8000000
+
+# Flash executable code to loramote
+flash:
+	$(Q)$(STLINK)/st-flash --reset write $(filter $(wildcard *.flash.bin),$(MAKECMDGOALS)) 0x8000000
+
+# Flash executable code to loramote, when a bootloader is present
+bootloader-flash:
+	$(Q)$(STLINK)/st-flash --reset write $(filter $(wildcard *.dfu.bin),$(MAKECMDGOALS)) 0x8003000
+
+# Upload executable code to loramote
+upload:
+	$(Q)$(DFU_UTIL)/src/dfu-suffix --add $(filter $(wildcard *.dfu.bin),$(MAKECMDGOALS)) --pid df11 --vid 0483 > /dev/null
+	$(Q)$(DFU_UTIL)/src/dfu-util --device 0483:df11 --dfuse-address 0x8003000:leave --download $(filter $(wildcard *.dfu.bin),$(MAKECMDGOALS))
+
+
+# Start serialview to show output
+ifdef MOTE
+  serialview:
+	$(Q)sleep .5
+	$(Q)$(SERIALDUMP)/serialdump-linux -b115200 $(USBDEVPREFIX)$(MOTE) | $(CONTIKI)/tools/timestamp
+else
+  serialview:
+ifeq ($(strip $(CMOTES)),)
+	$(Q)$(MAKE) --no-print-directory serialview
+endif
+	$(Q)$(SERIALDUMP)/serialdump-linux -b115200 $(USBDEVPREFIX)$(firstword $(CMOTES)) | $(CONTIKI)/tools/timestamp
+endif
+
+# Start openocd to debug
+openocd:
+	@echo "REMARK: Set the REDIRECT_STDIO variable in the makefile's user settings section to 0 and rebuild the project before using the OpenOCD debugger!"
+	$(Q)($(GDB) -ex 'target extended-remote localhost:3333' -ex 'monitor reset halt' -ex 'continue' -ex 'quit' &)	# Merge output of both commands to same CLI window
+	$(Q)$(OPENOCD)/src/openocd -f $(LORA_TOOLS)/loramote.cfg -s $(OPENOCD)/tcl
+
