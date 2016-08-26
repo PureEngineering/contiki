@@ -1,0 +1,197 @@
+/*
+ * Copyright (c) 2012, STMicroelectronics.
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ * This file is part of the Contiki OS
+ *
+ */
+/*---------------------------------------------------------------------------*/
+#include "contiki.h"
+#include "stm32l1xx_conf.h"
+#include "lpm.h"
+/*---------------------------------------------------------------------------*/
+/* the prescaler assumes the timer is sourced with same clock speed as the LSE*/
+#define CLOCK_PRESCALER       		(F_LSE / (CLOCK_SECOND*2))
+/*---------------------------------------------------------------------------*/
+static volatile unsigned long seconds;
+static volatile clock_time_t ticks;
+/*---------------------------------------------------------------------------*/
+void TIM9_IRQHandler(void)
+{
+  ENERGEST_ON(ENERGEST_TYPE_IRQ);
+
+  /* clear interrupt pending flag */
+  TIM_ClearITPendingBit(TIM9, TIM_IT_Update);
+
+  ticks++;
+  if((ticks % CLOCK_SECOND) == 0) {
+    seconds++;
+    energest_flush();
+  }
+  if(etimer_pending()) {
+    lpm_exit_stopmode();
+    etimer_request_poll();
+  }
+  
+  ENERGEST_OFF(ENERGEST_TYPE_IRQ);
+}
+/*---------------------------------------------------------------------------*/
+void
+clock_init(void)
+{
+  seconds = 0;
+  ticks = 0;
+
+  /* to init, we use structures that are filled in and passed to the HAL */
+  NVIC_InitTypeDef		NVIC_InitStructure;
+  TIM_TimeBaseInitTypeDef	TIM_TimeBaseStructure;
+  GPIO_InitTypeDef		GPIO_InitStructure;
+  TIM_OCInitTypeDef		TIM_OCInitStructure;
+  EXTI_InitTypeDef		EXTI_InitStructure;
+
+  /* Enable GPIOA clock */
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+
+  /* Enable PWR clock */
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+
+  /* Allow access to the RTC */
+  PWR_RTCAccessCmd(ENABLE);
+
+  /* Reset Backup Domain */
+  RCC_RTCResetCmd(ENABLE);
+  RCC_RTCResetCmd(DISABLE);
+
+  /*!< LSE Enable */
+  RCC_LSEConfig(RCC_LSE_ON);
+
+  /*!< Wait till LSE is ready */
+  while (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET){}
+  
+  /* TIM9 Periph clock enable */
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM9, ENABLE);
+
+  /* TIM9 pins configuration: PA2 */
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_40MHz;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+  /* Remap PA2 to TIM9 Channel 1 */
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_TIM9);
+
+  /* Time base configuration: TIM9 */
+  TIM_TimeBaseStructure.TIM_Period = 1;
+  TIM_TimeBaseStructure.TIM_Prescaler = CLOCK_PRESCALER;
+  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+  TIM_TimeBaseInit(TIM9, &TIM_TimeBaseStructure);
+
+  /* PWM1 Mode configuration: TIM9 Channel1 */
+  TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+  TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+  
+  /* Duty cycle = 0x08 / (0x1F + 1) * 100 = 25 % */
+  TIM_OCInitStructure.TIM_Pulse = 0x08;
+  
+  TIM_OC1Init(TIM9, &TIM_OCInitStructure);
+
+  /* External clock configuration TIM9(LSE(32.768KHz)) */
+  TIM_ETRClockMode1Config(TIM9, TIM_ExtTRGPSC_OFF, TIM_ExtTRGPolarity_Inverted, 0);
+
+
+  /* Enable SYSCFG clock */
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+  /* Connect EXTI2 Line to PA2 pin */
+  SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource2);
+
+  /* Configure EXTI2 line */
+  EXTI_InitStructure.EXTI_Line = EXTI_Line2;
+  EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;  
+  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+  EXTI_Init(&EXTI_InitStructure);
+
+  /* Enable the TIM3 Interrupt in the NVIC */
+  //NVIC_InitStructure.NVIC_IRQChannel = EXTI2_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannel = TIM9_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure);
+
+  /* Enable TIM counter */
+  TIM_ClearFlag(TIM9, TIM_FLAG_Update);
+  TIM_ITConfig(TIM9, TIM_IT_Update, ENABLE);
+  TIM_Cmd(TIM9, ENABLE);
+}
+/*---------------------------------------------------------------------------*/
+unsigned long
+clock_seconds(void)
+{
+  return seconds;
+}
+/*---------------------------------------------------------------------------*/
+void
+clock_set_seconds(unsigned long sec)
+{
+  seconds = sec;
+}
+/*---------------------------------------------------------------------------*/
+clock_time_t
+clock_time(void)
+{
+  return ticks;
+}
+/*---------------------------------------------------------------------------*/
+/**
+ * busy-wait the CPU for a duration depending on CPU speed.
+ */
+void
+clock_delay(unsigned int i)
+{
+  for(; i > 0; i--) {
+    unsigned int j;
+    for(j = 50; j > 0; j--) {
+      __NOP;
+    }
+  }
+}
+/*---------------------------------------------------------------------------*/
+/**
+ * Wait for a multiple of clock ticks (3.9ms at 256Hz).
+ */
+void
+clock_wait(clock_time_t i)
+{
+  clock_time_t start;
+  start = clock_time();
+  while(clock_time() - start < (clock_time_t)i);
+}
+/*---------------------------------------------------------------------------*/
