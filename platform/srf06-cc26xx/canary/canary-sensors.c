@@ -38,11 +38,11 @@
 /*---------------------------------------------------------------------------*/
 #include "contiki.h"
 #include "lib/sensors.h"
-#include "canary/opt-3001-sensor.h"
-#include "canary/bme-280-sensor.h"
-#include "canary/lis2de12-accel-sensor.h"
-#include "canary/lis3mdl-mag-sensor.h"
-#include "canary/gas-sensor.h"
+#include "opt-3001-sensor.h"
+#include "bme-280-sensor.h"
+#include "lis2de12-accel-sensor.h"
+#include "lis3mdl-mag-sensor.h"
+#include "gas-sensor.h"
 #include <string.h>
 /*---------------------------------------------------------------------------*/
 /** \brief Exports a global symbol to be used by the sensor API */

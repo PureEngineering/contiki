@@ -64,19 +64,12 @@
  * Those values are not meant to be modified by the user
  * @{
  */
-/* Some files include leds.h before us, so we need to get rid of defaults in
- * leds.h before we provide correct definitions */
+
 #undef LEDS_GREEN
 #undef LEDS_YELLOW
 #undef LEDS_RED
 #undef LEDS_CONF_ALL
 
-
-/*
-I know this looks dumb but because of TI's odd way of implementing LEDS,
-it saves a lot of time and headaches by just overwritting their defines
-with a single define
-*/
 #define LED 1
 #define LEDS_RED       LED
 #define LEDS_GREEN     LED
@@ -152,60 +145,28 @@ with a single define
 #define BOARD_IOID_GPS_RX              IOID_29
 #define BOARD_IOID_GPS_WAKEUP          IOID_30
 
-// #define BOARD_IOID_KEY_LEFT       IOID_UNUSED
-// #define BOARD_IOID_KEY_RIGHT      IOID_UNUSED
-// #define BOARD_KEY_LEFT            (1 << BOARD_IOID_KEY_LEFT)
-// #define BOARD_KEY_RIGHT           (1 << BOARD_IOID_KEY_RIGHT)
-
-/*-----------------------------------------------------------------------------
-;                            Bit Packed Representation                        ;
------------------------------------------------------------------------------*/
-/*
-  to use ti_lib_gpio_pin_write() we must have a bit packed representation of
-  the pin we are writing to.
-*/
-
-
 /*--------------/
 ;    LEDs       ;
 ---------------*/
 #define BOARD_LED                    BOARD_IOID_LED
 
-
 /*--------------/
 ;    UART       ;
 ---------------*/
-/*
-note ti's uart code has to have BOARD_UART_TX AND BOARD_IOID_UART_TX defined
-no where in TIs code is BOARD_UART_TX used. However for the sake of keeping it
-the same I created a bit packed representation of each pin.
-*/
 #define BOARD_UART_RX               (1 << BOARD_IOID_UART_RX)
 #define BOARD_UART_TX               (1 << BOARD_IOID_UART_TX)
 #define BOARD_UART_CTS              (1 << BOARD_IOID_UART_CTS)
 #define BOARD_UART_RTS              (1 << BOARD_IOID_UART_RTS)
 
-
-
 /*--------------/
 ;    I2C        ;
 ---------------*/
-/*
-this bit packed representation may be useless because the defined is not used
-in any code. However it does not hurt to have a bit packed representation of the
-pin
-*/
 #define BOARD_SDA                   (1 << BOARD_IOID_SDA)
 #define BOARD_SCL                   (1 << BOARD_IOID_SCL)
-
 
 /*--------------/
 ;    SPI        ;
 ---------------*/
-/*
-As with I2C TI does not create a bit packed representation so it may not be
-needed. Will leave alone for now to see if it causes any errors
-*/
 #define BOARD_SPI_MOSI               (1 << BOARD_IOID_SPI_MOSI)
 #define BOARD_SPI_MISO               (1 << BOARD_IOID_SPI_MISO)
 
