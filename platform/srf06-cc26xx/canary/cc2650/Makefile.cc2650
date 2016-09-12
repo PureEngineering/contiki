@@ -7,5 +7,5 @@ CPU_FAMILY = cc26xx
 ### Add to the source dirs
 CONTIKI_TARGET_DIRS += canary/cc2650
 
-### Include the common sensortag makefile
+### Include the common canary makefile
 include $(PLATFORM_ROOT_DIR)/canary/Makefile.canary
