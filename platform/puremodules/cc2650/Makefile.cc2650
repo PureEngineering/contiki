@@ -1,0 +1,8 @@
+CONTIKI_TARGET_DIRS += .
+
+### Include our cpu makefile
+CONTIKI_CPU=$(CONTIKI)/cpu/cc26xx-cc13xx
+include $(CONTIKI_CPU)/Makefile.$(cc26xx)
+
+### Add .c files to our source files
+CONTIKI_SOURCEFILES +=

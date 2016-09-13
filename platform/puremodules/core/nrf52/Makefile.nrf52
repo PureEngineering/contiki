@@ -1,0 +1,8 @@
+CONTIKI_TARGET_DIRS += .
+
+### Include our cpu makefile
+CONTIKI_CPU=$(CONTIKI)/cpu/nrf52832
+include $(CONTIKI_CPU)/Makefile.nrf52832
+
+### Add .c files to our source files
+CONTIKI_SOURCEFILES +=
