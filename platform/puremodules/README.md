@@ -34,11 +34,11 @@ The following steps will teach you how to create your own project using the Pure
 
 - Create a new folder in **examples/puremodules/(cpu)** or **examples/puremodules/common** if the example will work across multiple cores.
 - Create a file called "Makefile" and add the following lines
-  ```Make
-  all:"project name"
-  ### Relative path to contiki folder
-  CONTIKI = ../../..
-  include $(CONTIKI)/Makefile.include
-  ```
+
+      all:"project name"
+      ### Relative path to contiki folder
+      CONTIKI = ../../..
+      include $(CONTIKI)/Makefile.include
+
   *Note: replace "project name" with the name of the c file that you want to compile. For example if you have hello-world.c, the project name is "hello world"*
 - Create a .h file called "project-conf.h" and place any defines here including the sensors that you want to use.
