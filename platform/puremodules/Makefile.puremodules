@@ -1,0 +1,17 @@
+### Pure Modules make file. Adds modules source files to build system and
+### redirects to correct board folder
+
+ifndef BOARD
+  $(error BOARD not defined! Add "BOARD=(board)" to your make command)
+endif
+
+CONTIKI_TARGET_DIRS += . sensors/gas-sensors
+
+### Every new .c file added in modules must be appended to this variable
+CONTIKI_SOURCEFILES += gas-sensor.c
+
+### Include the boards makefile
+PLATFORM_ROOT_DIR = $(CONTIKI)/platform/$(TARGET)
+-include $(PLATFORM_ROOT_DIR)/core/$(BOARD)/Makefile.$(notdir $(BOARD))
+
+CLEAN += *.puremodules
