@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2014, Texas Instruments Incorporated - http://www.ti.com/
- * All rights reserved.
+ * Copyright (C) 2016, Intel Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -10,6 +9,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
+ *
  * 3. Neither the name of the copyright holder nor the names of its
  *    contributors may be used to endorse or promote products derived
  *    from this software without specific prior written permission.
@@ -27,35 +27,14 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/*---------------------------------------------------------------------------*/
-/**
- * \addtogroup remote
- * @{
- *
- * \file
- *  Board-initialisation for the Zolertia's RE-Mote platform
- *
- */
-/*---------------------------------------------------------------------------*/
-#include "contiki-conf.h"
-#include "antenna-sw.h"
-#include <stdint.h>
-#include <string.h>
-/*---------------------------------------------------------------------------*/
-static void
-configure_unused_pins(void)
-{
-  /* FIXME */
-}
-/*---------------------------------------------------------------------------*/
-void
-board_init()
-{
-  antenna_sw_config();
-  configure_unused_pins();
-}
-/*---------------------------------------------------------------------------*/
-/**
- * @}
- */
 
+#ifndef PLATFORM_GALILEO_DRIVERS_GALILEO_GPIO_H_
+#define PLATFORM_GALILEO_DRIVERS_GALILEO_GPIO_H_
+
+#include <stdint.h>
+
+void galileo_gpio_config(uint8_t pin, int flags);
+void galileo_gpio_read(uint8_t pin, uint8_t *value);
+void galileo_gpio_write(uint8_t pin, uint8_t value);
+
+#endif /* PLATFORM_GALILEO_DRIVERS_GALILEO_GPIO_H_ */
