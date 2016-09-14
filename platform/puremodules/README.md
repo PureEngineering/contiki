@@ -1,4 +1,5 @@
 # Pure Engineering PureModules
+For more information please visit www.puremodules.com
 
 This readme will tell you where to add files for the PureModules contiki port
 
