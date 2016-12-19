@@ -433,6 +433,10 @@ typedef uint32_t rtimer_clock_t;
 #define IEEE802154_CONF_PANID           0xABCD
 #endif
 
+#ifdef RF_CHANNEL
+#define CC2538_RF_CONF_CHANNEL      RF_CHANNEL
+#endif
+
 #ifndef CC2538_RF_CONF_CHANNEL
 #define CC2538_RF_CONF_CHANNEL              26
 #endif /* CC2538_RF_CONF_CHANNEL */
@@ -488,10 +492,6 @@ typedef uint32_t rtimer_clock_t;
 #define UIP_CONF_ND6_SEND_RA                 0
 #define UIP_CONF_IP_FORWARD                  0
 #define RPL_CONF_STATS                       0
-
-#ifndef RPL_CONF_OF
-#define RPL_CONF_OF rpl_mrhof
-#endif
 
 #define UIP_CONF_ND6_REACHABLE_TIME     600000
 #define UIP_CONF_ND6_RETRANS_TIMER       10000
@@ -570,6 +570,27 @@ typedef uint32_t rtimer_clock_t;
 
 #ifndef CCM_STAR_CONF
 #define CCM_STAR_CONF           cc2538_ccm_star_driver /**< AES-CCM* driver */
+#endif
+/** @} */
+/*---------------------------------------------------------------------------*/
+/**
+ * \name RTC
+ *
+ * @{
+ */
+#ifdef PLATFORM_HAS_RTC
+
+#ifndef RTC_CONF_INIT
+#define RTC_CONF_INIT   0 /**< Whether to initialize the RTC */
+#endif
+
+#ifndef RTC_CONF_SET_FROM_SYS
+#define RTC_CONF_SET_FROM_SYS    0 /**< Whether to set the RTC from the build system */
+#endif
+
+#else
+#undef RTC_CONF_INIT
+#define RTC_CONF_INIT   0
 #endif
 /** @} */
 /*---------------------------------------------------------------------------*/

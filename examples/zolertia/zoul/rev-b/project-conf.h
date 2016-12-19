@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Texas Instruments Incorporated - http://www.ti.com/
+ * Copyright (c) 2016, Zolertia <http://www.zolertia.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,38 +29,27 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * \addtogroup cc2538
+ * \addtogroup remote-examples
  * @{
  *
- * \defgroup cc2538-mpu cc2538 Memory Protection Unit
+ * \defgroup remote-power-mgmt-revb-test RE-Mote rev.B power management test
  *
- * Driver for the cc2538 Memory Protection Unit
+ * Test the RE-Mote revision B power management implementation
  * @{
  *
  * \file
- * Header file for the ARM Memory Protection Unit
+ * Project specific configuration defines for the basic RE-Mote examples
  */
-#ifndef MPU_H_
-#define MPU_H_
+#ifndef PROJECT_CONF_H_
+#define PROJECT_CONF_H_
 
-#define MPU_MPU_TYPE           0xE000ED90 /**< MPU Type */
-#define MPU_MPU_CTRL           0xE000ED94 /**< MPU Control */
-#define MPU_MPU_NUMBER         0xE000ED98 /**< MPU Region Number */
-#define MPU_MPU_BASE           0xE000ED9C /**< MPU Region Base Address */
-#define MPU_MPU_ATTR           0xE000EDA0 /**< MPU Region Attribute and Size */
-#define MPU_MPU_BASE1          0xE000EDA4 /**< MPU Region Base Address Alias 1 */
-#define MPU_MPU_ATTR1          0xE000EDA8 /**< MPU Region Attribute and Size Alias 1 */
-#define MPU_MPU_BASE2          0xE000EDAC /**< MPU Region Base Address Alias 2 */
-#define MPU_MPU_ATTR2          0xE000EDB0 /**< MPU Region Attribute and Size Alias 2*/
-#define MPU_MPU_BASE3          0xE000EDB4 /**< MPU Region Base Address Alias 3 */
-#define MPU_MPU_ATTR3          0xE000EDB8 /**< MPU Region Attribute and Size Alias 3*/
-#define MPU_DBG_CTRL           0xE000EDF0 /**< Debug Control and Status Reg */
-#define MPU_DBG_XFER           0xE000EDF4 /**< Debug Core Reg. Transfer Select */
-#define MPU_DBG_DATA           0xE000EDF8 /**< Debug Core Register Data */
-#define MPU_DBG_INT            0xE000EDFC /**< Debug Reset Interrupt Control */
-#define MPU_SW_TRIG            0xE000EF00 /**< Software Trigger Interrupt */
+#define BROADCAST_CHANNEL     129
+#define NETSTACK_CONF_RDC     nullrdc_driver
 
-#endif /* MPU_H_ */
+#define RTC_CONF_INIT           1
+#define RTC_CONF_SET_FROM_SYS   1
+
+#endif /* PROJECT_CONF_H_ */
 
 /**
  * @}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, Texas Instruments Incorporated - http://www.ti.com/
+ * Copyright (c) 2015, Zolertia
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,45 +28,51 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+/*---------------------------------------------------------------------------*/
 /**
- * \addtogroup cc2538-cpu
+ * \addtogroup zoul-bme280-sensor
  * @{
  *
  * \file
- * Implementations of interrupt control on the cc2538 Cortex-M3 micro
+ *  Architecture-specific I2C for the external BME280 weather sensor
+ *
+ * \author
+ *         Antonio Lignan <alinan@zolertia.com>
  */
 /*---------------------------------------------------------------------------*/
-unsigned long __attribute__((naked))
-cpu_cpsie(void)
+#include "contiki.h"
+#include "dev/i2c.h"
+/*---------------------------------------------------------------------------*/
+void
+bme280_arch_i2c_init(void)
 {
-  unsigned long ret;
-
-  /* Read PRIMASK and enable interrupts */
-  __asm("    mrs     r0, PRIMASK\n"
-        "    cpsie   i\n"
-        "    bx      lr\n"
-        : "=r" (ret));
-
-  /* The inline asm returns, we never reach here.
-   * We add a return statement to keep the compiler happy */
-  return ret;
+  i2c_init(I2C_SDA_PORT, I2C_SDA_PIN, I2C_SCL_PORT, I2C_SCL_PIN,
+           I2C_SCL_NORMAL_BUS_SPEED);
 }
 /*---------------------------------------------------------------------------*/
-unsigned long __attribute__((naked))
-cpu_cpsid(void)
+void
+bme280_arch_i2c_write_mem(uint8_t addr, uint8_t reg, uint8_t value)
 {
-  unsigned long ret;
+  uint8_t buf[2];
 
-  /* Read PRIMASK and disable interrupts */
-  __asm("    mrs     r0, PRIMASK\n"
-        "    cpsid   i\n"
-        "    bx      lr\n"
-        : "=r" (ret));
+  buf[0] = reg;
+  buf[1] = value;
 
-  /* The inline asm returns, we never reach here.
-   * We add a return statement to keep the compiler happy */
-  return ret;
+  i2c_master_enable();
+  i2c_burst_send(addr, buf, 2);
 }
 /*---------------------------------------------------------------------------*/
+void
+bme280_arch_i2c_read_mem(uint8_t addr, uint8_t reg, uint8_t *buf, uint8_t bytes)
+{
+  i2c_master_enable();
+  if(i2c_single_send(addr, reg) == I2C_MASTER_ERR_NONE) {
+    while(i2c_master_busy());
+    i2c_burst_receive(addr, buf, bytes);
+  }
+}
+/*---------------------------------------------------------------------------*/
+/**
+ * @}
+ */
 
-/** @} */
