@@ -39,8 +39,8 @@
 /*---------------------------------------------------------------------------*/
 #include "contiki-net.h"
 #include "contiki.h"
-#include "batmon-sensor.h"
-#include "board-peripherals.h"
+//#include "batmon-sensor.h"
+//#include "board-peripherals.h"
 #include "cc26xx-web-demo.h"
 #include "lib/list.h"
 #include "lib/sensors.h"
@@ -52,8 +52,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lora-radio.h"
-#include "lora-sx1276-board.h"
+//#include "lora-radio.h"
+//#include "lora-sx1276-board.h"
 /*---------------------------------------------------------------------------*/
 PROCESS_NAME(cetic_6lbr_client_process);
 PROCESS(cc26xx_web_demo_process, "CC26XX Web Demo");
@@ -105,22 +105,25 @@ static void get_bme_reading() {
   int value;
   clock_time_t next = SENSOR_READING_PERIOD;
 
-  value = bme_280_sensor.value(BME_280_SENSOR_TYPE_TEMP);
-  if (value != CC26XX_SENSOR_READING_ERROR) {
+  value = 10;
+  //value = bme_280_sensor.value(BME_280_SENSOR_TYPE_TEMP);
+  //if (value != CC26XX_SENSOR_READING_ERROR) {
     bme_temp_reading.raw = value;
-  }
+  //}
 
-  value = bme_280_sensor.value(BME_280_SENSOR_TYPE_PRESS);
-  if (value != CC26XX_SENSOR_READING_ERROR) {
+  value = 10;
+  // value = bme_280_sensor.value(BME_280_SENSOR_TYPE_PRESS);
+  //if (value != CC26XX_SENSOR_READING_ERROR) {
     bme_pres_reading.raw = value;
-  }
+ // }
 
-  value = bme_280_sensor.value(BME_280_SENSOR_TYPE_HUM);
-  if (value != CC26XX_SENSOR_READING_ERROR) {
+  value = 10;
+  // value = bme_280_sensor.value(BME_280_SENSOR_TYPE_HUM);
+ // if (value != CC26XX_SENSOR_READING_ERROR) {
     bme_hum_reading.raw = value;
-  }
+ // }
 
-  SENSORS_DEACTIVATE(bme_280_sensor);
+  //SENSORS_DEACTIVATE(bme_280_sensor);
   ctimer_set(&bme_timer, next, init_bme_reading, NULL);
 }
 
@@ -128,11 +131,12 @@ static void get_light_reading() {
   int value;
   clock_time_t next = SENSOR_READING_PERIOD;
 
-  value = opt_3001_sensor.value(0);
+   value = 10;
+  // value = opt_3001_sensor.value(0);
 
-  if (value != CC26XX_SENSOR_READING_ERROR) {
+ // if (value != CC26XX_SENSOR_READING_ERROR) {
     opt_reading.raw = value;
-  }
+ // }
   /* The OPT will turn itself off, so we don't need to call its DEACTIVATE */
   ctimer_set(&opt_timer, next, init_light_reading, NULL);
 }
@@ -141,22 +145,25 @@ static void get_accel_reading(){
   int value;
   clock_time_t next = SENSOR_READING_PERIOD;
 
-  value = lis2de12_accel_sensor.value(ACCEL_X); //read x value
-  if(value!=CC26XX_SENSOR_READING_ERROR) {
+   value = 10;
+  // value = lis2de12_accel_sensor.value(ACCEL_X); //read x value
+ // if(value!=CC26XX_SENSOR_READING_ERROR) {
     accel_x_reading.raw = value;
-  }
+  //}
 
-  value = lis2de12_accel_sensor.value(ACCEL_Y); //read y value
-  if(value!=CC26XX_SENSOR_READING_ERROR) {
+   value = 10;
+  // value = lis2de12_accel_sensor.value(ACCEL_Y); //read y value
+  //if(value!=CC26XX_SENSOR_READING_ERROR) {
     accel_y_reading.raw = value;
-  }
+  //}
 
-  value = lis2de12_accel_sensor.value(ACCEL_Z); //read z value
-  if(value!=CC26XX_SENSOR_READING_ERROR) {
+   value = 10;
+  // value = lis2de12_accel_sensor.value(ACCEL_Z); //read z value
+  //if(value!=CC26XX_SENSOR_READING_ERROR) {
     accel_z_reading.raw = value;
-  }
+ // }
 
-  SENSORS_DEACTIVATE(lis2de12_accel_sensor);
+  //SENSORS_DEACTIVATE(lis2de12_accel_sensor);
   ctimer_set(&accel_timer, next, init_accel_reading, NULL);
 
 }
@@ -165,22 +172,25 @@ static void get_mag_reading(){
   int value;
   clock_time_t next = SENSOR_READING_PERIOD;
 
-  value = lis3mdl_mag_sensor.value(MAG_X); //read x value
-  if(value!=CC26XX_SENSOR_READING_ERROR) {
+   value = 10;
+  // value = lis3mdl_mag_sensor.value(MAG_X); //read x value
+ // if(value!=CC26XX_SENSOR_READING_ERROR) {
     mag_x_reading.raw = value;
-  }
+ // }
 
-  value = lis3mdl_mag_sensor.value(MAG_Y); //read y value
-  if(value!=CC26XX_SENSOR_READING_ERROR) {
+   value = 10;
+  // value = lis3mdl_mag_sensor.value(MAG_Y); //read y value
+ // if(value!=CC26XX_SENSOR_READING_ERROR) {
     mag_y_reading.raw = value;
-  }
+ // }
 
-  value = lis3mdl_mag_sensor.value(MAG_Z); //read z value
-  if(value!=CC26XX_SENSOR_READING_ERROR) {
+   value = 10;
+  // value = lis3mdl_mag_sensor.value(MAG_Z); //read z value
+ // if(value!=CC26XX_SENSOR_READING_ERROR) {
     mag_z_reading.raw = value;
-  }
+ // }
 
-  SENSORS_DEACTIVATE(lis3mdl_mag_sensor);
+ // SENSORS_DEACTIVATE(lis3mdl_mag_sensor);
   ctimer_set(&mag_timer, next, init_mag_reading, NULL);
 }
 
@@ -188,44 +198,47 @@ static void get_gas_reading(){
   int value;
   clock_time_t next = SENSOR_READING_PERIOD;
 
-  value = gas_sensor.value(GAS_OX);
-  if(value!=CC26XX_SENSOR_READING_ERROR) {
+   value = 10;
+  // value = gas_sensor.value(GAS_OX);
+ // if(value!=CC26XX_SENSOR_READING_ERROR) {
     gas_ox_reading.raw = value;
-  }
+ // }
 
-  value = gas_sensor.value(GAS_NH3);
-  if(value!=CC26XX_SENSOR_READING_ERROR) {
+   value = 10;
+  // value = gas_sensor.value(GAS_NH3);
+ // if(value!=CC26XX_SENSOR_READING_ERROR) {
     gas_nh3_reading.raw = value;
-  }
+ // }
 
-  value = gas_sensor.value(GAS_RED);
-  if(value!=CC26XX_SENSOR_READING_ERROR) {
+   value = 10;
+  // value = gas_sensor.value(GAS_RED);
+ // if(value!=CC26XX_SENSOR_READING_ERROR) {
     gas_red_reading.raw = value;
-  }
+ // }
 
-  SENSORS_DEACTIVATE(gas_sensor);
+  //SENSORS_DEACTIVATE(gas_sensor);
   ctimer_set(&gas_timer,next,init_gas_reading,NULL);
 
 }
 
 static void init_bme_reading(void *data) {
-  SENSORS_ACTIVATE(bme_280_sensor);
+  //SENSORS_ACTIVATE(bme_280_sensor);
 }
 
 static void init_light_reading(void *data) {
-  SENSORS_ACTIVATE(opt_3001_sensor);
+  //SENSORS_ACTIVATE(opt_3001_sensor);
 }
 
 static void init_accel_reading(void *data) {
-  SENSORS_ACTIVATE(lis2de12_accel_sensor);
+ // SENSORS_ACTIVATE(lis2de12_accel_sensor);
 }
 
 static void init_mag_reading(void *data){
-  SENSORS_ACTIVATE(lis3mdl_mag_sensor);
+ // SENSORS_ACTIVATE(lis3mdl_mag_sensor);
 }
 
 static void init_gas_reading(void *data){
-  SENSORS_ACTIVATE(gas_sensor);
+ // SENSORS_ACTIVATE(gas_sensor);
 }
 // sets up this process to be autostarted
 AUTOSTART_PROCESSES(&cc26xx_web_demo_process);
@@ -276,15 +289,17 @@ static void get_batmon_reading(void *data) {
   int value;
   clock_time_t next = SENSOR_READING_PERIOD;
 
-  value = batmon_sensor.value(BATMON_SENSOR_TYPE_TEMP);
-  if (value != CC26XX_SENSOR_READING_ERROR) {
+   value = 10;
+  // value = batmon_sensor.value(BATMON_SENSOR_TYPE_TEMP);
+  //if (value != CC26XX_SENSOR_READING_ERROR) {
     batmon_temp_reading.raw = value;
-  }
+ // }
 
-  value = batmon_sensor.value(BATMON_SENSOR_TYPE_VOLT);
-  if (value != CC26XX_SENSOR_READING_ERROR) {
+   value = 10;
+  // value = batmon_sensor.value(BATMON_SENSOR_TYPE_VOLT);
+ // if (value != CC26XX_SENSOR_READING_ERROR) {
     batmon_volt_reading.raw = value;
-  }
+  //}
 
   ctimer_set(&batmon_timer, next, get_batmon_reading, NULL);
 }
@@ -310,7 +325,6 @@ static void init_sensors(void) {
 
   list_add(sensor_list, &batmon_temp_reading);
   list_add(sensor_list, &batmon_volt_reading);
-  SENSORS_ACTIVATE(batmon_sensor);
   list_add(sensor_list, &opt_reading);
   list_add(sensor_list, &bme_pres_reading);
   list_add(sensor_list, &bme_temp_reading);
@@ -329,8 +343,8 @@ static void init_sensors(void) {
 PROCESS_THREAD(cc26xx_web_demo_process, ev, data) {
   PROCESS_BEGIN();
 
-  SX1276IoInit();
-  Radio.Sleep();
+//  SX1276IoInit();
+  //Radio.Sleep();
 
   printf("CC26XX Web Demo Process\n");
   // add sensors to linked list
@@ -353,17 +367,14 @@ PROCESS_THREAD(cc26xx_web_demo_process, ev, data) {
   while (1) {
 
     // sensor reading events
-    if (ev == sensors_event && data == &opt_3001_sensor) {
       get_light_reading();
-    } else if (ev == sensors_event && data == &bme_280_sensor) {
       get_bme_reading();
-    } else if (ev == sensors_event && data == &lis2de12_accel_sensor){
       get_accel_reading();
-    } else if (ev == sensors_event && data == &lis3mdl_mag_sensor){
       get_mag_reading();
-    } else if (ev ==sensors_event && data == &gas_sensor){
       get_gas_reading();
-    }
+  cc26xx_web_demo_sensor_reading_t *reading = NULL;
+	reading = list_head(sensor_list);
+      printf("%d\n", reading->raw);
 
     PROCESS_YIELD();
   }

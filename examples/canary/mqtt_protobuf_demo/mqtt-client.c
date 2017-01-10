@@ -35,9 +35,9 @@
  *   MQTT/IBM cloud service client for the CC26XX web demo.
  */
 /*---------------------------------------------------------------------------*/
-#include "ieee-addr.h"
+//#include "ieee-addr.h"
 #include "mqtt-client.h"
-#include "board-peripherals.h"
+//#include "board-peripherals.h"
 #include "cc26xx-web-demo.h"
 #include "contiki-conf.h"
 #include "dev/leds.h"
@@ -261,7 +261,7 @@ static int construct_sub_topic(void) {
 static int construct_client_id(void) {
   uint16_t short_addr;
   uint8_t ext_addr[8];
-  ieee_addr_cpy_to(ext_addr, 8);
+//  ieee_addr_cpy_to(ext_addr, 8);
   short_addr = ext_addr[7];
   short_addr |= ext_addr[6] << 8;
   unique_id = short_addr;
