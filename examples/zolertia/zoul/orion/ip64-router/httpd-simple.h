@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, Swedish Institute of Computer Science.
+ * Copyright (c) 2010, Swedish Institute of Computer Science.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,55 +26,45 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * This file is part of the Contiki operating system.
- *
  */
-
+/*---------------------------------------------------------------------------*/
 /**
  * \file
- *         Functions for manipulating Rime addresses
+ *         A simple webserver
  * \author
  *         Adam Dunkels <adam@sics.se>
+ *         Niclas Finne <nfi@sics.se>
+ *         Joakim Eriksson <joakime@sics.se>
  */
-
-/**
- * \addtogroup linkaddr
- * @{
- */
-
-#include "net/linkaddr.h"
-#include <string.h>
-
-linkaddr_t linkaddr_node_addr;
-#if LINKADDR_SIZE == 2
-const linkaddr_t linkaddr_null = { { 0, 0 } };
-#else /*LINKADDR_SIZE == 2*/
-#if LINKADDR_SIZE == 8
-const linkaddr_t linkaddr_null = { { 0, 0, 0, 0, 0, 0, 0, 0 } };
-#endif /*LINKADDR_SIZE == 8*/
-#if LINKADDR_SIZE == 6
-const linkaddr_t linkaddr_null = { { 0, 0, 0, 0, 0, 0 } };
-#endif /*LINKADDR_SIZE == 6*/
-#endif /*LINKADDR_SIZE == 2*/
-
-
 /*---------------------------------------------------------------------------*/
-void
-linkaddr_copy(linkaddr_t *dest, const linkaddr_t *src)
-{
-	memcpy(dest, src, LINKADDR_SIZE);
-}
+#ifndef HTTPD_SIMPLE_H_
+#define HTTPD_SIMPLE_H_
+
+#include "contiki-net.h"
+#ifndef WEBSERVER_CONF_CFS_PATHLEN
+#define HTTPD_PATHLEN 2
+#else /* WEBSERVER_CONF_CFS_CONNS */
+#define HTTPD_PATHLEN WEBSERVER_CONF_CFS_PATHLEN
+#endif /* WEBSERVER_CONF_CFS_CONNS */
 /*---------------------------------------------------------------------------*/
-int
-linkaddr_cmp(const linkaddr_t *addr1, const linkaddr_t *addr2)
-{
-	return (memcmp(addr1, addr2, LINKADDR_SIZE) == 0);
-}
+struct httpd_state;
+typedef char (* httpd_simple_script_t)(struct httpd_state *s);
 /*---------------------------------------------------------------------------*/
-void
-linkaddr_set_node_addr(linkaddr_t *t)
-{
-  linkaddr_copy(&linkaddr_node_addr, t);
-}
+struct httpd_state {
+  struct timer timer;
+  struct psock sin, sout;
+  struct pt outputpt;
+  char inputbuf[HTTPD_PATHLEN + 24];
+/*char outputbuf[UIP_TCP_MSS]; */
+  char filename[HTTPD_PATHLEN];
+  httpd_simple_script_t script;
+  char state;
+};
 /*---------------------------------------------------------------------------*/
-/** @} */
+void httpd_init(void);
+void httpd_appcall(void *state);
+httpd_simple_script_t httpd_simple_get_script(const char *name);
+/*---------------------------------------------------------------------------*/
+#define SEND_STRING(s, str) PSOCK_SEND(s, (uint8_t *)str, strlen(str))
+/*---------------------------------------------------------------------------*/
+#endif /* HTTPD_SIMPLE_H_ */

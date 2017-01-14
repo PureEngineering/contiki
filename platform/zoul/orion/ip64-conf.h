@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, Yasuyuki Tanaka
+ * Copyright (c) 2012, Thingsquare, http://www.thingsquare.com/.
+ * Copyright (c) 2016, Zolertia <http://www.zolertia.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,15 +28,17 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
  */
-
-#ifndef _PROJECT_CONF_H_
-#define _PROJECT_CONF_H_
-
-#define UNIT_TEST_PRINT_FUNCTION test_print_report
-
-#if WITH_TSCH
-#include "project-tsch-conf.h"
-#endif
-
-#endif /* !_PROJECT_CONF_H_ */
+/*---------------------------------------------------------------------------*/
+#ifndef IP64_CONF_H
+#define IP64_CONF_H
+/*---------------------------------------------------------------------------*/
+#include "ip64-eth-interface.h"
+/*---------------------------------------------------------------------------*/
+#define IP64_CONF_UIP_FALLBACK_INTERFACE ip64_eth_interface
+#define IP64_CONF_INPUT                  ip64_eth_interface_input
+#include "enc28j60-ip64-driver.h"
+#define IP64_CONF_ETH_DRIVER             enc28j60_ip64_driver
+/*---------------------------------------------------------------------------*/
+#endif /* IP64_CONF_H */

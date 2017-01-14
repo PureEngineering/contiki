@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2016, Yasuyuki Tanaka
+ * Copyright (c) 2014, Texas Instruments Incorporated - http://www.ti.com/
+ * Copyright (c) 2016, Zolertia <http://www.zolertia.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -10,7 +11,6 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- *
  * 3. Neither the name of the copyright holder nor the names of its
  *    contributors may be used to endorse or promote products derived
  *    from this software without specific prior written permission.
@@ -28,14 +28,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+/*---------------------------------------------------------------------------*/
+/**
+ * \addtogroup zolertia-orion-ethernet-router
+ * @{
+ *
+ * \file
+ *  Board-initialisation for the Zolertia Orion Ethernet Router
+ *
+ */
+/*---------------------------------------------------------------------------*/
+#include "contiki-conf.h"
+#include <stdint.h>
+#include <string.h>
+/*---------------------------------------------------------------------------*/
+static void
+configure_unused_pins(void)
+{
+  // FIXME
+}
+/*---------------------------------------------------------------------------*/
+void
+board_init()
+{
+  configure_unused_pins();
+}
+/*---------------------------------------------------------------------------*/
+/**
+ * @}
+ */
 
-#ifndef _PROJECT_CONF_H_
-#define _PROJECT_CONF_H_
-
-#define UNIT_TEST_PRINT_FUNCTION test_print_report
-
-#if WITH_TSCH
-#include "project-tsch-conf.h"
-#endif
-
-#endif /* !_PROJECT_CONF_H_ */

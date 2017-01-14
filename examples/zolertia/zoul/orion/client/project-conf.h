@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Yasuyuki Tanaka
+ * Copyright (c) 2016, Zolertia - http://www.zolertia.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,14 +28,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+/*---------------------------------------------------------------------------*/
+#ifndef PROJECT_CONF_H_
+#define PROJECT_CONF_H_
+/*---------------------------------------------------------------------------*/
+/* Use either the cc1200_driver for sub-1GHz, or cc2538_rf_driver (default)
+ * for 2.4GHz built-in radio interface
+ */
+#undef  NETSTACK_CONF_RADIO
+#define NETSTACK_CONF_RADIO              cc2538_rf_driver
 
-#ifndef _PROJECT_CONF_H_
-#define _PROJECT_CONF_H_
+/* Alternate between ANTENNA_SW_SELECT_SUBGHZ or ANTENNA_SW_SELECT_2_4GHZ */
+#define ANTENNA_SW_SELECT_DEF_CONF       ANTENNA_SW_SELECT_2_4GHZ
 
-#define UNIT_TEST_PRINT_FUNCTION test_print_report
+#define NETSTACK_CONF_RDC                nullrdc_driver
 
-#if WITH_TSCH
-#include "project-tsch-conf.h"
-#endif
+#define RESOLV_CONF_SUPPORTS_MDNS        0
+#define UIP_CONF_MAX_ROUTES              3
+#define NBR_TABLE_CONF_MAX_NEIGHBORS     3
 
-#endif /* !_PROJECT_CONF_H_ */
+#define HTTP_CLIENT_BUFFER_LEN           256
+
+#define IFTTT_EVENT   "button"
+#define IFTTT_KEY     "XXXXXX"
+/*---------------------------------------------------------------------------*/
+#endif /* PROJECT_CONF_H_ */
+/*---------------------------------------------------------------------------*/
