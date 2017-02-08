@@ -4,11 +4,19 @@ class Database:
 
 	def __init__(self, u, p, d):
 		self.database = d
+		self.user = u
+		self.password = p
 		self.table = "sensorData"
-		self.connection = mariadb.connect(user=u, password=p)
+		self.createTable()
+
+	def openConnection(self):
+		self.connection = mariadb.connect(user=self.user, password=self.password)
 		self.cursor = self.connection.cursor()
 		self.setDatabase()
-		self.createTable()
+
+	def closeConnection(self):
+		self.cursor.close()
+		self.connection.close()
 
 	def setDatabase(self):
 		try:
@@ -29,16 +37,20 @@ class Database:
                     exit(1)
 
 	def createTable(self):
+		self.openConnection()
 		create = """ CREATE TABLE IF NOT EXISTS """ + self.table + """ 
 			     (ID INTEGER PRIMARY KEY AUTO_INCREMENT, 
 			     uniq_id  INTEGER NOT NULL, time INTEGER NOT NULL, 
 			     type TEXT NOT NULL, data BLOB NOT NULL) """
 		self.cursor.execute(create)
+		self.closeConnection()
 
 	def insert(self, id, time, type, data):
+		self.openConnection()
 		query = """ INSERT INTO """ + self.table + """
 			    (uniq_id, time, type, data) 
 			    VALUES (%s, %s, %s, %s) """
 		args = (id, time, type, data)
 		self.cursor.execute(query, args)
 		self.connection.commit()
+		self.closeConnection()
