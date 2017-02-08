@@ -3,9 +3,9 @@ import mysql.connector as mariadb
 class Database:
 
 	def __init__(self, u, p, d):
-		self.database = d
 		self.user = u
 		self.password = p
+		self.database = d
 		self.table = "sensorData"
 		self.createTable()
 
