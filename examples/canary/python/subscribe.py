@@ -6,7 +6,7 @@ import sys
 
 message = sensor_message_pb.sensors()
 # Initialize a Database object
-db = Database("newuser", "secretpassword", "sensordb", str(sys.argv[1]))
+db = Database("newuser", "secretpassword", str(sys.argv[1]))
 
 # This callback is triggered when successfully connected
 def on_connect(client, userdata, flags, rc):
