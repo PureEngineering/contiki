@@ -3,11 +3,11 @@ import mysql.connector as mariadb
 class Database:
 
 	def __init__(self, u, p, d):
+		self.database = d
+		self.table = "sensorData"
 		self.connection = mariadb.connect(user=u, password=p)
 		self.cursor = self.connection.cursor()
-		self.database = d
 		self.setDatabase()
-		self.table = "sensorData"
 		self.createTable()
 
 	def setDatabase(self):
