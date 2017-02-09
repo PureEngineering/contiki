@@ -1,4 +1,5 @@
 import mysql.connector as mariadb
+from mysql.connector import errorcode
 
 class Database:
 
@@ -31,7 +32,7 @@ class Database:
 		
 	def createDatabase(self):
 		try:
-		    self.cursor.execute("CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(d))
+		    self.cursor.execute("CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(self.database))
 		except mariadb.Error as err:
         	    print("Failed creating database: {}".format(err))
                     exit(1)
