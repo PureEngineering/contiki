@@ -1,5 +1,6 @@
 import mysql.connector as mariadb
 from mysql.connector import errorcode
+import sensor_message_pb
 
 class Database:
 
@@ -9,6 +10,7 @@ class Database:
 		self.database = d
 		self.table = "sensorData"
 		self.createTable()
+		self.message = sensor_message_pb.sensors()
 
 	def openConnection(self):
 		self.connection = mariadb.connect(user=self.user, password=self.password)
@@ -62,4 +64,20 @@ class Database:
 		self.cursor.execute(query)
 		for(uniq_id, time, type, data) in self.cursor:
 			print("{},{},{},{}").format(uniq_id, time, type, data)
+			self.message.ParseFromString(str(data))
+			print("id = " + str(self.message.id))
+        		print("batmon_temp = " + str(self.message.batmon_temp))
+        		print("batmon_volt = " + str(self.message.batmon_volt))
+        		print("opt_3001 = " + str(self.message.opt_3001))
+        		print("bme_280_pres = " + str(self.message.bme_280_pres))
+        		print("bme_280_temp = " + str(self.message.bme_280_temp))
+        		print("bme_280_hum  = " + str(self.message.bme_280_hum))
+        		print("LIS2DE12_x = " + str(self.message.LIS2DE12_x))
+        		print("LIS2DE12_y = " + str(self.message.LIS2DE12_y))
+        		print("LIS2DE12_z = " + str(self.message.LIS2DE12_z))
+        		print("lis3mdl_x = " + str(self.message.lis3mdl_x))
+        		print("lis3mdl_y = " + str(self.message.lis3mdl_y))
+        		print("lis3mdl_z = " + str(self.message.lis3mdl_z))
+        		print("pir = " + str(self.message.pir))
+        		print("\n")
 		self.closeConnection() 
