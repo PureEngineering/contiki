@@ -39,11 +39,11 @@ class Database:
 
 	def createTable(self):
 		self.openConnection()
-		create = """ CREATE TABLE IF NOT EXISTS """ + self.table + """ 
+		query = """ CREATE TABLE IF NOT EXISTS """ + self.table + """ 
 			     (ID INTEGER PRIMARY KEY AUTO_INCREMENT, 
 			     uniq_id  INTEGER NOT NULL, time INTEGER NOT NULL, 
 			     type TEXT NOT NULL, data BLOB NOT NULL) """
-		self.cursor.execute(create)
+		self.cursor.execute(query)
 		self.closeConnection()
 
 	def insert(self, id, time, type, data):
