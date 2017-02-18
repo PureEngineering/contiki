@@ -55,3 +55,11 @@ class Database:
 		self.cursor.execute(query, args)
 		self.connection.commit()
 		self.closeConnection()
+
+	def read(self):
+		self.openConnection()
+		query = "SELECT uniq_id, time, type, data FROM " + self.table
+		self.cursor.execute(query)
+		for(uniq_id, time, type, data) in self.cursor:
+			print("{},{},{},{}").format(uniq_id, time, type, data)
+		self.closeConnection() 
