@@ -37,6 +37,10 @@
 #include "ip64-eth.h"
 #include "ip64-addr.h"
 
+#if CETIC_6LBR
+#include "cetic-6lbr.h"
+#endif
+
 #include <stdio.h>
 
 #define DEBUG DEBUG_NONE
@@ -61,10 +65,10 @@ PROCESS_THREAD(ip64_ipv4_dhcp_process, ev, data)
 
   ip64_dhcpc_init(&ip64_eth_addr, sizeof(ip64_eth_addr));
 
-  PRINTF("IP64: Inited\n");
+  PRINTF("Inited\n");
 
   ip64_dhcpc_request();
-  PRINTF("IP64: Requested\n");
+  PRINTF("Requested\n");
   while(1) {
     PROCESS_WAIT_EVENT();
 
@@ -81,7 +85,7 @@ void
 ip64_dhcpc_configured(const struct ip64_dhcpc_state *s)
 {
   uip_ip6addr_t ip6dnsaddr;
-  PRINTF("IP64: DHCP Configured with %d.%d.%d.%d\n",
+  PRINTF("DHCP Configured with %d.%d.%d.%d\n",
 	 s->ipaddr.u8[0], s->ipaddr.u8[1],
 	 s->ipaddr.u8[2], s->ipaddr.u8[3]);
 
@@ -89,14 +93,18 @@ ip64_dhcpc_configured(const struct ip64_dhcpc_state *s)
   ip64_set_netmask((uip_ip4addr_t *)&s->netmask);
   ip64_set_draddr((uip_ip4addr_t *)&s->default_router);
   if(!uip_ip4addr_cmp((uip_ip4addr_t *)&s->dnsaddr, &uip_all_zeroes_addr)) {
-    /* Note: Currently we assume only one DNS server */
+    //Note: Currently we assume only one DNS server
     uip_ipaddr_t * dns = uip_nameserver_get(0);
-    /* Only update DNS entry if it is empty or already IPv4 */
+    //Only update DNS entry if it is empty or already IPv4
     if(uip_is_addr_unspecified(dns) || ip64_addr_is_ip64(dns)) {
       ip64_addr_4to6((uip_ip4addr_t *)&s->dnsaddr, &ip6dnsaddr);
       uip_nameserver_update(&ip6dnsaddr, uip_ntohs(s->lease_time[0])*65536ul + uip_ntohs(s->lease_time[1]));
     }
   }
+#if CETIC_6LBR
+  cetic_6lbr_ip64_dhcpc_configured(s);
+#endif
+      uip_nameserver_update(&ip6dnsaddr, uip_ntohs(s->lease_time[0])*65536ul + uip_ntohs(s->lease_time[1]));
 }
 /*---------------------------------------------------------------------------*/
 void

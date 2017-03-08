@@ -46,6 +46,7 @@
 #define STATE_CONFIG_RECEIVED 3
 
 static struct ip64_dhcpc_state s;
+struct ip64_dhcpc_state *ip64_dhcp_state = &s;
 
 struct dhcp_msg {
   uint8_t op, htype, hlen, hops;
@@ -61,7 +62,7 @@ struct dhcp_msg {
   uint8_t options[312];
 };
 
-#if (UIP_BUFSIZE - UIP_UDPIP_HLEN) < 548
+#if (UIP_BUFSIZE - UIP_LLH_LEN - UIP_UDPIP_HLEN) < 548
 #error UIP_CONF_BUFFER_SIZE may be too small to accomodate DHCPv4 packets
 #error Increase UIP_CONF_BUFFER_SIZE in your project-conf.h, platform-conf.h, or contiki-conf.h
 #error A good size is 600 bytes

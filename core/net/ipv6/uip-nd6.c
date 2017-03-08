@@ -74,6 +74,18 @@
 #include "net/ipv6/uip-ds6.h"
 #include "net/ip/uip-nameserver.h"
 #include "lib/random.h"
+#if CETIC_6LBR_TRANSPARENTBRIDGE || CETIC_6LBR_SMARTBRIDGE
+#define LOG6LBR_MODULE "ND6"
+#include "cetic-6lbr.h"
+#include "nvm-config.h"
+#if CETIC_NODE_INFO
+#include "node-info.h"
+#endif
+#include "log-6lbr.h"
+#endif
+#if UIP_CONF_DS6_ROUTE_INFORMATION || CETIC_6LBR
+#include "rio.h"
+#endif
 
 /*------------------------------------------------------------------*/
 #define DEBUG 0
@@ -131,6 +143,13 @@ static uip_ds6_defrt_t *defrt; /**  Pointer to a router list entry */
 static uip_nd6_opt_prefix_info *nd6_opt_prefix_info; /**  Pointer to prefix information option in uip_buf */
 static uip_ipaddr_t ipaddr;
 #endif
+
+#if UIP_CONF_DS6_ROUTE_INFORMATION || CETIC_6LBR
+#define UIP_ND6_OPT_ROUTE_BUF ((uip_nd6_opt_route_info *)&uip_buf[uip_l2_l3_icmp_hdr_len + nd6_opt_offset])
+#if CETIC_6LBR_ROUTER
+static uip_ds6_route_info_t *rtinfo; /**  Pointer to a route information list entry */
+#endif
+#endif
 #if (!UIP_CONF_ROUTER || UIP_ND6_SEND_RA)
 static uip_ds6_prefix_t *prefix; /**  Pointer to a prefix list entry */
 #endif
@@ -186,6 +205,11 @@ static void
 ns_input(void)
 {
   uint8_t flags;
+#if CETIC_6LBR_SMARTBRIDGE
+  uip_ds6_route_t * route;
+#endif
+  uip_ipaddr_t tgtipaddr;
+
   PRINTF("Received NS from ");
   PRINT6ADDR(&UIP_IP_BUF->srcipaddr);
   PRINTF(" to ");
@@ -235,9 +259,8 @@ ns_input(void)
           if(lladdr == NULL) {
             goto discard;
           }
-          if(memcmp(&nd6_opt_llao[UIP_ND6_OPT_DATA_OFFSET],
-              lladdr, UIP_LLADDR_LEN) != 0) {
-            if(nbr_table_update_lladdr((const linkaddr_t *)lladdr, (const linkaddr_t *)&lladdr_aligned, 1) == 0) {
+          if(memcmp(&lladdr_aligned, lladdr, UIP_LLADDR_LEN) != 0) {
+            if(uip_ds6_nbr_update_lladdr(&nbr, &lladdr_aligned) == 0) {
               /* failed to update the lladdr */
               goto discard;
             }
@@ -259,7 +282,27 @@ ns_input(void)
     nd6_opt_offset += (UIP_ND6_OPT_HDR_BUF->len << 3);
   }
 
-  addr = uip_ds6_addr_lookup(&UIP_ND6_NS_BUF->tgtipaddr);
+  memcpy(&tgtipaddr, &UIP_ND6_NS_BUF->tgtipaddr, sizeof(tgtipaddr));
+  addr = uip_ds6_addr_lookup(&tgtipaddr);
+#if CETIC_6LBR_SMARTBRIDGE
+  //ND Proxy implementation
+  if ( addr == NULL ) {
+    if ( (route = uip_ds6_route_lookup(&tgtipaddr)) != NULL ) {
+      if(uip_is_addr_unspecified(&UIP_IP_BUF->srcipaddr)) {
+        /* DAD CASE */
+        uip_create_linklocal_allnodes_mcast(&tgtipaddr);
+        uip_ipaddr_copy(&UIP_IP_BUF->srcipaddr, &tgtipaddr);
+        flags = UIP_ND6_NA_FLAG_OVERRIDE;
+        goto create_na;
+      } else {
+        uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &UIP_IP_BUF->srcipaddr);
+        uip_ipaddr_copy(&UIP_IP_BUF->srcipaddr, &tgtipaddr);
+        flags = UIP_ND6_NA_FLAG_SOLICITED | UIP_ND6_NA_FLAG_OVERRIDE;
+        goto create_na;
+      }
+    }
+  }
+#endif
   if(addr != NULL) {
     if(uip_is_addr_unspecified(&UIP_IP_BUF->srcipaddr)) {
       /* DAD CASE */
@@ -300,7 +343,7 @@ ns_input(void)
     /* Address resolution case */
     if(uip_is_addr_solicited_node(&UIP_IP_BUF->destipaddr)) {
       uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &UIP_IP_BUF->srcipaddr);
-      uip_ipaddr_copy(&UIP_IP_BUF->srcipaddr, &UIP_ND6_NS_BUF->tgtipaddr);
+      uip_ipaddr_copy(&UIP_IP_BUF->srcipaddr, &tgtipaddr);
       flags = UIP_ND6_NA_FLAG_SOLICITED | UIP_ND6_NA_FLAG_OVERRIDE;
       goto create_na;
     }
@@ -308,7 +351,7 @@ ns_input(void)
     /* NUD CASE */
     if(uip_ds6_addr_lookup(&UIP_IP_BUF->destipaddr) == addr) {
       uip_ipaddr_copy(&UIP_IP_BUF->destipaddr, &UIP_IP_BUF->srcipaddr);
-      uip_ipaddr_copy(&UIP_IP_BUF->srcipaddr, &UIP_ND6_NS_BUF->tgtipaddr);
+      uip_ipaddr_copy(&UIP_IP_BUF->srcipaddr, &tgtipaddr);
       flags = UIP_ND6_NA_FLAG_SOLICITED | UIP_ND6_NA_FLAG_OVERRIDE;
       goto create_na;
     } else {
@@ -340,7 +383,7 @@ create_na:
   UIP_ICMP_BUF->icode = 0;
 
   UIP_ND6_NA_BUF->flagsreserved = flags;
-  memcpy(&UIP_ND6_NA_BUF->tgtipaddr, &addr->ipaddr, sizeof(uip_ipaddr_t));
+  memcpy(&UIP_ND6_NA_BUF->tgtipaddr, &tgtipaddr, sizeof(uip_ipaddr_t));
 
   create_llao(&uip_buf[uip_l2_l3_icmp_hdr_len + UIP_ND6_NA_LEN],
               UIP_ND6_OPT_TLLAO);
@@ -456,6 +499,9 @@ uip_nd6_ns_output(uip_ipaddr_t * src, uip_ipaddr_t * dest, uip_ipaddr_t * tgt)
 static void
 na_input(void)
 {
+#if CETIC_6LBR_SMARTBRIDGE
+  uip_ds6_route_t * route;
+#endif
   uint8_t is_llchange;
   uint8_t is_router;
   uint8_t is_solicited;
@@ -512,6 +558,22 @@ na_input(void)
     }
     nd6_opt_offset += (UIP_ND6_OPT_HDR_BUF->len << 3);
   }
+#if CETIC_6LBR_SMARTBRIDGE
+  /* Address Advertisement */
+  if ( (nvm_data.mode & CETIC_MODE_SMART_MULTI_BR) != 0 ) {
+    if (uip_is_addr_mcast(&UIP_IP_BUF->destipaddr) && uip_is_mcast_group_id_all_nodes(&UIP_IP_BUF->destipaddr)) {
+      LOG6LBR_6ADDR(INFO, &UIP_ND6_NA_BUF->tgtipaddr, "Received purge NA for ");
+#if CETIC_NODE_INFO
+      node_info_rm_by_addr(&UIP_ND6_NA_BUF->tgtipaddr);
+#endif
+      route = uip_ds6_route_lookup(&UIP_ND6_NA_BUF->tgtipaddr);
+      if (route != NULL ) {
+          uip_ds6_route_rm(route);
+      }
+      goto discard;
+    }
+  }
+#endif
   addr = uip_ds6_addr_lookup(&UIP_ND6_NA_BUF->tgtipaddr);
   /* Message processing, including TLLAO if any */
   if(addr != NULL) {
@@ -541,7 +603,7 @@ na_input(void)
       if(nd6_opt_llao == NULL || !extract_lladdr_from_llao_aligned(&lladdr_aligned)) {
         goto discard;
       }
-      if(nbr_table_update_lladdr((const linkaddr_t *)lladdr, (const linkaddr_t *)&lladdr_aligned, 1) == 0) {
+      if(uip_ds6_nbr_update_lladdr(&nbr, &lladdr_aligned) == 0) {
         /* failed to update the lladdr */
         goto discard;
       }
@@ -568,7 +630,7 @@ na_input(void)
         if(is_override || !is_llchange || nd6_opt_llao == NULL) {
           if(nd6_opt_llao != NULL && is_llchange) {
             if(!extract_lladdr_from_llao_aligned(&lladdr_aligned) ||
-               nbr_table_update_lladdr((const linkaddr_t *) lladdr, (const linkaddr_t *) &lladdr_aligned, 1) == 0) {
+               uip_ds6_nbr_update_lladdr(&nbr, &lladdr_aligned) == 0) {
               /* failed to update the lladdr */
               goto discard;
             }
@@ -610,6 +672,53 @@ discard:
   return;
 }
 #endif /* UIP_ND6_SEND_NS */
+
+#if CETIC_6LBR_SMARTBRIDGE
+void
+send_purge_na(uip_ipaddr_t *prefix)
+{
+      if ( (nvm_data.mode & CETIC_MODE_SMART_MULTI_BR) == 0 ) {
+    	  return;
+      }
+          LOG6LBR_6ADDR(INFO, prefix, "Sending purge NA for ");
+	  uip_ext_len = 0;
+	  UIP_IP_BUF->vtc = 0x60;
+	  UIP_IP_BUF->tcflow = 0;
+	  UIP_IP_BUF->flow = 0;
+	  UIP_IP_BUF->len[0] = 0;       /* length will not be more than 255 */
+	  UIP_IP_BUF->len[1] = UIP_ICMPH_LEN + UIP_ND6_NA_LEN + UIP_ND6_OPT_LLAO_LEN;
+	  UIP_IP_BUF->proto = UIP_PROTO_ICMP6;
+	  UIP_IP_BUF->ttl = UIP_ND6_HOP_LIMIT;
+
+	  uip_create_linklocal_allnodes_mcast(&UIP_IP_BUF->destipaddr);
+      uip_ipaddr_copy(&UIP_IP_BUF->srcipaddr, prefix);
+
+	  UIP_ICMP_BUF->type = ICMP6_NA;
+	  UIP_ICMP_BUF->icode = 0;
+
+	  UIP_ND6_NA_BUF->flagsreserved = UIP_ND6_NA_FLAG_OVERRIDE;
+	  memcpy(&UIP_ND6_NA_BUF->tgtipaddr, prefix, sizeof(uip_ipaddr_t));
+
+	  create_llao(&uip_buf[uip_l2_l3_icmp_hdr_len + UIP_ND6_NA_LEN],
+	              UIP_ND6_OPT_TLLAO);
+
+	  UIP_ICMP_BUF->icmpchksum = 0;
+	  UIP_ICMP_BUF->icmpchksum = ~uip_icmp6chksum();
+
+	  uip_len =
+	    UIP_IPH_LEN + UIP_ICMPH_LEN + UIP_ND6_NA_LEN + UIP_ND6_OPT_LLAO_LEN;
+
+	  UIP_STAT(++uip_stat.nd6.sent);
+	  PRINTF("Sending Unsolicited NA to ");
+	  PRINT6ADDR(&UIP_IP_BUF->destipaddr);
+	  PRINTF(" from ");
+	  PRINT6ADDR(&UIP_IP_BUF->srcipaddr);
+	  PRINTF(" with target address ");
+	  PRINT6ADDR(&UIP_ND6_NA_BUF->tgtipaddr);
+	  PRINTF("\n");
+	  tcpip_ipv6_output();
+}
+#endif
 
 #if UIP_CONF_ROUTER
 #if UIP_ND6_SEND_RA
@@ -776,6 +885,21 @@ uip_nd6_ra_output(uip_ipaddr_t * dest)
   uip_len += UIP_ND6_OPT_MTU_LEN;
   nd6_opt_offset += UIP_ND6_OPT_MTU_LEN;
 
+#if UIP_CONF_DS6_ROUTE_INFORMATION
+  for(rtinfo = uip_ds6_route_info_list;
+		  rtinfo < uip_ds6_route_info_list + UIP_DS6_ROUTE_INFO_NB; rtinfo++) {
+	  if((rtinfo->isused)) {
+		  UIP_ND6_OPT_ROUTE_BUF->type = UIP_ND6_OPT_ROUTE_INFO;
+		  UIP_ND6_OPT_ROUTE_BUF->len =(rtinfo->length >> 6) + 1 ;
+		  UIP_ND6_OPT_ROUTE_BUF->preflen = rtinfo->length;
+		  UIP_ND6_OPT_ROUTE_BUF->flagsreserved = rtinfo->flags;
+		  UIP_ND6_OPT_ROUTE_BUF->rlifetime = uip_htonl(rtinfo->lifetime);
+		  uip_ipaddr_copy(&(UIP_ND6_OPT_ROUTE_BUF->prefix), &(rtinfo->ipaddr));
+		  nd6_opt_offset += ((rtinfo->length >> 6) + 1)<<3;
+		  uip_len += ((rtinfo->length >> 6) + 1)<<3;
+	  }
+  }
+#endif /* UIP_CONF_DS6_ROUTE_INFORMATION */
 #if UIP_ND6_RA_RDNSS
   if(uip_nameserver_count() > 0) {
     uint8_t i = 0;
@@ -877,6 +1001,12 @@ ra_input(void)
   PRINTF("\n");
   UIP_STAT(++uip_stat.nd6.recv);
 
+#if CETIC_6LBR
+  if ((nvm_data.mode & CETIC_MODE_WAIT_RA_MASK) == 0 ) {
+    goto discard;
+  }
+#endif
+
 #if UIP_CONF_IPV6_CHECKS
   if((UIP_IP_BUF->ttl != UIP_ND6_HOP_LIMIT) ||
      (!uip_is_addr_linklocal(&UIP_IP_BUF->srcipaddr)) ||
@@ -932,7 +1062,8 @@ ra_input(void)
         if(memcmp(&nd6_opt_llao[UIP_ND6_OPT_DATA_OFFSET],
                   lladdr, UIP_LLADDR_LEN) != 0) {
           /* change of link layer address */
-          if(nbr_table_update_lladdr((const linkaddr_t *)lladdr, (const linkaddr_t *)&lladdr_aligned, 1) == 0) {
+          if(uip_ds6_nbr_update_lladdr(&nbr,
+                                   &lladdr_aligned) == 0) {
             /* failed to update the lladdr */
             goto discard;
           }
@@ -953,6 +1084,7 @@ ra_input(void)
           uip_ntohl(nd6_opt_prefix_info->preferredlt))
          && (!uip_is_addr_linklocal(&nd6_opt_prefix_info->prefix))) {
         /* on-link flag related processing */
+#if !CETIC_6LBR_SMARTBRIDGE
         if(nd6_opt_prefix_info->flagsreserved1 & UIP_ND6_RA_FLAG_ONLINK) {
           prefix =
             uip_ds6_prefix_lookup(&nd6_opt_prefix_info->prefix,
@@ -988,6 +1120,7 @@ ra_input(void)
             }
           }
         }
+#endif
         /* End of on-link flag related processing */
         /* autonomous flag related processing */
         if((nd6_opt_prefix_info->flagsreserved1 & UIP_ND6_RA_FLAG_AUTONOMOUS)
@@ -1028,29 +1161,38 @@ ra_input(void)
                                ADDR_AUTOCONF);
             }
           }
+#if CETIC_6LBR_SMARTBRIDGE
+          cetic_6lbr_set_prefix(&nd6_opt_prefix_info->prefix, 64, &ipaddr);
+#endif
         }
         /* End of autonomous flag related processing */
       }
       break;
+#if CETIC_6LBR
+    // bridge handling RIO to update routes
+    case UIP_ND6_OPT_ROUTE_INFO:
+      PRINTF("RIO option in RA\n");
+      uip_nd6_opt_route_info *rio = (uip_nd6_opt_route_info *) UIP_ND6_OPT_ROUTE_BUF;
+      uip_ds6_route_info_callback(rio, &UIP_IP_BUF->srcipaddr);
+      break;
+#endif
 #if UIP_ND6_RA_RDNSS
     case UIP_ND6_OPT_RDNSS:
-      if(UIP_ND6_RA_BUF->flags_reserved & (UIP_ND6_O_FLAG << 6)) {
-        PRINTF("Processing RDNSS option\n");
-        uint8_t naddr = (UIP_ND6_OPT_RDNSS_BUF->len - 1) / 2;
-        uip_ipaddr_t *ip = (uip_ipaddr_t *)(&UIP_ND6_OPT_RDNSS_BUF->ip);
-        PRINTF("got %d nameservers\n", naddr);
-        while(naddr-- > 0) {
-          PRINTF(" nameserver: ");
-          PRINT6ADDR(ip);
-          PRINTF(" lifetime: %lx\n", uip_ntohl(UIP_ND6_OPT_RDNSS_BUF->lifetime));
-          uip_nameserver_update(ip, uip_ntohl(UIP_ND6_OPT_RDNSS_BUF->lifetime));
-          ip++;
-        }
+      PRINTF("Processing RDNSS option\n");
+      uint8_t naddr = (UIP_ND6_OPT_RDNSS_BUF->len - 1) / 2;
+      uip_ipaddr_t *ip = (uip_ipaddr_t *)(&UIP_ND6_OPT_RDNSS_BUF->ip);
+      PRINTF("got %d nameservers\n", naddr);
+      while(naddr-- > 0) {
+        PRINTF(" nameserver: ");
+        PRINT6ADDR(ip);
+        PRINTF(" lifetime: %lx\n", uip_ntohl(UIP_ND6_OPT_RDNSS_BUF->lifetime));
+        uip_nameserver_update(ip, uip_ntohl(UIP_ND6_OPT_RDNSS_BUF->lifetime));
+        ip++;
       }
       break;
 #endif /* UIP_ND6_RA_RDNSS */
     default:
-      PRINTF("ND option not supported in RA");
+      PRINTF("ND option not supported in RA\n");
       break;
     }
     nd6_opt_offset += (UIP_ND6_OPT_HDR_BUF->len << 3);
