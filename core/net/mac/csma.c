@@ -132,6 +132,26 @@ LIST(neighbor_list);
 
 static void packet_sent(void *ptr, int status, int num_transmissions);
 static void transmit_packet_list(void *ptr);
+
+int packet_overflow;
+int neighbor_overflow;
+uint32_t csma_sent_packets;
+uint32_t csma_received_packets;
+uint32_t csma_noack;
+uint32_t csma_collisions;
+uint32_t csma_deferred;
+uint32_t csma_retransmissions;
+uint32_t csma_dropped;
+
+/*---------------------------------------------------------------------------*/
+int csma_allocated_packets(void)
+{
+  return MAX_QUEUED_PACKETS - memb_numfree(&packet_memb);
+}
+int csma_allocated_neighbors(void)
+{
+  return CSMA_MAX_NEIGHBOR_QUEUES - memb_numfree(&neighbor_memb);
+}
 /*---------------------------------------------------------------------------*/
 static struct neighbor_queue *
 neighbor_queue_from_addr(const linkaddr_t *addr)
@@ -273,6 +293,7 @@ collision(struct rdc_buf_list *q, struct neighbor_queue *n,
 
   metadata = (struct qbuf_metadata *)q->ptr;
 
+  csma_collisions += num_transmissions;
   n->collisions += num_transmissions;
 
   if(n->collisions > CSMA_MAX_BACKOFF) {
@@ -282,6 +303,7 @@ collision(struct rdc_buf_list *q, struct neighbor_queue *n,
   }
 
   if(n->transmissions >= metadata->max_transmissions) {
+    csma_dropped++;
     tx_done(MAC_TX_COLLISION, q, n);
   } else {
     PRINTF("csma: rexmit collision %d\n", n->transmissions);
@@ -296,10 +318,13 @@ noack(struct rdc_buf_list *q, struct neighbor_queue *n, int num_transmissions)
 
   metadata = (struct qbuf_metadata *)q->ptr;
 
+  csma_noack++;
+  csma_sent_packets++;
   n->collisions = CSMA_MIN_BE;
   n->transmissions += num_transmissions;
 
   if(n->transmissions >= metadata->max_transmissions) {
+    csma_dropped++;
     tx_done(MAC_TX_NOACK, q, n);
   } else {
     PRINTF("csma: rexmit noack %d\n", n->transmissions);
@@ -310,6 +335,7 @@ noack(struct rdc_buf_list *q, struct neighbor_queue *n, int num_transmissions)
 static void
 tx_ok(struct rdc_buf_list *q, struct neighbor_queue *n, int num_transmissions)
 {
+  csma_sent_packets++;
   n->collisions = CSMA_MIN_BE;
   n->transmissions += num_transmissions;
   tx_done(MAC_TX_OK, q, n);
@@ -454,8 +480,10 @@ send_packet(mac_callback_t sent, void *ptr)
       PRINTF("csma: Neighbor queue full\n");
     }
     PRINTF("csma: could not allocate packet, dropping packet\n");
+    packet_overflow++;
   } else {
     PRINTF("csma: could not allocate neighbor, dropping packet\n");
+    neighbor_overflow++;
   }
   mac_call_sent_callback(sent, ptr, MAC_TX_ERR, 1);
 }
@@ -463,6 +491,7 @@ send_packet(mac_callback_t sent, void *ptr)
 static void
 input_packet(void)
 {
+  csma_received_packets++;
   NETSTACK_LLSEC.input();
 }
 /*---------------------------------------------------------------------------*/
@@ -493,6 +522,7 @@ init(void)
   memb_init(&packet_memb);
   memb_init(&metadata_memb);
   memb_init(&neighbor_memb);
+  packet_overflow = 0;
 }
 /*---------------------------------------------------------------------------*/
 const struct mac_driver csma_driver = {
