@@ -41,7 +41,7 @@
 #include <string.h>
 #include <stdio.h>
 /*---------------------------------------------------------------------------*/
-#define DEBUG 1
+#define DEBUG 0
 #include "net/ip/uip-debug.h"
 /*---------------------------------------------------------------------------*/
 #ifndef CETIC_6LBR_NODE_INFO_PORT
