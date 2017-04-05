@@ -61,9 +61,6 @@
 #include "sensor_message.pb.h"
 #include "pb_decode.h"
 
-
-
-
 #define CC26XX_WEB_DEMO_STATUS_LED LEDS_GREEN
 /*---------------------------------------------------------------------------*/
 /* A timeout used when waiting to connect to a network */
