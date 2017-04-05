@@ -49,7 +49,7 @@
 #endif
 
 #define MAX_PAYLOAD_LEN    40
-#define MSG_INTERVAL       (60 * CLOCK_SECOND)
+#define MSG_INTERVAL       (CLOCK_SECOND)
 /*---------------------------------------------------------------------------*/
 static struct uip_udp_conn *client_conn = NULL;
 static struct etimer et;
