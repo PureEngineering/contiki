@@ -48,7 +48,7 @@
 #define MQTT_CLIENT_CONFIG_IP_ADDR_STR_LEN   64
 /*---------------------------------------------------------------------------*/
 #define MQTT_CLIENT_PUBLISH_INTERVAL_MAX      86400 /* secs: 1 day */
-#define MQTT_CLIENT_PUBLISH_INTERVAL_MIN          5 /* secs */
+#define MQTT_CLIENT_PUBLISH_INTERVAL_MIN          1 /* secs */
 /*---------------------------------------------------------------------------*/
 PROCESS_NAME(mqtt_client_process);
 /*---------------------------------------------------------------------------*/

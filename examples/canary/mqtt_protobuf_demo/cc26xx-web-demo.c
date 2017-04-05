@@ -62,7 +62,7 @@ PROCESS(cc26xx_web_demo_process, "CC26XX Web Demo");
  * Update sensor readings in a staggered fashion every SENSOR_READING_PERIOD
  * ticks + a random interval between 0 and SENSOR_READING_RANDOM ticks
  */
-#define SENSOR_READING_PERIOD (CLOCK_SECOND * 30)
+#define SENSOR_READING_PERIOD (CLOCK_SECOND)
 
 struct ctimer batmon_timer, opt_timer, bme_timer, accel_timer, mag_timer,
               gas_timer;
