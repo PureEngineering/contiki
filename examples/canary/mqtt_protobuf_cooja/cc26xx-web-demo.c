@@ -9,12 +9,19 @@
 #include "net/ipv6/sicslowpan.h"
 #include "sys/process.h"
 
+#include "node-id.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 //#include "lora-radio.h"
 //#include "lora-sx1276-board.h"
+char data_id[8] = "";
+char *ids[8] = {"20357", "33794", "49451", "51072", "55428"};
+enum {BATMON_TEMP, BATMON_VOLT, OPT_LIGHT, BME_HUM, BME_PRES, BME_TEMP, ACCEL_X, ACCEL_Y, ACCEL_Z, MAG_X, MAG_Y, MAG_Z};
+char *sensor_names[16] = {"batmon_temp", "batmon_volt", "opt_3001", "bme_280_hum", "bme_280_pres", "bme_280_temp", "LIS2DE12_x", "LIS2DE12_y", "LIS2DE12_z", "lis3mdl_x", "lis3mdl_y", "lis3mdl_z"};
+char data[16][100][100];
 /*---------------------------------------------------------------------------*/
 PROCESS_NAME(cetic_6lbr_client_process);
 PROCESS(cc26xx_web_demo_process, "CC26XX Web Demo");
@@ -22,9 +29,7 @@ process_event_t cc26xx_web_demo_publish_event;
 
 #define SENSOR_READING_PERIOD (CLOCK_SECOND * 30)
 
-struct ctimer batmon_timer, opt_timer, bme_timer, accel_timer, mag_timer,
-              gas_timer;
-
+struct ctimer batmon_timer, opt_timer, bme_timer, accel_timer, mag_timer;
 /*---------------------------------------------------------------------------*/
 process_event_t cc26xx_web_demo_publish_event;
 
@@ -48,15 +53,11 @@ DEMO_SENSOR(accel_z, CC26XX_WEB_DEMO_SENSOR_ACCEL_Z);
 DEMO_SENSOR(mag_x, CC26XX_WEB_DEMO_SENSOR_MAG_X);
 DEMO_SENSOR(mag_y, CC26XX_WEB_DEMO_SENSOR_MAG_Y);
 DEMO_SENSOR(mag_z, CC26XX_WEB_DEMO_SENSOR_MAG_Z);
-DEMO_SENSOR(gas_ox, CC26XX_WEB_DEMO_SENSOR_GAS_OX);
-DEMO_SENSOR(gas_nh3, CC26XX_WEB_DEMO_SENSOR_GAS_NH3);
-DEMO_SENSOR(gas_red, CC26XX_WEB_DEMO_SENSOR_GAS_RED);
 
 static void init_light_reading(void *data);
 static void init_bme_reading(void *data);
 static void init_accel_reading(void *data);
 static void init_mag_reading(void *data);
-static void init_gas_reading(void *data);
 
 AUTOSTART_PROCESSES(&cc26xx_web_demo_process);
 
@@ -153,32 +154,6 @@ static void get_mag_reading(){
   ctimer_set(&mag_timer, next, init_mag_reading, NULL);
 }
 
-static void get_gas_reading(){
-  int value;
-  clock_time_t next = SENSOR_READING_PERIOD;
-
-   value = 10;
-  // value = gas_sensor.value(GAS_OX);
- // if(value!=CC26XX_SENSOR_READING_ERROR) {
-    gas_ox_reading.raw = value;
- // }
-
-   value = 10;
-  // value = gas_sensor.value(GAS_NH3);
- // if(value!=CC26XX_SENSOR_READING_ERROR) {
-    gas_nh3_reading.raw = value;
- // }
-
-   value = 10;
-  // value = gas_sensor.value(GAS_RED);
- // if(value!=CC26XX_SENSOR_READING_ERROR) {
-    gas_red_reading.raw = value;
- // }
-
-  //SENSORS_DEACTIVATE(gas_sensor);
-  ctimer_set(&gas_timer,next,init_gas_reading,NULL);
-
-}
 
 static void init_bme_reading(void *data) {
   //SENSORS_ACTIVATE(bme_280_sensor);
@@ -196,9 +171,6 @@ static void init_mag_reading(void *data){
  // SENSORS_ACTIVATE(lis3mdl_mag_sensor);
 }
 
-static void init_gas_reading(void *data){
- // SENSORS_ACTIVATE(gas_sensor);
-}
 // sets up this process to be autostarted
 int cc26xx_web_demo_ipaddr_sprintf(char *buf, uint8_t buf_len,
                                    const uip_ipaddr_t *addr) {
@@ -273,12 +245,39 @@ static void init_sensor_readings(void) {
   init_bme_reading(NULL);
   init_accel_reading(NULL);
   init_mag_reading(NULL);
-  init_gas_reading(NULL);
 
   return;
 }
 /*---------------------------------------------------------------------------*/
 static void init_sensors(void) {
+
+  strcpy(data_id, ids[node_id%5]);
+  FILE *data_file;
+  unsigned int i;
+  for (i = 0; i < 12; i++) {
+    char filename[300] = "/mnt/hgfs/contiki/examples/canary/mqtt_protobuf_cooja/";
+    strcat(filename, data_id);
+    strcat(filename, "_");
+    strcat(filename, sensor_names[i]);
+    //printf("%s\n", filename);
+    data_file = fopen(filename, "r");
+    if (data_file == 0)
+    {
+        printf("fug\n");
+    } else {
+
+    char buff[255];
+    fscanf(data_file, "%s", buff);
+    printf("1 : %s\n", buff );
+    unsigned int j = 0;
+    //while(fgets(data[i][j], 100, data_file)) {
+      //data[i][j][strlen(data[i][j])-1] = '\0';
+      //j++;
+    //}
+    }
+
+  }
+
 
   list_add(sensor_list, &batmon_temp_reading);
   list_add(sensor_list, &batmon_volt_reading);
@@ -292,9 +291,6 @@ static void init_sensors(void) {
   list_add(sensor_list, &mag_x_reading);
   list_add(sensor_list, &mag_y_reading);
   list_add(sensor_list, &mag_z_reading);
-  list_add(sensor_list, &gas_ox_reading);
-  list_add(sensor_list, &gas_nh3_reading);
-  list_add(sensor_list, &gas_red_reading);
 }
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(cc26xx_web_demo_process, ev, data) {
@@ -318,7 +314,6 @@ PROCESS_THREAD(cc26xx_web_demo_process, ev, data) {
     get_bme_reading();
     get_accel_reading();
     get_mag_reading();
-    get_gas_reading();
     PROCESS_YIELD();
   }
 

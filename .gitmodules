@@ -17,3 +17,9 @@
 [submodule "tools/sensniff"]
 	path = tools/sensniff
 	url = https://github.com/g-oikonomou/sensniff.git
+[submodule "tools/cooja/apps/radiologger-headless"]
+	path = tools/cooja/apps/radiologger-headless
+	url = https://github.com/cetic/cooja-radiologger-headless
+[submodule "tools/cooja/apps/serial2pty"]
+	path = tools/cooja/apps/serial2pty
+	url = https://github.com/cetic/cooja-serial2pty
