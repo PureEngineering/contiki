@@ -27,47 +27,22 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-/**
- * \addtogroup cc26xx-web-demo
- * @{
- *
- * \file
- *   Main module for the CC26XX web demo. Activates on-device resources,
- *   takes sensor readings periodically and caches them for all other modules
- *   to use.
- */
-/*---------------------------------------------------------------------------*/
-#include "contiki-net.h"
+
 #include "contiki.h"
-#include "batmon-sensor.h"
 #include "board-peripherals.h"
-#include "example.h"
-#include "lib/list.h"
 #include "lib/sensors.h"
-#include "net/ipv6/sicslowpan.h"
 #include "sys/process.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "lora-radio.h"
-#include "lora-sx1276-board.h"
 
 //PROCESS_NAME(example);
 PROCESS(example1, "example");
 AUTOSTART_PROCESSES(&example1);
 
 PROCESS_THREAD(example1, ev, data) {
-PROCESS_BEGIN();
-while (1) {
-SENSORS_ACTIVATE(opt_3001_sensor);
-printf("HEY ");
-PROCESS_YIELD();
+    PROCESS_BEGIN();
+    while (1) {
+        SENSORS_ACTIVATE(opt_3001_sensor);
+        printf("HEY ");
+        PROCESS_YIELD();
+    }
+    PROCESS_END();
 }
-PROCESS_END();
-}
-
-/**
- * @}
- */
