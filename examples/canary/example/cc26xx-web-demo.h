@@ -51,7 +51,7 @@
 /*---------------------------------------------------------------------------*/
 #include "dev/leds.h"
 #include "sys/process.h"
-#include "mqtt-client.h"
+//#include "mqtt-client.h"
 #include "net/ip/uip.h"
 #include <stdint.h>
 
@@ -114,7 +114,7 @@ typedef struct cc26xx_web_demo_sensor_reading {
 } cc26xx_web_demo_sensor_reading_t;
 /*---------------------------------------------------------------------------*/
 
-extern mqtt_client_config_t mqtt_config;
+//extern mqtt_client_config_t mqtt_config;
 /*---------------------------------------------------------------------------*/
 /**
  * \brief Performs a lookup for a reading of a specific type of sensor
