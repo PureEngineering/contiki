@@ -67,6 +67,8 @@ PROCESS(cc26xx_web_demo_process, "CC26XX Web Demo");
 struct ctimer batmon_timer, opt_timer, bme_timer, accel_timer, mag_timer,
               gas_timer;
 
+struct ctimer hi;
+
 /*---------------------------------------------------------------------------*/
 process_event_t cc26xx_web_demo_publish_event;
 
@@ -125,15 +127,17 @@ static void get_bme_reading() {
 }
 
 static void get_light_reading() {
-  int value;
-  clock_time_t next = SENSOR_READING_PERIOD;
+  //int value;
+  clock_time_t next = SENSOR_READING_PERIOD / 25;
 
-  value = opt_3001_sensor.value(0);
+  //value = opt_3001_sensor.value(0);
 
-  if (value != CC26XX_SENSOR_READING_ERROR) {
-    opt_reading.raw = value;
-  }
+  //if (value != CC26XX_SENSOR_READING_ERROR) {
+    //opt_reading.raw = value;
+  //}
   /* The OPT will turn itself off, so we don't need to call its DEACTIVATE */
+    //printf("val %d", value);
+    //printf("raw %d", opt_reading.raw);
   ctimer_set(&opt_timer, next, init_light_reading, NULL);
 }
 
@@ -296,12 +300,12 @@ static void init_sensor_readings(void) {
    * Make a first pass and get all initial sensor readings. This will also
    * trigger periodic value updates
    */
-  get_batmon_reading(NULL);
+  //get_batmon_reading(NULL);
   init_light_reading(NULL);
-  init_bme_reading(NULL);
-  init_accel_reading(NULL);
-  init_mag_reading(NULL);
-  init_gas_reading(NULL);
+  //init_bme_reading(NULL);
+  //init_accel_reading(NULL);
+  //init_mag_reading(NULL);
+  //init_gas_reading(NULL);
 
   return;
 }
@@ -328,46 +332,13 @@ static void init_sensors(void) {
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(cc26xx_web_demo_process, ev, data) {
   PROCESS_BEGIN();
-
-  SX1276IoInit();
-  Radio.Sleep();
-
-  printf("CC26XX Web Demo Process\n");
-  // add sensors to linked list
-  init_sensors();
-
-  cc26xx_web_demo_publish_event = process_alloc_event();
-
-  // start 6lbr process
-  process_start(&cetic_6lbr_client_process, NULL);
-  // start mqtt process
-  process_start(&mqtt_client_process, NULL);
-
-  //start reading cycle
-  init_sensor_readings();
-
-  /*
-   * Update all sensor readings on a configurable sensors_event
-   * (e.g a button press / or reed trigger)
-   */
+  //clock_time_t next = SENSOR_READING_PERIOD / 25;
   while (1) {
-
-    // sensor reading events
-    if (ev == sensors_event && data == &opt_3001_sensor) {
-      get_light_reading();
-    } else if (ev == sensors_event && data == &bme_280_sensor) {
-      get_bme_reading();
-    } else if (ev == sensors_event && data == &lis2de12_accel_sensor){
-      get_accel_reading();
-    } else if (ev == sensors_event && data == &lis3mdl_mag_sensor){
-      get_mag_reading();
-    } else if (ev ==sensors_event && data == &gas_sensor){
-      get_gas_reading();
-    }
-
+    //ctimer_set(&hi, next, init_light_reading, NULL);
+    SENSORS_ACTIVATE(opt_3001_sensor);
+    printf("HEY ");
     PROCESS_YIELD();
   }
-
   PROCESS_END();
 }
 /*---------------------------------------------------------------------------*/
