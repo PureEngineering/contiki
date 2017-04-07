@@ -1,6 +1,5 @@
 import paho.mqtt.client as mqtt
 import sensor_message_pb2
-import MySQLdb
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
