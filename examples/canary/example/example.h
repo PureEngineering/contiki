@@ -107,9 +107,9 @@ extern process_event_t cc26xx_web_demo_publish_event;
 #define CC26XX_WEB_DEMO_CONVERTED_LEN        12
 
 typedef struct cc26xx_web_demo_sensor_reading {
-  struct cc26xx_web_demo_sensor_reading *next;
-  int raw;
-  uint8_t type;
+    struct cc26xx_web_demo_sensor_reading *next;
+    int raw;
+    uint8_t type;
 
 } cc26xx_web_demo_sensor_reading_t;
 /*---------------------------------------------------------------------------*/

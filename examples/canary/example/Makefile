@@ -1,6 +1,6 @@
 DEFINES+=PROJECT_CONF_H=\"project-conf.h\"
 
-all: cc26xx-web-demo
+all: example
 
 CONTIKI=../../..
 include $(CONTIKI)/Makefile.include

@@ -41,10 +41,9 @@
 #include "contiki.h"
 #include "batmon-sensor.h"
 #include "board-peripherals.h"
-#include "cc26xx-web-demo.h"
+#include "example.h"
 #include "lib/list.h"
 #include "lib/sensors.h"
-//#include "mqtt-client.h"
 #include "net/ipv6/sicslowpan.h"
 #include "sys/process.h"
 
@@ -60,13 +59,13 @@ PROCESS(example1, "example");
 AUTOSTART_PROCESSES(&example1);
 
 PROCESS_THREAD(example1, ev, data) {
-  PROCESS_BEGIN();
-  while (1) {
-    SENSORS_ACTIVATE(opt_3001_sensor);
-    printf("HEY ");
-    PROCESS_YIELD();
-  }
-  PROCESS_END();
+PROCESS_BEGIN();
+while (1) {
+SENSORS_ACTIVATE(opt_3001_sensor);
+printf("HEY ");
+PROCESS_YIELD();
+}
+PROCESS_END();
 }
 
 /**
