@@ -44,7 +44,7 @@
 #include "cc26xx-web-demo.h"
 #include "lib/list.h"
 #include "lib/sensors.h"
-#include "mqtt-client.h"
+//#include "mqtt-client.h"
 #include "net/ipv6/sicslowpan.h"
 #include "sys/process.h"
 
