@@ -18,36 +18,28 @@
 PROCESS(two, "two");
 AUTOSTART_PROCESSES(&two);
 
+static int light = 0;
+
 static void getSensorReadings() {
-    int value;
+    light = opt_3001_sensor.value(0);
 
     SENSORS_ACTIVATE(opt_3001_sensor);
-    //SENSORS_ACTIVATE(bme_280_sensor);
-
-    value = opt_3001_sensor.value(0);
-
-    if (value != CC26XX_SENSOR_READING_ERROR) {
-        opt_reading.raw = value;
-    }
 }
 
 PROCESS_THREAD(two, ev, data) {
-    static struct etimer et;
     PROCESS_BEGIN();
+    static struct etimer et;
     pb_byte_t buffer[50];
-
-    init_sensors();
-    init_sensor_readings();
 
     etimer_set(&et, CLOCK_SECOND / 2);
 
     while (1) {
         PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
-        //if (ev == sensors_event && data == &opt_3001_sensor)
-            get_light_reading();
+        getSensorReadings();
 
-        printf("LIGHT %i", cc26xx_web_demo_sensor_lookup(2)->raw);
+        printf("LIGHT %i ", light);
+
         /*sensors message = sensors_init_zero;
 
         message.id = 100;
