@@ -25,6 +25,12 @@ static int bme3 = 0;
 static int accel_x = 0;
 static int accel_y = 0;
 static int accel_z = 0;
+static int mag_x = 0;
+static int mag_y = 0;
+static int mag_z = 0;
+static int gas_ox = 0;
+static int gas_nh3 = 0;
+static int gas_red = 0;
 
 static void getSensorReadings() {
     light = opt_3001_sensor.value(0);
@@ -34,9 +40,18 @@ static void getSensorReadings() {
     accel_x = lis2de12_accel_sensor.value(ACCEL_X);
     accel_y = lis2de12_accel_sensor.value(ACCEL_Y);
     accel_z = lis2de12_accel_sensor.value(ACCEL_Z);
+    mag_x = lis3mdl_mag_sensor.value(MAG_X);
+    mag_y = lis3mdl_mag_sensor.value(MAG_Y);
+    mag_z = lis3mdl_mag_sensor.value(MAG_Z);
+    gas_ox = gas_sensor.value(GAS_OX);
+    gas_nh3 = gas_sensor.value(GAS_NH3);
+    gas_red = gas_sensor.value(GAS_RED);
 
     SENSORS_ACTIVATE(opt_3001_sensor);
     SENSORS_ACTIVATE(bme_280_sensor);
+    SENSORS_ACTIVATE(lis2de12_accel_sensor);
+    SENSORS_ACTIVATE(lis3mdl_mag_sensor);
+    SENSORS_ACTIVATE(gas_sensor);
 }
 
 PROCESS_THREAD(two, ev, data) {
@@ -45,8 +60,6 @@ PROCESS_THREAD(two, ev, data) {
     pb_byte_t buffer[50];
 
     etimer_set(&et, CLOCK_SECOND / 2);
-
-    SENSORS_ACTIVATE(lis2de12_accel_sensor);
 
     while (1) {
         PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
@@ -60,6 +73,13 @@ PROCESS_THREAD(two, ev, data) {
         printf("ACCEL_X %i ", accel_x);
         printf("ACCEL_Y %i ", accel_y);
         printf("ACCEL_Z %i ", accel_z);
+        printf("MAG_X %i ", mag_x);
+        printf("MAG_Y %i ", mag_y);
+        printf("MAG_Z %i ", mag_z);
+        printf("GAS_OK %i ", gas_ox);
+        printf("GAS_NH3 %i ", gas_nh3);
+        printf("GAS_RED %i ", gas_red);
+        //putc('n');
 
         /*sensors message = sensors_init_zero;
 
