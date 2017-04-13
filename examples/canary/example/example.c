@@ -19,11 +19,24 @@ PROCESS(two, "two");
 AUTOSTART_PROCESSES(&two);
 
 static int light = 0;
+static int bme1 = 0;
+static int bme2 = 0;
+static int bme3 = 0;
+static int accel_x = 0;
+static int accel_y = 0;
+static int accel_z = 0;
 
 static void getSensorReadings() {
     light = opt_3001_sensor.value(0);
+    bme1 = bme_280_sensor.value(BME_280_SENSOR_TYPE_TEMP);
+    bme2 = bme_280_sensor.value(BME_280_SENSOR_TYPE_PRESS);
+    bme3 = bme_280_sensor.value(BME_280_SENSOR_TYPE_HUM);
+    accel_x = lis2de12_accel_sensor.value(ACCEL_X);
+    accel_y = lis2de12_accel_sensor.value(ACCEL_Y);
+    accel_z = lis2de12_accel_sensor.value(ACCEL_Z);
 
     SENSORS_ACTIVATE(opt_3001_sensor);
+    SENSORS_ACTIVATE(bme_280_sensor);
 }
 
 PROCESS_THREAD(two, ev, data) {
@@ -33,12 +46,20 @@ PROCESS_THREAD(two, ev, data) {
 
     etimer_set(&et, CLOCK_SECOND / 2);
 
+    SENSORS_ACTIVATE(lis2de12_accel_sensor);
+
     while (1) {
         PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
         getSensorReadings();
 
         printf("LIGHT %i ", light);
+        printf("BME1 %i ", bme1);
+        printf("BME2 %i ", bme2);
+        printf("BME3 %i ", bme3);
+        printf("ACCEL_X %i ", accel_x);
+        printf("ACCEL_Y %i ", accel_y);
+        printf("ACCEL_Z %i ", accel_z);
 
         /*sensors message = sensors_init_zero;
 
