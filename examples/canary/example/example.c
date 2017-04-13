@@ -58,15 +58,16 @@ PROCESS_THREAD(two, ev, data) {
     PROCESS_BEGIN();
     static struct etimer et;
     pb_byte_t buffer[50];
+    char str[60];
 
-    etimer_set(&et, CLOCK_SECOND / 2);
+    etimer_set(&et, CLOCK_SECOND / 25);
 
     while (1) {
         PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
-        getSensorReadings();
+        //getSensorReadings();
 
-        printf("LIGHT %i ", light);
+        /*printf("LIGHT %i ", light);
         printf("BME1 %i ", bme1);
         printf("BME2 %i ", bme2);
         printf("BME3 %i ", bme3);
@@ -78,10 +79,10 @@ PROCESS_THREAD(two, ev, data) {
         printf("MAG_Z %i ", mag_z);
         printf("GAS_OK %i ", gas_ox);
         printf("GAS_NH3 %i ", gas_nh3);
-        printf("GAS_RED %i ", gas_red);
+        printf("GAS_RED %i ", gas_red);*/
         //putc('n');
 
-        /*sensors message = sensors_init_zero;
+        sensors message = sensors_init_zero;
 
         message.id = 100;
 
@@ -127,11 +128,14 @@ PROCESS_THREAD(two, ev, data) {
         size_t message_length;
         message_length = stream.bytes_written;
 
-        int i;
+        sprintf(str, "%s\n", buffer);
+        printf(str);
+
+        /*int i;
         for (i = 0; i < message_length; i++) {
-            printf("%c", buffer[i]);
+            cc26xx_uart_write_byte(buffer[i]);
         }
-        printf("\n");*/
+        cc26xx_uart_write_byte('\n');*/
 
         etimer_reset(&et);
     }
