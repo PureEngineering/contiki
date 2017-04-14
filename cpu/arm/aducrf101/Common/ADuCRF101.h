@@ -738,7 +738,7 @@ typedef enum {
 #define SPISTA_RXS_MSK                 (0x1   << 11 )
 #define SPISTA_RXS                     (0x1   << 11 )
 #define SPISTA_RXS_CLR                 (0x0   << 11 ) /* CLR. When the number of bytes in the FIFO is equal or less than the number in SPI0CON[15:14]. This bit is not cleared on a read of SPI0STA register. */
-#define SPISTA_RXS_SET                 (0x1   << 11 ) /* SET. When there are more bytes in the Rx FIFO than configured in MOD (SPI0CON[15:14]). For example if MOD = TX1RX1, RXS is set when there are 2 or more bytes in the Rx FIFO. This bit does not dependent on SPI0CON[6] and does not cause an interrupt. */
+#define SPISTA_RXS_SET                 (0x1   << 11 ) /* SET. When there are more bytes in the Rx FIFO than configured in MOD (SPI0CON[15:14]). For uart_demo if MOD = TX1RX1, RXS is set when there are 2 or more bytes in the Rx FIFO. This bit does not dependent on SPI0CON[6] and does not cause an interrupt. */
 
 /* SPISTA[RXFSTA] - Rx FIFO status bits, indicates how many valid bytes are in the Rx FIFO. */
 #define SPISTA_RXFSTA_MSK              (0x7   << 8  )
@@ -1233,7 +1233,7 @@ typedef struct {                            /*!< pADI_DMA Structure             
 /* Reset Value for DMASTA*/
 #define DMASTA_RVAL                    0xD0000
 
-/* DMASTA[CHNLSMINUS1] - Number of available DMA channels minus 1. For example, if there are 14 channels available, the register reads back 0xD for these bits. */
+/* DMASTA[CHNLSMINUS1] - Number of available DMA channels minus 1. For uart_demo, if there are 14 channels available, the register reads back 0xD for these bits. */
 #define DMASTA_CHNLSMINUS1_MSK         (0x1F  << 16 )
 #define DMASTA_CHNLSMINUS1_FOURTEENCHNLS (0xD   << 16 ) /* FOURTEENCHNLS - Controller configured to use 14 DMA channels. */
 
@@ -5341,7 +5341,7 @@ typedef struct {                            /*!< pADI_I2C Structure             
 /* Reset Value for I2CMRXCNT*/
 #define I2CMRXCNT_RVAL                 0x0
 
-/* I2CMRXCNT[EXTEND] - Extended read: Use this bit if greater than 256 bytes are required on a read.  For example: To receive 412 bytes, write 0x100 (EXTEND = 1) to this register (I2CMRXCNT).  Wait for the first byte to be received, then check the I2CMCRXCNT register for every byte received thereafter.  When I2CMCRXCNT returns to 0, 256 bytes have been received.  Then, write 0x09C (412 - 256 = 156 decimal (equal to 0x9C)  with the EXTEND bit set to 0) to this register (I2CMRXCNT). */
+/* I2CMRXCNT[EXTEND] - Extended read: Use this bit if greater than 256 bytes are required on a read.  For uart_demo: To receive 412 bytes, write 0x100 (EXTEND = 1) to this register (I2CMRXCNT).  Wait for the first byte to be received, then check the I2CMCRXCNT register for every byte received thereafter.  When I2CMCRXCNT returns to 0, 256 bytes have been received.  Then, write 0x09C (412 - 256 = 156 decimal (equal to 0x9C)  with the EXTEND bit set to 0) to this register (I2CMRXCNT). */
 #define I2CMRXCNT_EXTEND_BBA           (*(volatile unsigned long *) 0x42060220)
 #define I2CMRXCNT_EXTEND_MSK           (0x1   << 8  )
 #define I2CMRXCNT_EXTEND               (0x1   << 8  )
@@ -5428,7 +5428,7 @@ typedef struct {                            /*!< pADI_I2C Structure             
 #define I2CSCON_NACK_MSK               (0x1   << 7  )
 #define I2CSCON_NACK                   (0x1   << 7  )
 #define I2CSCON_NACK_DIS               (0x0   << 7  ) /* DIS. Disable.            */
-#define I2CSCON_NACK_EN                (0x1   << 7  ) /* EN. Allow the next communication to be NACK'ed.  This can be used for example if during a 24xx I2C serial eeprom style access, an attempt was made to write to a read only or nonexisting location in system memory. That is the indirect address in a 24xx I2C serial eeprom style write pointed to an unwritable memory location. */
+#define I2CSCON_NACK_EN                (0x1   << 7  ) /* EN. Allow the next communication to be NACK'ed.  This can be used for uart_demo if during a 24xx I2C serial eeprom style access, an attempt was made to write to a read only or nonexisting location in system memory. That is the indirect address in a 24xx I2C serial eeprom style write pointed to an unwritable memory location. */
 
 /* I2CSCON[STRETCH] - Stretch I2CSCL enable. */
 #define I2CSCON_STRETCH_BBA            (*(volatile unsigned long *) 0x42060518)
@@ -8294,7 +8294,7 @@ typedef struct {                            /*!< pADI_SPI0 Structure            
 #define SPI0STA_RXS_MSK                (0x1   << 11 )
 #define SPI0STA_RXS                    (0x1   << 11 )
 #define SPI0STA_RXS_CLR                (0x0   << 11 ) /* CLR. When the number of bytes in the FIFO is equal or less than the number in SPI0CON[15:14]. This bit is not cleared on a read of SPI0STA register. */
-#define SPI0STA_RXS_SET                (0x1   << 11 ) /* SET. When there are more bytes in the Rx FIFO than configured in MOD (SPI0CON[15:14]). For example if MOD = TX1RX1, RXS is set when there are 2 or more bytes in the Rx FIFO. This bit does not dependent on SPI0CON[6] and does not cause an interrupt. */
+#define SPI0STA_RXS_SET                (0x1   << 11 ) /* SET. When there are more bytes in the Rx FIFO than configured in MOD (SPI0CON[15:14]). For uart_demo if MOD = TX1RX1, RXS is set when there are 2 or more bytes in the Rx FIFO. This bit does not dependent on SPI0CON[6] and does not cause an interrupt. */
 
 /* SPI0STA[RXFSTA] - Rx FIFO status bits, indicates how many valid bytes are in the Rx FIFO. */
 #define SPI0STA_RXFSTA_MSK             (0x7   << 8  )
@@ -8535,7 +8535,7 @@ typedef struct {                            /*!< pADI_SPI0 Structure            
 #define SPI1STA_RXS_MSK                (0x1   << 11 )
 #define SPI1STA_RXS                    (0x1   << 11 )
 #define SPI1STA_RXS_CLR                (0x0   << 11 ) /* CLR. When the number of bytes in the FIFO is equal or less than the number in SPI0CON[15:14]. This bit is not cleared on a read of SPI0STA register. */
-#define SPI1STA_RXS_SET                (0x1   << 11 ) /* SET. When there are more bytes in the Rx FIFO than configured in MOD (SPI1CON[15:14]). For example if MOD = TX1RX1, RXS is set when there are 2 or more bytes in the Rx FIFO. This bit does not dependent on SPI1CON[6] and does not cause an interrupt. */
+#define SPI1STA_RXS_SET                (0x1   << 11 ) /* SET. When there are more bytes in the Rx FIFO than configured in MOD (SPI1CON[15:14]). For uart_demo if MOD = TX1RX1, RXS is set when there are 2 or more bytes in the Rx FIFO. This bit does not dependent on SPI1CON[6] and does not cause an interrupt. */
 
 /* SPI1STA[RXFSTA] - Rx FIFO status bits, indicates how many valid bytes are in the Rx FIFO. */
 #define SPI1STA_RXFSTA_MSK             (0x7   << 8  )

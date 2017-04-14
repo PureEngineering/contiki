@@ -47,7 +47,7 @@
 #include <string.h>
 /*---------------------------------------------------------------------------*/
 /*
- * Generic resource handler for any sensor in this example. Ultimately gets
+ * Generic resource handler for any sensor in this uart_demo. Ultimately gets
  * called by all handlers and populates the CoAP response
  */
 static void

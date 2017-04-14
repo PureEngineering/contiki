@@ -45,7 +45,7 @@
 /* This option enables an optimization where the link addresses are
    left to the MAC RDC and not encoded in the Chameleon header.
    Note: this requires that the underlying MAC layer to add link
-   addresses and will not work together with for example nullrdc.
+   addresses and will not work together with for uart_demo nullrdc.
  */
 #ifdef CHAMELEON_CONF_WITH_MAC_LINK_ADDRESSES
 #define CHAMELEON_WITH_MAC_LINK_ADDRESSES CHAMELEON_CONF_WITH_MAC_LINK_ADDRESSES

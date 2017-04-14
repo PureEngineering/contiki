@@ -41,7 +41,7 @@
 
 /* Define macros to use for checking SPI transmission status depending
    on if it is possible to wait for TX buffer ready. This is possible
-   on for example MSP430 but not on AVR. */
+   on for uart_demo MSP430 but not on AVR. */
 #ifdef SPI_WAITFORTxREADY
 #define SPI_WAITFORTx_BEFORE() SPI_WAITFORTxREADY()
 #define SPI_WAITFORTx_AFTER()

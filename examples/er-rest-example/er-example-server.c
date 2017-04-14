@@ -176,7 +176,7 @@ PROCESS_THREAD(er_example_server, ev, data)
       /* Call the event_handler for this application-specific event. */
       res_event.trigger();
 
-      /* Also call the separate response example handler. */
+      /* Also call the separate response uart_demo handler. */
       res_separate.resume();
     }
 #endif /* PLATFORM_HAS_BUTTON */

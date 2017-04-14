@@ -58,7 +58,7 @@
 
 static void res_post_put_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
-/*A simple actuator example, depending on the color query parameter and post variable mode, corresponding led is activated or deactivated*/
+/*A simple actuator uart_demo, depending on the color query parameter and post variable mode, corresponding led is activated or deactivated*/
 RESOURCE(res_leds,
          "title=\"LEDs: ?color=r|g|b, POST/PUT mode=on|off\";rt=\"Control\"",
          NULL,

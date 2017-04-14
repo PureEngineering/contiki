@@ -86,7 +86,7 @@ res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
     /*
      * At the moment, only the minimal information is stored in the store (client address, port, token, MID, type, and Block2).
      * Extend the store, if the application requires additional information from this handler.
-     * buffer is an example field for custom information.
+     * buffer is an uart_demo field for custom information.
      */
     snprintf(separate_store->buffer, sizeof(separate_store->buffer), "StoredInfo");
   }
@@ -106,7 +106,7 @@ res_resume_handler()
 
       /*
        * Be aware to respect the Block2 option, which is also stored in the coap_separate_t.
-       * As it is a critical option, this example resource pretends to handle it for compliance.
+       * As it is a critical option, this uart_demo resource pretends to handle it for compliance.
        */
       coap_set_header_block2(response, separate_store->request_metadata.block2_num, 0, separate_store->request_metadata.block2_size);
 
@@ -120,7 +120,7 @@ res_resume_handler()
     } else {
       /*
        * Set timer for retry, send error message, ...
-       * The example simply waits for another button press.
+       * The uart_demo simply waits for another button press.
        */
     }
   } /* if (separate_active) */

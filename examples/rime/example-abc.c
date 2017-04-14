@@ -47,7 +47,7 @@
 
 #include <stdio.h>
 /*---------------------------------------------------------------------------*/
-PROCESS(example_abc_process, "ABC example");
+PROCESS(example_abc_process, "ABC uart_demo");
 AUTOSTART_PROCESSES(&example_abc_process);
 /*---------------------------------------------------------------------------*/
 static void

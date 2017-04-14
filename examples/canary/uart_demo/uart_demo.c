@@ -3,7 +3,7 @@
 #include "contiki.h"
 #include "batmon-sensor.h"
 #include "board-peripherals.h"
-#include "example.h"
+#include "uart_demo.h"
 #include "lib/list.h"
 #include "lib/sensors.h"
 #include "net/ipv6/sicslowpan.h"
@@ -13,10 +13,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-//PROCESS_NAME(example);
-//PROCESS(hey, "hey");
-PROCESS(two, "two");
-AUTOSTART_PROCESSES(&two);
+//PROCESS_NAME(uart_demo);
+PROCESS(uart_demo, "uart_demo");
+AUTOSTART_PROCESSES(&uart_demo);
 
 static int light = 0;
 static int bme1 = 0;
@@ -54,7 +53,7 @@ static void getSensorReadings() {
     SENSORS_ACTIVATE(gas_sensor);
 }
 
-PROCESS_THREAD(two, ev, data) {
+PROCESS_THREAD(uart_demo, ev, data) {
     PROCESS_BEGIN();
     static struct etimer et;
     pb_byte_t buffer[50];

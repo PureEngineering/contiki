@@ -55,7 +55,7 @@
 static struct simple_udp_connection unicast_connection;
 
 /*---------------------------------------------------------------------------*/
-PROCESS(unicast_receiver_process, "Unicast receiver example process");
+PROCESS(unicast_receiver_process, "Unicast receiver uart_demo process");
 AUTOSTART_PROCESSES(&unicast_receiver_process);
 /*---------------------------------------------------------------------------*/
 static void

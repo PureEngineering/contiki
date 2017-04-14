@@ -978,7 +978,7 @@ tcp_input(struct tcp_socket *s,
    * Check for unsupported payload length. Will read all incoming data from the
    * server in any case and then reset the packet.
    *
-   * TODO: Decide if we, for example, want to disconnect instead.
+   * TODO: Decide if we, for uart_demo, want to disconnect instead.
    */
   if((conn->in_packet.remaining_length > MQTT_INPUT_BUFF_SIZE) &&
      (conn->in_packet.fhdr & 0xF0) != MQTT_FHDR_MSG_TYPE_PUBLISH) {

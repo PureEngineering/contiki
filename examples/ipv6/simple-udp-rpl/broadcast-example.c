@@ -51,7 +51,7 @@
 static struct simple_udp_connection broadcast_connection;
 
 /*---------------------------------------------------------------------------*/
-PROCESS(broadcast_example_process, "UDP broadcast example process");
+PROCESS(broadcast_example_process, "UDP broadcast uart_demo process");
 AUTOSTART_PROCESSES(&broadcast_example_process);
 /*---------------------------------------------------------------------------*/
 static void

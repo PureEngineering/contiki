@@ -98,7 +98,7 @@ PROCESS_THREAD(tcp_server_process, ev, data)
     if(bytes_to_send > 0) {
       /* Send header */
       printf("sending header\n");
-      tcp_socket_send_str(&socket, "HTTP/1.0 200 ok\r\nServer: Contiki tcp-socket example\r\n\r\n");
+      tcp_socket_send_str(&socket, "HTTP/1.0 200 ok\r\nServer: Contiki tcp-socket uart_demo\r\n\r\n");
 
       /* Send data */
       printf("sending data\n");

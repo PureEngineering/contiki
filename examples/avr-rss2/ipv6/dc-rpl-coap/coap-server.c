@@ -56,7 +56,7 @@
 #include "dev/dc-vdc-sensor.h"
 #include "dev/dc-hw-sensor.h"
 
-/* from er-rest-example/er-rexample-server.c */
+/* from er-rest-uart_demo/er-rexample-server.c */
 #include "rest-engine.h"
 /* #include "er-coap.h" */
 

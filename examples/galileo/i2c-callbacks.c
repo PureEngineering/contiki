@@ -85,7 +85,7 @@ PROCESS_THREAD(i2c_callbacks_process, ev, data)
 
   ctimer_set(&timer, CLOCK_SECOND * 5, timeout, NULL);
 
-  printf("I2C callbacks example is running\n");
+  printf("I2C callbacks uart_demo is running\n");
 
   PROCESS_YIELD();
 

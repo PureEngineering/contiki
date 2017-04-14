@@ -133,7 +133,7 @@
 /*---------------------------------------------------------------------------*/
 /*
  * You normally won't have to change anything from here onwards unless you are
- * extending the example
+ * extending the uart_demo
  */
 /*---------------------------------------------------------------------------*/
 /* Sensor types */

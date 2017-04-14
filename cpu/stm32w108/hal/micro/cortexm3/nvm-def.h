@@ -39,7 +39,7 @@
 
 //IMPORTANT: Data storage starts at offset 0x0040.
 
-//Three example pieces of data:
+//Three uart_demo pieces of data:
 #define NVM_FOO_OFFSET  (NVM_MGMT_SIZE_B+0x0040)
 #define NVM_FOO_SIZE_B  2
 #define NVM_HAM_OFFSET  (NVM_MGMT_SIZE_B+0x0042)

@@ -691,7 +691,7 @@ tcpip_ipv6_output(void)
            the route. */
         nexthop = uip_ds6_route_nexthop(route);
 
-        /* If the nexthop is dead, for example because the neighbor
+        /* If the nexthop is dead, for uart_demo because the neighbor
            never responded to link-layer acks, we drop its route. */
         if(nexthop == NULL) {
 #if UIP_CONF_IPV6_RPL
@@ -810,7 +810,7 @@ tcpip_ipv6_output(void)
 #if UIP_CONF_IPV6_QUEUE_PKT
       /*
        * Send the queued packets from here, may not be 100% perfect though.
-       * This happens in a few cases, for example when instead of receiving a
+       * This happens in a few cases, for uart_demo when instead of receiving a
        * NA after sendiong a NS, you receive a NS with SLLAO: the entry moves
        * to STALE, and you must both send a NA and the queued packet.
        */

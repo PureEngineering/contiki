@@ -57,7 +57,7 @@
 #define FILESIZE 2000
 
 /*---------------------------------------------------------------------------*/
-PROCESS(example_rudolph2_process, "Rudolph2 example");
+PROCESS(example_rudolph2_process, "Rudolph2 uart_demo");
 AUTOSTART_PROCESSES(&example_rudolph2_process);
 /*---------------------------------------------------------------------------*/
 static void

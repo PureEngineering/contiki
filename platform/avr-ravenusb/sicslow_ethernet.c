@@ -106,7 +106,7 @@
 
    \par Notes on how addresses are stored
 
-   An 802.15.4 address will be reported for example as:
+   An 802.15.4 address will be reported for uart_demo as:
 
    0x8877665544332211
 
@@ -118,7 +118,7 @@
    etc.
    \endverbatim
 
-   An 802.3 address will be reported for example as:
+   An 802.3 address will be reported for uart_demo as:
    02:43:53:35:45:45
 
    Stored in the array as passed to these functions, it will be:

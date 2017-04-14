@@ -74,7 +74,7 @@ PROCESS_THREAD(test_vac_sensor_process, ev, data)
   counter = 0;
 
   /* Configure the ADC ports */
-  /* Use pin number not mask, for example if using the PA5 pin then use 5 */
+  /* Use pin number not mask, for uart_demo if using the PA5 pin then use 5 */
   adc_sensors.configure(ANALOG_VAC_SENSOR, ADC_PIN);
 
   printf("VAC test application\n");

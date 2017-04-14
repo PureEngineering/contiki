@@ -38,7 +38,7 @@
 #include "contiki.h"
 #include "ff.h"
 /*---------------------------------------------------------------------------*/
-PROCESS(example_fat_process, "FAT example");
+PROCESS(example_fat_process, "FAT uart_demo");
 AUTOSTART_PROCESSES(&example_fat_process);
 /*---------------------------------------------------------------------------*/
 #define TEST_FILENAME   "test.txt"
@@ -53,7 +53,7 @@ PROCESS_THREAD(example_fat_process, ev, data)
 
   PROCESS_BEGIN();
 
-  printf("FAT example\n");
+  printf("FAT uart_demo\n");
 
   /* Register work area to the default drive */
   f_mount(&FatFs, "", 0);

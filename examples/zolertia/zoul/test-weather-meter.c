@@ -97,7 +97,7 @@ PROCESS_THREAD(test_weather_meter_sensors, ev, data)
   static uint16_t wind_speed_avg_2m;
   static uint16_t wind_speed_max;
 
-  printf("Weather meter test example, integration period %u\n",
+  printf("Weather meter test uart_demo, integration period %u\n",
          WEATHER_METER_AVG_PERIOD);
 
   /* Register the callback handler when thresholds are met */

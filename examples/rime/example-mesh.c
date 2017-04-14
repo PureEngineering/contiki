@@ -52,7 +52,7 @@
 
 static struct mesh_conn mesh;
 /*---------------------------------------------------------------------------*/
-PROCESS(example_mesh_process, "Mesh example");
+PROCESS(example_mesh_process, "Mesh uart_demo");
 AUTOSTART_PROCESSES(&example_mesh_process);
 /*---------------------------------------------------------------------------*/
 static void

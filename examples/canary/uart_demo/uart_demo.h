@@ -51,7 +51,7 @@
 /*---------------------------------------------------------------------------*/
 #include "dev/leds.h"
 #include "sys/process.h"
-#include "mqtt-client.h"
+//#include "mqtt-client.h"
 #include "net/ip/uip.h"
 #include <stdint.h>
 
@@ -60,9 +60,6 @@
 #include "pb.h"
 #include "sensor_message.pb.h"
 #include "pb_decode.h"
-
-
-
 
 #define CC26XX_WEB_DEMO_STATUS_LED LEDS_GREEN
 /*---------------------------------------------------------------------------*/
@@ -76,9 +73,9 @@
 #define CC26XX_WEB_DEMO_DEFAULT_EVENT_TYPE_ID       "status"
 #define CC26XX_WEB_DEMO_DEFAULT_SUBSCRIBE_CMD_TYPE  "+"
 #define CC26XX_WEB_DEMO_DEFAULT_BROKER_PORT         1883
-#define CC26XX_WEB_DEMO_DEFAULT_PUBLISH_INTERVAL    (30 * CLOCK_SECOND)
+#define CC26XX_WEB_DEMO_DEFAULT_PUBLISH_INTERVAL    (CLOCK_SECOND)
 #define CC26XX_WEB_DEMO_DEFAULT_KEEP_ALIVE_TIMER    60
-#define CC26XX_WEB_DEMO_DEFAULT_RSSI_MEAS_INTERVAL  (CLOCK_SECOND * 30)
+#define CC26XX_WEB_DEMO_DEFAULT_RSSI_MEAS_INTERVAL  (CLOCK_SECOND)
 /*---------------------------------------------------------------------------*/
 /*
  * You normally won't have to change anything from here onwards unless you are
@@ -110,14 +107,14 @@ extern process_event_t cc26xx_web_demo_publish_event;
 #define CC26XX_WEB_DEMO_CONVERTED_LEN        12
 
 typedef struct cc26xx_web_demo_sensor_reading {
-  struct cc26xx_web_demo_sensor_reading *next;
-  int raw;
-  uint8_t type;
+    struct cc26xx_web_demo_sensor_reading *next;
+    int raw;
+    uint8_t type;
 
 } cc26xx_web_demo_sensor_reading_t;
 /*---------------------------------------------------------------------------*/
 
-extern mqtt_client_config_t mqtt_config;
+//extern mqtt_client_config_t mqtt_config;
 /*---------------------------------------------------------------------------*/
 /**
  * \brief Performs a lookup for a reading of a specific type of sensor

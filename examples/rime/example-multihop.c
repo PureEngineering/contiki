@@ -94,7 +94,7 @@ struct example_neighbor {
 LIST(neighbor_table);
 MEMB(neighbor_mem, struct example_neighbor, MAX_NEIGHBORS);
 /*---------------------------------------------------------------------------*/
-PROCESS(example_multihop_process, "multihop example");
+PROCESS(example_multihop_process, "multihop uart_demo");
 AUTOSTART_PROCESSES(&example_multihop_process);
 /*---------------------------------------------------------------------------*/
 /*

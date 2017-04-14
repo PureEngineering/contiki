@@ -171,7 +171,7 @@ void lpm_exit(void);
  * Defines for the \e pm argument are LPM_PMx.
  *
  * This function can be used by software in situations where some power
- * modes are undesirable. If, for example, an application needs to avoid PM2,
+ * modes are undesirable. If, for uart_demo, an application needs to avoid PM2,
  * it would call lpm_set_max_pm(LPM_PM1).
  * If an application wants to avoid PM1 as well, it would call
  * lpm_set_max_pm(LPM_PM0)

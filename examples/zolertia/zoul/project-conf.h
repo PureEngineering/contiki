@@ -43,7 +43,7 @@
 #define BROADCAST_CHANNEL     129
 #define NETSTACK_CONF_RDC     nullrdc_driver
 
-/* Pin definition for the test-motion example, for the RE-Mote it uses the
+/* Pin definition for the test-motion uart_demo, for the RE-Mote it uses the
  * ADC1 pin
  */
 #define MOTION_SENSOR_PORT       GPIO_A_NUM

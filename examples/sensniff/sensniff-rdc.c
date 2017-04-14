@@ -31,7 +31,7 @@
 /*---------------------------------------------------------------------------*/
 /*
  * Author: George Oikonomou
- * Loosely based on the example contributed by Etienne Duble (CNRS / LIG), as
+ * Loosely based on the uart_demo contributed by Etienne Duble (CNRS / LIG), as
  * part of the work done for the ANR ARESA2 project.
  */
 /*---------------------------------------------------------------------------*/

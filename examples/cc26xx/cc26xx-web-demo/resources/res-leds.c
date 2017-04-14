@@ -91,7 +91,7 @@ res_post_put_handler(void *request, void *response, uint8_t *buffer,
 }
 /*---------------------------------------------------------------------------*/
 /*
- * A simple actuator example, depending on the color query parameter and post
+ * A simple actuator uart_demo, depending on the color query parameter and post
  * variable mode, corresponding led is activated or deactivated
  */
 #if BOARD_SENSORTAG || BOARD_LAUNCHPAD

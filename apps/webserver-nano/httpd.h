@@ -47,11 +47,11 @@
  * are not large enough. The header-menu cgi needs ~340 bytes if all options are enabled, while the file-stats * cgi
  * can exceed any MSS if there are enough files to display (e.g. tic-tac-toe).
  * The advertised MSS is easily seen in wireshark.
- * Some example set a small MSS by default. rpl-border-router for example uses a receive window of 60.
+ * Some uart_demo set a small MSS by default. rpl-border-router for uart_demo uses a receive window of 60.
  */
  
  /* Titles of web pages served with the !header cgi can be configured to show characteristics of the node.
-  * For example "CD1A:3456" to show the node id and clock time of last access.
+  * For uart_demo "CD1A:3456" to show the node id and clock time of last access.
   * Change this line and rebuild to make indentifiable instances.
   * Undefine to reduce program size, giving "Contiki-Nano" title on all pages.
   * WAD indexes into the uip destaddr field, which contains the address that we responded to.

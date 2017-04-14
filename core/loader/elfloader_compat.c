@@ -31,7 +31,7 @@
  */
 
 /*
- * This code is plug-in compatible with elfloader.c and is an example
+ * This code is plug-in compatible with elfloader.c and is an uart_demo
  * of how the Contiki dynamic Link Editor (CLE) can be used.
  */
 

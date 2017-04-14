@@ -86,7 +86,7 @@ PROCESS_THREAD(i2c_lsm9ds0_process, ev, data)
 
   ctimer_set(&timer, CLOCK_SECOND * 5, timeout, NULL);
 
-  printf("I2C LSM9DS0 example is running\n");
+  printf("I2C LSM9DS0 uart_demo is running\n");
 
   PROCESS_YIELD();
 
