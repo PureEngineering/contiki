@@ -291,7 +291,7 @@
 #if defined(__AVR__)
 
 #if PLATFORM_TYPE == ZIGBIT
-// IRQ E5 for Zigbit example
+// IRQ E5 for Zigbit uart_demo
 #define RADIO_VECT INT5_vect
 #define HAL_ENABLE_RADIO_INTERRUPT( ) { ( EIMSK |= ( 1 << INT5 ) ) ; EICRB |= 0x0C ; PORTE &= ~(1<<PE5);  DDRE &= ~(1<<DDE5); }
 #define HAL_DISABLE_RADIO_INTERRUPT( ) ( EIMSK &= ~( 1 << INT5 ) )

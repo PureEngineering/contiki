@@ -18,7 +18,7 @@
 // desirable to only add new entries, and only add them on to the end of an
 // existing address table... this will provide the best compatibility with
 // any existing code which may utilize the tables, and which may not be able to 
-// be updated to understand a new format (example: bootloader which reads the 
+// be updated to understand a new format (uart_demo: bootloader which reads the
 // application address table)
 
 

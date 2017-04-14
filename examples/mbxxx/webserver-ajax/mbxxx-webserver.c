@@ -37,7 +37,7 @@
  *         Adam Dunkels <adam@sics.se>
  */
 /*
- * salvopitru: example adapted to mbxxx.
+ * salvopitru: uart_demo adapted to mbxxx.
  */
 
 

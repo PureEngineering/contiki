@@ -213,7 +213,7 @@ putchar(int c)
     slip_debug_frame = 1;
   }
 
-  /* Need to also print '\n' because for example COOJA will not show
+  /* Need to also print '\n' because for uart_demo COOJA will not show
      any output before line end */
   slip_arch_writeb((char)c);
 

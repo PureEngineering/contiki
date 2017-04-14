@@ -255,7 +255,7 @@ typedef uint64_t rtimer_clock_t;
 #if NETSTACK_CONF_WITH_IPV6
 #endif /* NETSTACK_CONF_WITH_IPV6 */
 
-/* Turn off example-provided putchars */
+/* Turn off uart_demo-provided putchars */
 #define SLIP_BRIDGE_CONF_NO_PUTCHAR 1
 
 

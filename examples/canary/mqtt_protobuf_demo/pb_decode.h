@@ -14,7 +14,7 @@ extern "C" {
 
 /* Structure for defining custom input streams. You will need to provide
  * a callback function to read the bytes from your storage, which can be
- * for example a file or a network socket.
+ * for uart_demo a file or a network socket.
  * 
  * The callback must conform to these rules:
  *

@@ -117,7 +117,7 @@ static void
 trickle_tx(void *ptr, uint8_t suppress)
 {
   /* *ptr is a pointer to the trickle_timer that triggered this callback. In
-   * his example we know that ptr points to tt. However, we pretend that we did
+   * his uart_demo we know that ptr points to tt. However, we pretend that we did
    * not know (which would be the case if we e.g. had multiple trickle timers)
    * and cast it to a local struct trickle_timer* */
   struct trickle_timer *loc_tt = (struct trickle_timer *)ptr;

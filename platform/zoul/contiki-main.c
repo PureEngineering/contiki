@@ -149,7 +149,7 @@ rtc_init(void)
   /* Don't care about the milliseconds... */
   td.miliseconds = 0;
 
-  /* This example relies on 24h mode */
+  /* This uart_demo relies on 24h mode */
   td.mode = RTCC_24H_MODE;
 
   /*

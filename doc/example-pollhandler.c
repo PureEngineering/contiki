@@ -1,6 +1,6 @@
 #include "contiki.h"
 
-PROCESS(example_pollhandler, "Pollhandler example");
+PROCESS(example_pollhandler, "Pollhandler uart_demo");
 
 static void
 exithandler(void)

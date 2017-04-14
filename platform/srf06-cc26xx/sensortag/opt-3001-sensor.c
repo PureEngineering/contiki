@@ -114,7 +114,7 @@
 /*---------------------------------------------------------------------------*/
 /*
  * SENSOR_STATE_SLEEPING and SENSOR_STATE_ACTIVE are mutually exclusive.
- * SENSOR_STATE_DATA_READY can be ORd with both of the above. For example the
+ * SENSOR_STATE_DATA_READY can be ORd with both of the above. For uart_demo the
  * sensor may be sleeping but with a conversion ready to read out.
  */
 #define SENSOR_STATE_SLEEPING     0

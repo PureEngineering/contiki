@@ -63,7 +63,7 @@ PROCESS_THREAD(remote_rotation_process, ev, data)
 
   uint16_t rotation;
 
-  /* Use pin number not mask, for example if using the PA5 pin then use 5 */
+  /* Use pin number not mask, for uart_demo if using the PA5 pin then use 5 */
   adc_sensors.configure(ANALOG_PHIDGET_ROTATION_1109, 5);
 
   /* And periodically poll the sensor */

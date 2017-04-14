@@ -55,7 +55,7 @@
 #define LWM2M_SERVER_ADDRESS "fd00::1"
 #endif
 
-PROCESS(example_ipso_objects, "IPSO object example");
+PROCESS(example_ipso_objects, "IPSO object uart_demo");
 AUTOSTART_PROCESSES(&example_ipso_objects);
 /*---------------------------------------------------------------------------*/
 static void
@@ -79,7 +79,7 @@ PROCESS_THREAD(example_ipso_objects, ev, data)
 
   PROCESS_PAUSE();
 
-  PRINTF("Starting IPSO objects example\n");
+  PRINTF("Starting IPSO objects uart_demo\n");
 
   /* Initialize the OMA LWM2M engine */
   lwm2m_engine_init();

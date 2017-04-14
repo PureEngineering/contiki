@@ -42,7 +42,7 @@
 #include "cfs/cfs.h"
 #include "cfs/cfs-coffee.h"
 /*---------------------------------------------------------------------------*/
-PROCESS(example_coffee_process, "Coffee example");
+PROCESS(example_coffee_process, "Coffee uart_demo");
 AUTOSTART_PROCESSES(&example_coffee_process);
 /*---------------------------------------------------------------------------*/
 #define FILENAME "test"
@@ -70,7 +70,7 @@ file_test(const char *filename, char *msg)
    * with a non-zero, if we are writing multiple records and closing the
    * file descriptor in between.
    *
-   * In this example, in which the file_test function can be called
+   * In this uart_demo, in which the file_test function can be called
    * multiple times, we ensure that the sequence counter starts at 1.
    */
 

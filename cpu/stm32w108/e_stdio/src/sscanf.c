@@ -324,7 +324,7 @@ RETURNS
 	width specification, a positive decimal integer).
 
 	o       The next character read cannot be converted
-	under the the current format (for example,
+	under the the current format (for uart_demo,
 	if a <<Z>> is read when the format is decimal).
 
 	o       The next character in the input field does not appear

@@ -507,7 +507,7 @@ enc28j60_send(const uint8_t *data, uint16_t datalen)
   /*
     1. Appropriately program the ETXST pointer to point to an unused
        location in memory. It will point to the per packet control
-       byte. In the example, it would be programmed to 0120h. It is
+       byte. In the uart_demo, it would be programmed to 0120h. It is
        recommended that an even address be used for ETXST.
 
     2. Use the WBM SPI command to write the per packet control byte,
@@ -515,7 +515,7 @@ enc28j60_send(const uint8_t *data, uint16_t datalen)
        type/length and the data payload.
 
     3. Appropriately program the ETXND pointer. It should point to the
-       last byte in the data payload.  In the example, it would be
+       last byte in the data payload.  In the uart_demo, it would be
        programmed to 0156h.
 
     4. Clear EIR.TXIF, set EIE.TXIE and set EIE.INTIE to enable an

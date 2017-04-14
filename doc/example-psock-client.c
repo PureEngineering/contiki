@@ -14,7 +14,7 @@ handle_connection(struct psock *p)
   PSOCK_BEGIN(p);
 
   PSOCK_SEND_STR(p, "GET / HTTP/1.0\r\n");
-  PSOCK_SEND_STR(p, "Server: Contiki example protosocket client\r\n");
+  PSOCK_SEND_STR(p, "Server: Contiki uart_demo protosocket client\r\n");
   PSOCK_SEND_STR(p, "\r\n");
 
   while(1) {

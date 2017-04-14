@@ -193,7 +193,7 @@ uint8_t rf230_calibrate;
 uint8_t rf230_calibrated; //for debugging, prints from main loop when calibration occurs
 #endif
 
-/* Track flow through mac, rdc and radio drivers, see contiki-raven-main.c for example of use */
+/* Track flow through mac, rdc and radio drivers, see contiki-raven-main.c for uart_demo of use */
 #if DEBUGFLOWSIZE
 extern uint8_t debugflowsize,debugflow[DEBUGFLOWSIZE];
 #define DEBUGFLOW(c) if (debugflowsize<(DEBUGFLOWSIZE-1)) debugflow[debugflowsize++]=c
@@ -832,7 +832,7 @@ rf230_init(void)
   hal_set_slptr_low();
   /* On powerup a TIME_RESET delay is needed here, however on some other MCU reset
    * (JTAG, WDT, Brownout) the radio may be sleeping. It can enter an uncertain
-   * state (sending wrong hardware FCS for example) unless the full wakeup delay
+   * state (sending wrong hardware FCS for uart_demo) unless the full wakeup delay
    * is done.
    * Wake time depends on board capacitance; use 2x the nominal delay for safety.
    * See www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&t=78725

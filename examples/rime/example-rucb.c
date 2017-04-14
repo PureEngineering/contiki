@@ -61,7 +61,7 @@ static clock_time_t start_time;
 
 
 /*---------------------------------------------------------------------------*/
-PROCESS(example_rucb_process, "Rucb example");
+PROCESS(example_rucb_process, "Rucb uart_demo");
 AUTOSTART_PROCESSES(&example_rucb_process);
 /*---------------------------------------------------------------------------*/
 static void
