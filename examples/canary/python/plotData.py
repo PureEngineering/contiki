@@ -6,12 +6,24 @@ import matplotlib.pyplot as plt
 
 light = []
 accel = []
+mag = []
+bme = []
+hum = []
+batmon = []
+temp = []
+bmeTemp = []
 
 def decode(data):
         message = sensor_message_pb.sensors()
         message.ParseFromString(str(data))
 	light.append(message.opt_3001)
 	accel.append((message.LIS2DE12_x + message.LIS2DE12_y + message.LIS2DE12_z)/3)
+	mag.append((message.lis3mdl_x + message.lis3mdl_y + message.lis3mdl_z) / 3)
+	bme.append(message.bme_280_pres)
+	hum.append(message.bme_280_hum)
+	batmon.append(message.batmon_volt)
+	temp.append(message.batmon_temp)
+	bmeTemp.append(message.bme_280_temp)
         #print("id = " + str(message.id))
         #print("batmon_temp = " + str(message.batmon_temp))
         #print("batmon_volt = " + str(message.batmon_volt))
@@ -43,13 +55,15 @@ def main():
 	plt.title('Sensor Data', fontsize = 12)
 	plt.xlabel('Time', fontsize = 10)
 	plt.ylabel('Data', fontsize = 10)
-
-	x = [1, 2, 3, 4, 5]
-	y = [2, 4, 2, 5, 7]
-
+	
 	plt.plot(timeList, light)
 	plt.plot(timeList, accel)
-	plt.legend(['Light', 'Accelerometer'], loc = 0)
+	plt.plot(timeList, temp)
+	plt.plot(timeList, batmon)
+	plt.plot(timeList, mag)
+	plt.plot(timeList, bme)
+	plt.plot(timeList, bmeTemp)
+	plt.legend(['Light', 'Accelerometer', 'Temperature', 'Battery Monitor', 'Magnetometer', 'Biometric Pressure', "Biometric Temp"], loc = 0)
 	plt.show()
 
 if __name__ == "__main__":
