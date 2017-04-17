@@ -2,8 +2,10 @@ from database import Database
 import sys
 
 def main():
-	db = Database("root", "user", str(sys.argv[1]))
-	db.read()
+	db = Database("newuser", "secretpassword", str(sys.argv[1]))
+	sensorData = db.read()
+	for k in sensorData:
+		print("{},{},{},{}").format(sensorData[k][0], sensorData[k][1], sensorData[k][2], sensorData[k][3])
 
 if __name__ == "__main__":
 	main()
