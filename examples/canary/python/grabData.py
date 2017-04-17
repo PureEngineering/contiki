@@ -3,8 +3,8 @@ import sys
 import sensor_message_pb
 
 def decode(data):
-	message = sensor_message_pb.sensors()
-	message.ParseFromString(str(data))
+        message = sensor_message_pb.sensors()
+        message.ParseFromString(str(data))
         print("id = " + str(message.id))
         print("batmon_temp = " + str(message.batmon_temp))
         print("batmon_volt = " + str(message.batmon_volt))
@@ -22,11 +22,17 @@ def decode(data):
         print("\n")
 
 def main():
-	db = Database("newuser", "secretpassword", str(sys.argv[1]))
-	sensorData = db.read()
-	for k in sensorData:
-		print("{},{},{},{}").format(sensorData[k][0], sensorData[k][1], sensorData[k][2], sensorData[k][3])
-		decode(sensorData[k][3])
+        db = Database("newuser", "secretpassword", str(sys.argv[1]))
+        sensorData = db.read()
+        for d in sensorData:
+                id = d[0]
+                time = d[1]
+                type = d[2]
+                data = d[3]
+                print("{},{},{},{}").format(id, time, type, data)
+                decode(data)
+
 
 if __name__ == "__main__":
-	main()
+        main()
+

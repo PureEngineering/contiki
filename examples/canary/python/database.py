@@ -57,13 +57,11 @@ class Database:
 		self.closeConnection()
 
 	def read(self):
-		sensorData = {}
-		i = 0
+		sensorData = []
 		self.openConnection()
 		query = "SELECT uniq_id, time, type, data FROM " + self.table
 		self.cursor.execute(query)
 		for(uniq_id, time, type, data) in self.cursor:
-			sensorData[i] = [uniq_id, time, type, data]
-			i += 1
+			sensorData.append([uniq_id, time, type, data])
 		self.closeConnection()
 		return sensorData
