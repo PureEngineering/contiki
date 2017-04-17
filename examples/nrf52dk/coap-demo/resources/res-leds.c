@@ -57,7 +57,7 @@ res_get_handler(void *request, void *response, uint8_t *buffer,
 static void
 res_event_handler();
 
-/*A simple actuator example, depending on the color query parameter and post variable mode, corresponding led is activated or deactivated*/
+/*A simple actuator uart_demo, depending on the color query parameter and post variable mode, corresponding led is activated or deactivated*/
 EVENT_RESOURCE(res_led3,
                "title=\"LED3\"; obs",
                res_get_handler,

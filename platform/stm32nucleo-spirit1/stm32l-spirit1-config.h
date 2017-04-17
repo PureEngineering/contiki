@@ -78,7 +78,7 @@
 #define STM32L15_USB_DISCONNECT             SYSCFG_USBPuCmd(DISABLE)
 
 #elif defined(USB_USE_EXTERNAL_PULLUP)
-/* PA0 is chosen just as illustrating example, you should modify the defines
+/* PA0 is chosen just as illustrating uart_demo, you should modify the defines
    below according to your hardware configuration. */
 #define USB_DISCONNECT                      GPIOA
 #define USB_DISCONNECT_PIN                  GPIO_PIN_0

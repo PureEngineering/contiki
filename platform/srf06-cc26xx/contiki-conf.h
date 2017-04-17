@@ -93,11 +93,6 @@
 #define RF_CORE_CONF_CHANNEL             RF_CHANNEL
 #endif
 
-/* Number of Prop Mode RX buffers */
-#ifndef PROP_MODE_CONF_RX_BUF_CNT
-#define PROP_MODE_CONF_RX_BUF_CNT        4
-#endif
-
 /*
  * Auto-configure Prop-mode radio if we are running on CC13xx, unless the
  * project has specified otherwise. Depending on the final mode, determine a
@@ -128,9 +123,8 @@
 #define CONTIKIMAC_CONF_AFTER_ACK_DETECTED_WAIT_TIME (RTIMER_SECOND / 1000)
 #define CONTIKIMAC_CONF_INTER_PACKET_INTERVAL     (RTIMER_SECOND / 240)
 #else
-#ifndef NETSTACK_CONF_RADIO //we can now change the definition on the project-conf file
 #define NETSTACK_CONF_RADIO        ieee_mode_driver
-#endif
+
 #ifndef RF_CORE_CONF_CHANNEL
 #define RF_CORE_CONF_CHANNEL                     25
 #endif
@@ -211,7 +205,9 @@
 /* Addresses, Sizes and Interfaces */
 #define LINKADDR_CONF_SIZE                   8
 #define UIP_CONF_LL_802154                   1
+#ifndef UIP_CONF_LLH_LEN
 #define UIP_CONF_LLH_LEN                     0
+#endif
 
 /* The size of the uIP main buffer */
 #ifndef UIP_CONF_BUFFER_SIZE
@@ -223,7 +219,9 @@
 #define UIP_CONF_ROUTER                      1
 #endif
 
+#ifndef UIP_CONF_ND6_SEND_RA
 #define UIP_CONF_ND6_SEND_RA                 0
+#endif
 #define UIP_CONF_IP_FORWARD                  0
 #define RPL_CONF_STATS                       0
 
@@ -285,7 +283,7 @@
 #define BOARD_CONF_DEBUGGER_DEVPACK        1
 #endif
 
-/* Turn off example-provided putchars */
+/* Turn off uart_demo-provided putchars */
 #define SLIP_BRIDGE_CONF_NO_PUTCHAR        1
 #define SLIP_RADIO_CONF_NO_PUTCHAR         1
 

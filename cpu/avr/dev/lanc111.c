@@ -1154,7 +1154,7 @@ PROCESS_THREAD(lanc111_process, ev, data)
     /*
      * Do not continue unless we managed to start the NIC. We are
      * trapped here if the Ethernet link cannot be established.
-     * This happens, for example, if no Ethernet cable is plugged
+     * This happens, for uart_demo, if no Ethernet cable is plugged
      * in.
      */
   /*    while(NicStart(ifn->if_mac)) {*/

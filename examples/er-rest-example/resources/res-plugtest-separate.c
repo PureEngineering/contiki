@@ -113,7 +113,7 @@ res_resume_handler()
 
       /*
        * Be aware to respect the Block2 option, which is also stored in the coap_separate_t.
-       * As it is a critical option, this example resource pretends to handle it for compliance.
+       * As it is a critical option, this uart_demo resource pretends to handle it for compliance.
        */
       coap_set_header_block2(response,
                              separate_store->request_metadata.block2_num, 0,

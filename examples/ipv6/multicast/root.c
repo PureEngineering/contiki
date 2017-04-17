@@ -64,7 +64,7 @@ static char buf[MAX_PAYLOAD_LEN];
 static uint32_t seq_id;
 
 #if !NETSTACK_CONF_WITH_IPV6 || !UIP_CONF_ROUTER || !UIP_IPV6_MULTICAST || !UIP_CONF_IPV6_RPL
-#error "This example can not work with the current contiki configuration"
+#error "This uart_demo can not work with the current contiki configuration"
 #error "Check the values of: NETSTACK_CONF_WITH_IPV6, UIP_CONF_ROUTER, UIP_CONF_IPV6_RPL"
 #endif
 /*---------------------------------------------------------------------------*/

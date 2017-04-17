@@ -63,7 +63,7 @@ PROCESS_THREAD(remote_grove_loudness_process, ev, data)
 
   uint16_t loudness;
 
-  /* Use pin number not mask, for example if using the PA5 pin then use 5 */
+  /* Use pin number not mask, for uart_demo if using the PA5 pin then use 5 */
   adc_sensors.configure(ANALOG_GROVE_LOUDNESS, ADC_PIN);
 
   /* And periodically poll the sensor */

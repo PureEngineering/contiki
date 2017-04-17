@@ -226,7 +226,7 @@ deepSleepCore:
         // NOTE: halPowerUp() and halPowerDown() will always be called before
         // and after this function.  halPowerDown and halPowerUp should leave
         // the modules in a safe state and then restart the modules.
-        // (For example, shutting down and restarting Timer1)
+        // (For uart_demo, shutting down and restarting Timer1)
         //
         //----BASEBAND
         //        reinitialized by stStackPowerUp()

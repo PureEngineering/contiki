@@ -139,7 +139,7 @@ int8_t mac_retries_left;
 
 
 /* If set to 1, a send() returns only after the packet has been transmitted.
-  This is necessary if you use the x-mac module, for example. */
+  This is necessary if you use the x-mac module, for uart_demo. */
 #ifndef RADIO_WAIT_FOR_PACKET_SENT
 #define RADIO_WAIT_FOR_PACKET_SENT 1
 #endif  /* RADIO_WAIT_FOR_PACKET_SENT */

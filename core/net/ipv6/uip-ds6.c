@@ -50,6 +50,10 @@
 #include "net/ipv6/uip-ds6.h"
 #include "net/ipv6/multicast/uip-mcast6.h"
 #include "net/ip/uip-packetqueue.h"
+#if CETIC_6LBR
+#define LOG6LBR_MODULE "DS6"
+#include "log-6lbr.h"
+#endif
 
 #define DEBUG DEBUG_NONE
 #include "net/ip/uip-debug.h"
@@ -421,6 +425,25 @@ uip_ds6_get_global(int8_t state)
 }
 
 /*---------------------------------------------------------------------------*/
+/*
+ * get the number of configured address -
+ * state = -1 => any address is ok. Otherwise state = desired state of addr.
+ * (TENTATIVE, PREFERRED, DEPRECATED)
+ */
+int
+uip_ds6_get_addr_number(int8_t state)
+{
+  int count = 0;
+  for(locaddr = uip_ds6_if.addr_list;
+      locaddr < uip_ds6_if.addr_list + UIP_DS6_ADDR_NB; locaddr++) {
+    if(locaddr->isused && (state == -1 || locaddr->state == state)) {
+      count++;
+    }
+  }
+  return count;
+}
+
+/*---------------------------------------------------------------------------*/
 uip_ds6_maddr_t *
 uip_ds6_maddr_add(const uip_ipaddr_t *ipaddr)
 {
@@ -617,6 +640,9 @@ uip_ds6_dad(uip_ds6_addr_t *addr)
 int
 uip_ds6_dad_failed(uip_ds6_addr_t *addr)
 {
+#if CETIC_6LBR
+  LOG6LBR_6ADDR(ERROR, &addr->ipaddr, "Address is already used : ");
+#endif
   if(uip_is_addr_linklocal(&addr->ipaddr)) {
     PRINTF("Contiki shutdown, DAD for link local address failed\n");
     return 0;
@@ -657,6 +683,11 @@ uip_ds6_send_ra_sollicited(void)
 void
 uip_ds6_send_ra_periodic(void)
 {
+#if CETIC_6LBR
+  if ((nvm_data.mode & CETIC_MODE_ROUTER_RA_DAEMON) == 0 ) {
+	  return;
+  }
+#endif
   if(racount > 0) {
     /* send previously scheduled RA */
     uip_nd6_ra_output(NULL);
@@ -684,6 +715,11 @@ uip_ds6_send_ra_periodic(void)
 void
 uip_ds6_send_rs(void)
 {
+#if CETIC_6LBR
+  if ((nvm_data.mode & CETIC_MODE_WAIT_RA_MASK) == 0 ) {
+    return;
+  }
+#endif
   if((uip_ds6_defrt_choose() == NULL)
      && (rscount < UIP_ND6_MAX_RTR_SOLICITATIONS)) {
     PRINTF("Sending RS %u\n", rscount);

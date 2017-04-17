@@ -46,7 +46,7 @@
 
 #include <stdio.h>
 /*---------------------------------------------------------------------------*/
-PROCESS(example_trickle_process, "Trickle example");
+PROCESS(example_trickle_process, "Trickle uart_demo");
 AUTOSTART_PROCESSES(&example_trickle_process);
 /*---------------------------------------------------------------------------*/
 static void

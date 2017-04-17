@@ -62,17 +62,17 @@ PROCESS_THREAD(settings_example_process, ev, data)
 
   status = settings_set_uint16(SETTINGS_KEY_PAN_ID, 0xABCD);
   if(SETTINGS_STATUS_OK != status) {
-    printf("settings-example: `set` failed: %d\n", status);
+    printf("settings-uart_demo: `set` failed: %d\n", status);
   }
 
   status = settings_set_uint8(SETTINGS_KEY_CHANNEL, 26);
   if(SETTINGS_STATUS_OK != status) {
-    printf("settings-example: `set` failed: %d\n", status);
+    printf("settings-uart_demo: `set` failed: %d\n", status);
   }
 
   status = settings_set_cstr(SETTINGS_KEY_HOSTNAME, "contiki.local");
   if(SETTINGS_STATUS_OK != status) {
-    printf("settings-example: `set` failed: %d\n", status);
+    printf("settings-uart_demo: `set` failed: %d\n", status);
   }
 
   /*************************************************************************/
@@ -80,18 +80,18 @@ PROCESS_THREAD(settings_example_process, ev, data)
 
   panid = settings_get_uint16(SETTINGS_KEY_PAN_ID, 0);
   if(0xABCD != panid) {
-    printf("settings-example: `get` failed: value mismatch.\n");
+    printf("settings-uart_demo: `get` failed: value mismatch.\n");
   }
 
   channel = settings_get_uint16(SETTINGS_KEY_CHANNEL, 0);
   if(26 != channel) {
-    printf("settings-example: `get` failed: value mismatch.\n");
+    printf("settings-uart_demo: `get` failed: value mismatch.\n");
   }
 
   if(!settings_get_cstr(SETTINGS_KEY_HOSTNAME, 0, hostname, sizeof(hostname))) {
-    printf("settings-example: `get` failed: settings_get_cstr returned NULL\n");
+    printf("settings-uart_demo: `get` failed: settings_get_cstr returned NULL\n");
   } else if(strcmp(hostname, "contiki.local") != 0) {
-    printf("settings-example: `get` failed: value mismatch.\n");
+    printf("settings-uart_demo: `get` failed: value mismatch.\n");
   }
 
   /*************************************************************************/
@@ -106,7 +106,7 @@ PROCESS_THREAD(settings_example_process, ev, data)
 
   for(i = 0; i < 10; i++) {
     if(settings_get_uint8(TCC('e', 'x'), i) != i + 20) {
-      printf("settings-example: `get` failed: value mismatch.\n");
+      printf("settings-uart_demo: `get` failed: value mismatch.\n");
     }
   }
 
@@ -128,9 +128,9 @@ PROCESS_THREAD(settings_example_process, ev, data)
     if(u.bytes[0] >= 32 && u.bytes[0] < 127
        && u.bytes[1] >= 32 && u.bytes[1] < 127
     ) {
-      printf("settings-example: [%c%c] = <",u.bytes[0],u.bytes[1]);
+      printf("settings-uart_demo: [%c%c] = <",u.bytes[0],u.bytes[1]);
     } else {
-      printf("settings-example: <0x%04X> = <",u.key);
+      printf("settings-uart_demo: <0x%04X> = <",u.key);
     }
 
     for(; len; len--, addr++) {
@@ -144,7 +144,7 @@ PROCESS_THREAD(settings_example_process, ev, data)
     printf(">\n");
   }
 
-  printf("settings-example: Done.\n");
+  printf("settings-uart_demo: Done.\n");
 
   PROCESS_END();
 }

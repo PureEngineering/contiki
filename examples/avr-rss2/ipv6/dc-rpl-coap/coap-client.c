@@ -41,7 +41,7 @@
 #include <string.h>
 
 /**************************************************************************/
-/* from er-rest-example/er-rexample-client.c */
+/* from er-rest-uart_demo/er-rexample-client.c */
 #include <stdlib.h>
 #include "er-coap-engine.h"
 #include "er-coap.h"

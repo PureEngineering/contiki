@@ -65,7 +65,7 @@ callback(struct websocket *s, websocket_result_t r,
   } else if(r == WEBSOCKET_CONNECTED) {
     websocket_send_str(s, "Connected");
   } else if(r == WEBSOCKET_DATA) {
-    printf("websocket-example: Received data '%.*s' (len %d)\n", datalen,
+    printf("websocket-uart_demo: Received data '%.*s' (len %d)\n", datalen,
            data, datalen);
   }
 }

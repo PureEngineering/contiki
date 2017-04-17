@@ -41,6 +41,7 @@
 #include <string.h>
 #include "net/netstack.h"
 #include "net/packetbuf.h"
+#include "dev/watchdog.h"
 
 #define DEBUG DEBUG_NONE
 #include "net/ip/uip-debug.h"
@@ -60,13 +61,23 @@ int packet_pos;
 
 static int slip_radio_cmd_handler(const uint8_t *data, int len);
 
-#if CONTIKI_TARGET_NOOLIBERRY
+#if RADIO_DEVICE_cc2420
+int cmd_handler_cc2420(const uint8_t *data, int len);
+#elif CONTIKI_TARGET_NOOLIBERRY
 int cmd_handler_rf230(const uint8_t *data, int len);
 #elif CONTIKI_TARGET_ECONOTAG
 int cmd_handler_mc1322x(const uint8_t *data, int len);
+#elif CONTIKI_TARGET_CC2538DK
+int cmd_handler_cc2538(const uint8_t *data, int len);
+#elif CONTIKI_TARGET_COOJA
+int cmd_handler_cooja(const uint8_t *data, int len);
 #else /* Leave CC2420 as default */
 int cmd_handler_cc2420(const uint8_t *data, int len);
 #endif /* CONTIKI_TARGET */
+
+#define SLIP_END     0300
+
+char slip_debug_frame = 0;
 
 /*---------------------------------------------------------------------------*/
 #ifdef CMD_CONF_HANDLERS
@@ -103,15 +114,17 @@ slip_radio_cmd_handler(const uint8_t *data, int len)
     /* should send out stuff to the radio - ignore it as IP */
     /* --- s e n d --- */
     if(data[1] == 'S') {
-      int pos;
+      int pos = 0;
       packet_ids[packet_pos] = data[2];
 
       packetbuf_clear();
+#if DESERIALIZE_ATTRIBUTES
       pos = packetutils_deserialize_atts(&data[3], len - 3);
       if(pos < 0) {
         PRINTF("slip-radio: illegal packet attributes\n");
         return 1;
       }
+#endif
       pos += 3;
       len -= pos;
       if(len > PACKETBUF_SIZE) {
@@ -131,12 +144,17 @@ slip_radio_cmd_handler(const uint8_t *data, int len)
       if(packet_pos >= sizeof(packet_ids)) {
 	packet_pos = 0;
       }
-
+      return 1;
+    } else if(data[1] == 'R' && len == 2) {
+#if !CONTIKI_TARGET_CC2538DK
+      PRINTF("Rebooting\n");
+      watchdog_reboot();
+#endif
       return 1;
     }
   } else if(uip_buf[0] == '?') {
     PRINTF("Got request message of type %c\n", uip_buf[1]);
-    if(data[1] == 'M') {
+    if(data[1] == 'M' && len == 2) {
       /* this is just a test so far... just to see if it works */
       uip_buf[0] = '!';
       uip_buf[1] = 'M';
@@ -154,6 +172,13 @@ slip_radio_cmd_handler(const uint8_t *data, int len)
 void
 slip_radio_cmd_output(const uint8_t *data, int data_len)
 {
+#if !SLIP_RADIO_CONF_NO_PUTCHAR
+  if(slip_debug_frame) {
+    slip_arch_writeb(SLIP_END);
+    slip_debug_frame = 0;
+  }
+#endif
+
   slip_send_packet(data, data_len);
 }
 /*---------------------------------------------------------------------------*/
@@ -182,16 +207,13 @@ init(void)
 int
 putchar(int c)
 {
-#define SLIP_END     0300
-  static char debug_frame = 0;
-
-  if(!debug_frame) {            /* Start of debug output */
+  if(!slip_debug_frame) {            /* Start of debug output */
     slip_arch_writeb(SLIP_END);
     slip_arch_writeb('\r');     /* Type debug line == '\r' */
-    debug_frame = 1;
+    slip_debug_frame = 1;
   }
 
-  /* Need to also print '\n' because for example COOJA will not show
+  /* Need to also print '\n' because for uart_demo COOJA will not show
      any output before line end */
   slip_arch_writeb((char)c);
 
@@ -201,7 +223,7 @@ putchar(int c)
    */
   if(c == '\n') {
     slip_arch_writeb(SLIP_END);
-    debug_frame = 0;
+    slip_debug_frame = 0;
   }
   return c;
 }

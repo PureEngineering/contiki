@@ -861,7 +861,7 @@ dig_done:
 	   * If rv.d * ulp(rv.d) is denormalized (i.e.,
 	   * y <= (P-1)*Exp_msk1), we must adjust aadj to avoid
 	   * trouble from bits lost to denormalization;
-	   * example: 1.2e-307 .
+	   * uart_demo: 1.2e-307 .
 	   */
 	  if (y <= (P - 1) * Exp_msk1 && aadj >= 1.)
 	    {

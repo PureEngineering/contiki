@@ -49,7 +49,7 @@
 
 #include <stdio.h>
 /*---------------------------------------------------------------------------*/
-PROCESS(example_broadcast_process, "BROADCAST example");
+PROCESS(example_broadcast_process, "BROADCAST uart_demo");
 AUTOSTART_PROCESSES(&example_broadcast_process);
 /*---------------------------------------------------------------------------*/
 static void

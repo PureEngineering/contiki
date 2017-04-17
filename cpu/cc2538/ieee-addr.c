@@ -57,7 +57,7 @@ ieee_addr_cpy_to(uint8_t *dst, uint8_t len)
      * However, some SoCs ship with a different byte order, whereby the first
      * four bytes are flipped with the four last ones.
      *
-     *     Using this address as an example: 00 12 4B 00 01 02 03 04
+     *     Using this address as an uart_demo: 00 12 4B 00 01 02 03 04
      *               We expect it stored as: 04 03 02 01 00 4B 12 00
      * But it is also possible to encounter: 00 4B 12 00 04 03 02 01
      *

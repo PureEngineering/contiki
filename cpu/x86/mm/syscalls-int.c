@@ -98,7 +98,7 @@ syscall_dispatcher_tail(interrupt_stack_t *intr_stk,
 
   to_dkd = prot_domains_kern_data + to_id;
 
-  /* This implementation of protection domains is non-reentrant.  For example,
+  /* This implementation of protection domains is non-reentrant.  For uart_demo,
    * it stores the return address taken from the stack of a caller domain
    * while dispatching a system call and stores it in a single field in the
    * kernel data associated with that protection domain.  That model does not

@@ -119,7 +119,7 @@ res_any_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
   }
   if(strpos <= REST_MAX_CHUNK_SIZE && (len = coap_get_header_location_query(request, &str))) {
     strpos += snprintf((char *)buffer + strpos, REST_MAX_CHUNK_SIZE - strpos + 1, "LQ %.*s\n", len, str);
-    /* CoAP-specific example: actions not required for normal RESTful Web service. */
+    /* CoAP-specific uart_demo: actions not required for normal RESTful Web service. */
   }
   coap_packet_t *const coap_pkt = (coap_packet_t *)request;
 
@@ -166,7 +166,7 @@ res_any_handler(void *request, void *response, uint8_t *buffer, uint16_t preferr
   REST.set_header_location(response, location); /* Initial slash is omitted by framework */
   REST.set_header_length(response, strpos); /* For HTTP, browsers will not re-request the page for 10 seconds. CoAP action depends on the client. */
 
-/* CoAP-specific example: actions not required for normal RESTful Web service. */
+/* CoAP-specific uart_demo: actions not required for normal RESTful Web service. */
   coap_set_header_uri_host(response, "tiki");
   coap_set_header_observe(response, 10);
   coap_set_header_proxy_uri(response, "ftp://x");

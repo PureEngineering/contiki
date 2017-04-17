@@ -46,7 +46,7 @@
 
 static void res_get_handler(void *request, void *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
 
-/* A simple getter example. Returns the reading of the rssi/lqi from radio sensor */
+/* A simple getter uart_demo. Returns the reading of the rssi/lqi from radio sensor */
 RESOURCE(res_radio,
          "title=\"RADIO: ?p=lqi|rssi\";rt=\"RadioSensor\"",
          res_get_handler,

@@ -72,7 +72,7 @@ PROCESS_THREAD(gpio_input_process, ev, data)
 
   ctimer_set(&timer, CLOCK_SECOND / 2, timeout, NULL);
 
-  printf("GPIO input example is running\n");
+  printf("GPIO input uart_demo is running\n");
   PROCESS_YIELD();
 
   quarkX1000_gpio_clock_disable();

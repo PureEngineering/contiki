@@ -6,7 +6,7 @@ import sys
 
 message = sensor_message_pb.sensors()
 # Initialize a Database object
-db = Database("newuser", "secretpassword", str(sys.argv[1]))
+db = Database("root", "user", str(sys.argv[1]))
 
 # This callback is triggered when successfully connected
 def on_connect(client, userdata, flags, rc):
@@ -24,13 +24,13 @@ def on_subscribe(client, userdata, mid, granted_qos):
 	print("Subscribed")
 
 def main():
-	mClient = mqtt.Client()
+	mClient = mqtt.Client(protocol=mqtt.MQTTv31)
 	# Set mqtt callback functions
 	mClient.on_connect = on_connect
 	mClient.on_message = on_message
 	mClient.on_subscribe = on_subscribe
 	# Connect to 6lbr 
-	mClient.connect("bbbb::101")
+	mClient.connect("bbbb::101", 1883)
 	mClient.subscribe("c", 0)
 	mClient.loop_forever()
 

@@ -1,0 +1,19 @@
+message sensors{
+  required int32 id             = 1;
+  optional int32 batmon_temp    = 2; // Units = C
+  optional int32 batmon_volt    = 3; // Units = mV
+  optional int32 opt_3001       = 4; // Units = lux
+  optional sint32 bme_280_temp  = 5; // Units = C
+  optional int32 bme_280_pres   = 6; // Units = hPa
+  optional int32 bme_280_hum    = 7; // Units = %RH
+  //motion accelerometer
+  optional sint32 LIS2DE12_x    = 8; //
+  optional sint32 LIS2DE12_y    = 9; //
+  optional sint32 LIS2DE12_z    = 10; //
+  //magnetic accelerometer
+  optional sint32 lis3mdl_x     = 11; //
+  optional sint32 lis3mdl_y     = 12; //
+  optional sint32 lis3mdl_z     = 13; //
+  optional bool pir             = 14; // motion
+
+}

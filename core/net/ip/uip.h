@@ -2020,6 +2020,7 @@ CCIF extern uip_lladdr_t uip_lladdr;
   ((a)->u8[0] == 0xfe &&                         \
    (a)->u8[1] == 0x80)
 
+
 /** \brief set IP address a to unspecified */
 #define uip_create_unspecified(a) uip_ip6addr(a, 0, 0, 0, 0, 0, 0, 0, 0)
 
