@@ -1,6 +1,5 @@
 import mysql.connector as mariadb
 from mysql.connector import errorcode
-import sensor_message_pb
 
 class Database:
 
@@ -10,7 +9,6 @@ class Database:
 		self.database = d
 		self.table = "sensorData"
 		self.createTable()
-		self.message = sensor_message_pb.sensors()
 
 	def openConnection(self):
 		self.connection = mariadb.connect(user=self.user, password=self.password)
