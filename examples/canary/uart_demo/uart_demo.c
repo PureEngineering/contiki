@@ -116,19 +116,19 @@ PROCESS_THREAD(uart_demo, ev, data) {
         size_t message_length;
         message_length = stream.bytes_written;
 
-        sprintf(str, "%s\n", buffer);
-        //printf(str);
+        //sprintf(str, "%s\n", buffer);
+        printf("%d", (int) message_length);
 
         int i;
         i = 0;
         while(1) {
 
             if(i < message_length)
-                if(cc26xx_uart_busy() == 0x00000000)
+                if(cc26xx_uart_busy() == 0)
                     cc26xx_uart_write_byte(buffer[i++]);
 
             if(i == message_length) {
-                if(cc26xx_uart_busy() == 0x00000000) {
+                if(cc26xx_uart_busy() == 0) {
                     cc26xx_uart_write_byte('\n');
                     i++;
                 }
