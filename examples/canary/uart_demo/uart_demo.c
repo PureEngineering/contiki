@@ -157,7 +157,10 @@ PROCESS_THREAD(uart_demo, ev, data) {
         message_length = stream.bytes_written;
 
         //sprintf(str, "%s\n", buffer);
-        printf("%d", (int) message_length);
+        //uint8_t thirt = (uint8_t) message_length;
+        if(cc26xx_uart_busy() == 0)
+            cc26xx_uart_write_byte((uint8_t) message_length);
+        //printf("%d", (int) message_length);
 
         int i;
         i = 0;
