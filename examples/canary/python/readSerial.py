@@ -21,8 +21,10 @@ while ser.is_open:
 	else:
 		payload = byte[2:-1]
 		length =  len(payload)
+		lenBytes = byte[0] + byte[1]
 		print length
-		if str(length) == str(byte[0] + byte[1]):
+		#print lenBytes
+		if str(length) == str(lenBytes): #46 or length == 47 or length == 48:
 			print payload
 			message.ParseFromString(payload)
 			milli = (int(round(time.time()*1000)))
