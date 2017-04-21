@@ -32,19 +32,59 @@ static int gas_nh3 = 0;
 static int gas_red = 0;
 
 static void getSensorReadings() {
-    light = opt_3001_sensor.value(0);
-    bme1 = bme_280_sensor.value(BME_280_SENSOR_TYPE_TEMP);
-    bme2 = bme_280_sensor.value(BME_280_SENSOR_TYPE_PRESS);
-    bme3 = bme_280_sensor.value(BME_280_SENSOR_TYPE_HUM);
-    accel_x = lis2de12_accel_sensor.value(ACCEL_X);
-    accel_y = lis2de12_accel_sensor.value(ACCEL_Y);
-    accel_z = lis2de12_accel_sensor.value(ACCEL_Z);
-    mag_x = lis3mdl_mag_sensor.value(MAG_X);
-    mag_y = lis3mdl_mag_sensor.value(MAG_Y);
-    mag_z = lis3mdl_mag_sensor.value(MAG_Z);
-    gas_ox = gas_sensor.value(GAS_OX);
-    gas_nh3 = gas_sensor.value(GAS_NH3);
-    gas_red = gas_sensor.value(GAS_RED);
+    int value;
+
+    value = opt_3001_sensor.value(0);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        light = value;
+
+    value = bme_280_sensor.value(BME_280_SENSOR_TYPE_TEMP);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        bme1 = value;
+
+    value = bme_280_sensor.value(BME_280_SENSOR_TYPE_PRESS);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        bme2 = value;
+
+    value = bme_280_sensor.value(BME_280_SENSOR_TYPE_HUM);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        bme3 = value;
+
+    value = lis2de12_accel_sensor.value(ACCEL_X);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        accel_x = value;
+
+    value = lis2de12_accel_sensor.value(ACCEL_Y);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        accel_y = value;
+
+    value = lis2de12_accel_sensor.value(ACCEL_Z);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        accel_z = value;
+
+    value = lis3mdl_mag_sensor.value(MAG_X);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        mag_x = value;
+
+    value = lis3mdl_mag_sensor.value(MAG_Y);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        mag_y = value;
+
+    value = lis3mdl_mag_sensor.value(MAG_Z);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        mag_z = value;
+
+    value = gas_sensor.value(GAS_OX);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        gas_ox = value;
+
+    value = gas_sensor.value(GAS_NH3);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        gas_nh3 = value;
+
+    value = gas_sensor.value(GAS_RED);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        gas_red = value;
 
     SENSORS_ACTIVATE(opt_3001_sensor);
     SENSORS_ACTIVATE(bme_280_sensor);
