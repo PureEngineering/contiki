@@ -20,7 +20,8 @@ def printData(d):
 		print ""			
 
 def main():
-	printData(str(sys.argv[1]))
+	arg = str(sys.argv[1])
+	printData(arg)
 
 if __name__ == "__main__":
         main()
