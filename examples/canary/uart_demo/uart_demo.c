@@ -32,19 +32,59 @@ static int gas_nh3 = 0;
 static int gas_red = 0;
 
 static void getSensorReadings() {
-    light = opt_3001_sensor.value(0);
-    bme1 = bme_280_sensor.value(BME_280_SENSOR_TYPE_TEMP);
-    bme2 = bme_280_sensor.value(BME_280_SENSOR_TYPE_PRESS);
-    bme3 = bme_280_sensor.value(BME_280_SENSOR_TYPE_HUM);
-    accel_x = lis2de12_accel_sensor.value(ACCEL_X);
-    accel_y = lis2de12_accel_sensor.value(ACCEL_Y);
-    accel_z = lis2de12_accel_sensor.value(ACCEL_Z);
-    mag_x = lis3mdl_mag_sensor.value(MAG_X);
-    mag_y = lis3mdl_mag_sensor.value(MAG_Y);
-    mag_z = lis3mdl_mag_sensor.value(MAG_Z);
-    gas_ox = gas_sensor.value(GAS_OX);
-    gas_nh3 = gas_sensor.value(GAS_NH3);
-    gas_red = gas_sensor.value(GAS_RED);
+    int value;
+
+    value = opt_3001_sensor.value(0);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        light = value;
+
+    value = bme_280_sensor.value(BME_280_SENSOR_TYPE_TEMP);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        bme1 = value;
+
+    value = bme_280_sensor.value(BME_280_SENSOR_TYPE_PRESS);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        bme2 = value;
+
+    value = bme_280_sensor.value(BME_280_SENSOR_TYPE_HUM);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        bme3 = value;
+
+    value = lis2de12_accel_sensor.value(ACCEL_X);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        accel_x = value;
+
+    value = lis2de12_accel_sensor.value(ACCEL_Y);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        accel_y = value;
+
+    value = lis2de12_accel_sensor.value(ACCEL_Z);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        accel_z = value;
+
+    value = lis3mdl_mag_sensor.value(MAG_X);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        mag_x = value;
+
+    value = lis3mdl_mag_sensor.value(MAG_Y);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        mag_y = value;
+
+    value = lis3mdl_mag_sensor.value(MAG_Z);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        mag_z = value;
+
+    value = gas_sensor.value(GAS_OX);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        gas_ox = value;
+
+    value = gas_sensor.value(GAS_NH3);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        gas_nh3 = value;
+
+    value = gas_sensor.value(GAS_RED);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        gas_red = value;
 
     SENSORS_ACTIVATE(opt_3001_sensor);
     SENSORS_ACTIVATE(bme_280_sensor);
@@ -59,67 +99,56 @@ PROCESS_THREAD(uart_demo, ev, data) {
     pb_byte_t buffer[50];
     char str[60];
 
+    //cc26xx_uart_init();
+
     etimer_set(&et, CLOCK_SECOND / 25);
 
     while (1) {
         PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
-        //getSensorReadings();
-
-        /*printf("LIGHT %i ", light);
-        printf("BME1 %i ", bme1);
-        printf("BME2 %i ", bme2);
-        printf("BME3 %i ", bme3);
-        printf("ACCEL_X %i ", accel_x);
-        printf("ACCEL_Y %i ", accel_y);
-        printf("ACCEL_Z %i ", accel_z);
-        printf("MAG_X %i ", mag_x);
-        printf("MAG_Y %i ", mag_y);
-        printf("MAG_Z %i ", mag_z);
-        printf("GAS_OK %i ", gas_ox);
-        printf("GAS_NH3 %i ", gas_nh3);
-        printf("GAS_RED %i ", gas_red);*/
-        //putc('n');
+        getSensorReadings();
 
         sensors message = sensors_init_zero;
 
-        message.id = 100;
+        int dummy = 1000;
+
+        message.id = dummy;
 
         message.has_batmon_temp = true;
-        message.batmon_temp = 100;
+        message.batmon_temp = dummy;
 
         message.has_batmon_volt = true;
-        message.batmon_volt = 100;
+        message.batmon_volt = dummy;
 
         message.has_opt_3001 = true;
-        message.opt_3001 = 100;
+        message.opt_3001 = light;
 
         message.has_bme_280_temp = true;
-        message.bme_280_temp = 100;
+        message.bme_280_temp = bme1;
 
         message.has_bme_280_pres = true;
-        message.bme_280_pres = 100;
+        message.bme_280_pres = bme2;
 
         message.has_bme_280_hum = true;
-        message.bme_280_hum = 100;
+        message.bme_280_hum = bme3;
 
         message.has_LIS2DE12_x = true;
-        message.LIS2DE12_x = 100;
+        message.LIS2DE12_x = accel_x;
 
         message.has_LIS2DE12_y = true;
-        message.LIS2DE12_y = 100;
+        message.LIS2DE12_y = accel_y;
 
         message.has_LIS2DE12_z = true;
-        message.LIS2DE12_z = 100;
+        message.LIS2DE12_z = accel_z;
 
         message.has_lis3mdl_x = true;
-        message.lis3mdl_x = 100;
+        message.lis3mdl_x = mag_x;
 
         message.has_lis3mdl_y = true;
-        message.lis3mdl_y = 100;
+        message.lis3mdl_y = mag_y;
 
         message.has_lis3mdl_z = true;
-        message.lis3mdl_z = 100;
+        message.lis3mdl_z = mag_z;
 
         pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
         bool status;
@@ -127,14 +156,30 @@ PROCESS_THREAD(uart_demo, ev, data) {
         size_t message_length;
         message_length = stream.bytes_written;
 
-        sprintf(str, "%s\n", buffer);
-        printf(str);
+        //sprintf(str, "%s\n", buffer);
+        //uint8_t thirt = (uint8_t) message_length;
+        if(cc26xx_uart_busy() == 0)
+            cc26xx_uart_write_byte((uint8_t) message_length);
+        //printf("%d", (int) message_length);
 
-        /*int i;
-        for (i = 0; i < message_length; i++) {
-            cc26xx_uart_write_byte(buffer[i]);
+        int i;
+        i = 0;
+        while(1) {
+
+            if(i < message_length)
+                if(cc26xx_uart_busy() == 0)
+                    cc26xx_uart_write_byte(buffer[i++]);
+
+            if(i == message_length) {
+                if(cc26xx_uart_busy() == 0) {
+                    cc26xx_uart_write_byte('\n');
+                    i++;
+                }
+            }
+
+            if(i == message_length + 1)
+                break;
         }
-        cc26xx_uart_write_byte('\n');*/
 
         etimer_reset(&et);
     }

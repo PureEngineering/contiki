@@ -14,14 +14,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 //#include "lora-radio.h"
 //#include "lora-sx1276-board.h"
 char data_id[8] = "";
-char *ids[8] = {"20357", "33794", "49451", "51072", "55428"};
+char *ids[8] = {"20357", "33794", "49541", "51072", "55428"};
 enum {BATMON_TEMP, BATMON_VOLT, OPT_LIGHT, BME_HUM, BME_PRES, BME_TEMP, ACCEL_X, ACCEL_Y, ACCEL_Z, MAG_X, MAG_Y, MAG_Z};
 char *sensor_names[16] = {"batmon_temp", "batmon_volt", "opt_3001", "bme_280_hum", "bme_280_pres", "bme_280_temp", "LIS2DE12_x", "LIS2DE12_y", "LIS2DE12_z", "lis3mdl_x", "lis3mdl_y", "lis3mdl_z"};
-char data[16][100][100];
+char sensor_data[100][256][56];
+int lens[100];
 /*---------------------------------------------------------------------------*/
 PROCESS_NAME(cetic_6lbr_client_process);
 PROCESS(cc26xx_web_demo_process, "CC26XX Web Demo");
@@ -62,95 +64,40 @@ static void init_mag_reading(void *data);
 AUTOSTART_PROCESSES(&cc26xx_web_demo_process);
 
 static void get_bme_reading() {
-  int value;
   clock_time_t next = SENSOR_READING_PERIOD;
 
-  value = 10;
-  //value = bme_280_sensor.value(BME_280_SENSOR_TYPE_TEMP);
-  //if (value != CC26XX_SENSOR_READING_ERROR) {
-    bme_temp_reading.raw = clock_time();
-  //}
+  bme_temp_reading.raw = strtol(sensor_data[3][clock_time()%lens[3]], NULL, 10);
+  bme_pres_reading.raw = strtol(sensor_data[4][clock_time()%lens[4]], NULL, 10);
+  bme_hum_reading.raw = strtol(sensor_data[5][clock_time()%lens[5]], NULL, 10);
 
-  value = 10;
-  // value = bme_280_sensor.value(BME_280_SENSOR_TYPE_PRESS);
-  //if (value != CC26XX_SENSOR_READING_ERROR) {
-    bme_pres_reading.raw = clock_time();
- // }
-
-  value = 10;
-  // value = bme_280_sensor.value(BME_280_SENSOR_TYPE_HUM);
- // if (value != CC26XX_SENSOR_READING_ERROR) {
-    bme_hum_reading.raw = value;
- // }
-
-  //SENSORS_DEACTIVATE(bme_280_sensor);
   ctimer_set(&bme_timer, next, init_bme_reading, NULL);
 }
 
 static void get_light_reading() {
-  int value;
   clock_time_t next = SENSOR_READING_PERIOD;
 
-   value = 10;
-  // value = opt_3001_sensor.value(0);
+  opt_reading.raw = strtol(sensor_data[2][clock_time()%lens[2]], NULL, 10);
 
- // if (value != CC26XX_SENSOR_READING_ERROR) {
-    opt_reading.raw = value;
- // }
-  /* The OPT will turn itself off, so we don't need to call its DEACTIVATE */
   ctimer_set(&opt_timer, next, init_light_reading, NULL);
 }
 
 static void get_accel_reading(){
-  int value;
   clock_time_t next = SENSOR_READING_PERIOD;
 
-   value = 10;
-  // value = lis2de12_accel_sensor.value(ACCEL_X); //read x value
- // if(value!=CC26XX_SENSOR_READING_ERROR) {
-    accel_x_reading.raw = value;
-  //}
+  accel_x_reading.raw = strtol(sensor_data[6][clock_time()%lens[6]], NULL, 10);
+  accel_y_reading.raw = strtol(sensor_data[7][clock_time()%lens[7]], NULL, 10);
+  accel_z_reading.raw = strtol(sensor_data[8][clock_time()%lens[8]], NULL, 10);
 
-   value = 10;
-  // value = lis2de12_accel_sensor.value(ACCEL_Y); //read y value
-  //if(value!=CC26XX_SENSOR_READING_ERROR) {
-    accel_y_reading.raw = value;
-  //}
-
-   value = 10;
-  // value = lis2de12_accel_sensor.value(ACCEL_Z); //read z value
-  //if(value!=CC26XX_SENSOR_READING_ERROR) {
-    accel_z_reading.raw = value;
- // }
-
-  //SENSORS_DEACTIVATE(lis2de12_accel_sensor);
   ctimer_set(&accel_timer, next, init_accel_reading, NULL);
-
 }
 
 static void get_mag_reading(){
-  int value;
   clock_time_t next = SENSOR_READING_PERIOD;
 
-   value = 10;
-  // value = lis3mdl_mag_sensor.value(MAG_X); //read x value
- // if(value!=CC26XX_SENSOR_READING_ERROR) {
-    mag_x_reading.raw = value;
- // }
+  mag_x_reading.raw = strtol(sensor_data[9][clock_time()%lens[9]], NULL, 10);
+  mag_y_reading.raw = strtol(sensor_data[10][clock_time()%lens[10]], NULL, 10);
+  mag_z_reading.raw = strtol(sensor_data[11][clock_time()%lens[11]], NULL, 10);
 
-   value = 10;
-  // value = lis3mdl_mag_sensor.value(MAG_Y); //read y value
- // if(value!=CC26XX_SENSOR_READING_ERROR) {
-    mag_y_reading.raw = value;
- // }
-
-   value = 10;
-  // value = lis3mdl_mag_sensor.value(MAG_Z); //read z value
- // if(value!=CC26XX_SENSOR_READING_ERROR) {
-    mag_z_reading.raw = value;
- // }
-
- // SENSORS_DEACTIVATE(lis3mdl_mag_sensor);
   ctimer_set(&mag_timer, next, init_mag_reading, NULL);
 }
 
@@ -217,20 +164,10 @@ const cc26xx_web_demo_sensor_reading_t *cc26xx_web_demo_sensor_first() {
 }
 
 static void get_batmon_reading(void *data) {
-  int value;
   clock_time_t next = SENSOR_READING_PERIOD;
 
-   value = 10;
-  // value = batmon_sensor.value(BATMON_SENSOR_TYPE_TEMP);
-  //if (value != CC26XX_SENSOR_READING_ERROR) {
-    batmon_temp_reading.raw = value;
- // }
-
-   value = 10;
-  // value = batmon_sensor.value(BATMON_SENSOR_TYPE_VOLT);
- // if (value != CC26XX_SENSOR_READING_ERROR) {
-    batmon_volt_reading.raw = value;
-  //}
+  batmon_temp_reading.raw = strtol(sensor_data[0][clock_time()%lens[0]], NULL, 10);
+  batmon_volt_reading.raw = strtol(sensor_data[0][clock_time()%lens[0]], NULL, 10);
 
   ctimer_set(&batmon_timer, next, get_batmon_reading, NULL);
 }
@@ -251,31 +188,32 @@ static void init_sensor_readings(void) {
 /*---------------------------------------------------------------------------*/
 static void init_sensors(void) {
 
+  
   strcpy(data_id, ids[node_id%5]);
-  FILE *data_file;
   unsigned int i;
+  FILE *data_file;
+  char buff[255];
   for (i = 0; i < 12; i++) {
-    char filename[300] = "/mnt/hgfs/contiki/examples/canary/mqtt_protobuf_cooja/";
+    char filename[300] = "../../../examples/canary/mqtt_protobuf_cooja/data/";
     strcat(filename, data_id);
     strcat(filename, "_");
     strcat(filename, sensor_names[i]);
-    //printf("%s\n", filename);
+    printf("%s\n", sensor_names[i]);
+
     data_file = fopen(filename, "r");
-    if (data_file == 0)
+    if (data_file == NULL)
     {
-        printf("fug\n");
-    } else {
-
-    char buff[255];
-    fscanf(data_file, "%s", buff);
-    printf("1 : %s\n", buff );
-    unsigned int j = 0;
-    //while(fgets(data[i][j], 100, data_file)) {
-      //data[i][j][strlen(data[i][j])-1] = '\0';
-      //j++;
-    //}
+        printf("oops");
+        return 1;
     }
-
+    unsigned int j = 0;
+    while (fgets(sensor_data[i][j], 255, data_file) != NULL) {
+        j++;
+        //printf("%d\n", strtol(buff, NULL, 10));
+    }
+    lens[i] = j;
+    printf("%d\n", j);
+    fclose(data_file);
   }
 
 
