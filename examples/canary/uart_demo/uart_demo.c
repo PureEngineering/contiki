@@ -30,6 +30,8 @@ static int mag_z = 0;
 static int gas_ox = 0;
 static int gas_nh3 = 0;
 static int gas_red = 0;
+static int batmon_t = 0;
+static int batmon_v = 0;
 
 static void getSensorReadings() {
     int value;
@@ -37,6 +39,10 @@ static void getSensorReadings() {
     value = opt_3001_sensor.value(0);
     if (value != CC26XX_SENSOR_READING_ERROR)
         light = value;
+
+    SENSORS_ACTIVATE(opt_3001_sensor);
+
+   // SENSORS_ACTIVATE(bme_280_sensor);
 
     value = bme_280_sensor.value(BME_280_SENSOR_TYPE_TEMP);
     if (value != CC26XX_SENSOR_READING_ERROR)
@@ -50,6 +56,10 @@ static void getSensorReadings() {
     if (value != CC26XX_SENSOR_READING_ERROR)
         bme3 = value;
 
+    SENSORS_ACTIVATE(bme_280_sensor);
+
+    //SENSORS_ACTIVATE(lis2de12_accel_sensor);
+
     value = lis2de12_accel_sensor.value(ACCEL_X);
     if (value != CC26XX_SENSOR_READING_ERROR)
         accel_x = value;
@@ -61,6 +71,10 @@ static void getSensorReadings() {
     value = lis2de12_accel_sensor.value(ACCEL_Z);
     if (value != CC26XX_SENSOR_READING_ERROR)
         accel_z = value;
+
+    SENSORS_ACTIVATE(lis2de12_accel_sensor);
+
+    //SENSORS_ACTIVATE(lis3mdl_mag_sensor);
 
     value = lis3mdl_mag_sensor.value(MAG_X);
     if (value != CC26XX_SENSOR_READING_ERROR)
@@ -74,6 +88,10 @@ static void getSensorReadings() {
     if (value != CC26XX_SENSOR_READING_ERROR)
         mag_z = value;
 
+    SENSORS_ACTIVATE(lis3mdl_mag_sensor);
+
+    //SENSORS_ACTIVATE(gas_sensor);
+
     value = gas_sensor.value(GAS_OX);
     if (value != CC26XX_SENSOR_READING_ERROR)
         gas_ox = value;
@@ -86,11 +104,15 @@ static void getSensorReadings() {
     if (value != CC26XX_SENSOR_READING_ERROR)
         gas_red = value;
 
-    SENSORS_ACTIVATE(opt_3001_sensor);
-    SENSORS_ACTIVATE(bme_280_sensor);
-    SENSORS_ACTIVATE(lis2de12_accel_sensor);
-    SENSORS_ACTIVATE(lis3mdl_mag_sensor);
     SENSORS_ACTIVATE(gas_sensor);
+
+    value = batmon_sensor.value(BATMON_SENSOR_TYPE_TEMP);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+       batmon_t = value;
+
+    value = batmon_sensor.value(BATMON_SENSOR_TYPE_VOLT);
+    if (value != CC26XX_SENSOR_READING_ERROR)
+        batmon_v = value;
 }
 
 PROCESS_THREAD(uart_demo, ev, data) {
@@ -100,6 +122,8 @@ PROCESS_THREAD(uart_demo, ev, data) {
     char str[60];
 
     //cc26xx_uart_init();
+    SENSORS_ACTIVATE(batmon_sensor);
+
 
     etimer_set(&et, CLOCK_SECOND / 25);
 
@@ -115,10 +139,10 @@ PROCESS_THREAD(uart_demo, ev, data) {
         message.id = dummy;
 
         message.has_batmon_temp = true;
-        message.batmon_temp = dummy;
+        message.batmon_temp = batmon_t;
 
         message.has_batmon_volt = true;
-        message.batmon_volt = dummy;
+        message.batmon_volt = batmon_v;
 
         message.has_opt_3001 = true;
         message.opt_3001 = light;
