@@ -1,5 +1,6 @@
 # Simulating mqtt+protobuf motes in Cooja
 #### Download and run the [instant contiki](http://www.contiki-os.org/start.html#install-instant-contiki) VM.
+Password for user "user" is "root."
 Do the following from within the VM:
 #### Install the mqtt broker, bridge-utils, and ncurses
 ```
@@ -22,9 +23,17 @@ As root:
 ```
 make install
 make plugins-install
+```
+Start 6lbr as a service:
 cp contiki/examples/canary/mqtt_protobuf_cooja/6lbr.conf /etc/6lbr/6lbr.conf
 update-rc.d 6lbr defaults
 service 6lbr start
+```
+or
+
+Start an instance of 6lbr:
+```
+6lbr ./contiki/examples/canary/mqtt_protobuf_cooja/6lbr.conf
 ```
 #### Configure and run the mqtt broker
 ```
