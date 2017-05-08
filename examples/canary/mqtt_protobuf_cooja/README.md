@@ -1,6 +1,6 @@
 # Simulating mqtt+protobuf motes in Cooja
 #### Download and run the [instant contiki](http://www.contiki-os.org/start.html#install-instant-contiki) VM.
-Password for user "user" is "root."
+Password for user "user" is "user."
 Do the following from within the VM:
 #### Install the mqtt broker, bridge-utils, and ncurses
 ```
