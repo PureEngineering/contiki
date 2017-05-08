@@ -25,6 +25,7 @@ make install
 make plugins-install
 ```
 Start 6lbr as a service:
+```
 cp contiki/examples/canary/mqtt_protobuf_cooja/6lbr.conf /etc/6lbr/6lbr.conf
 update-rc.d 6lbr defaults
 service 6lbr start
