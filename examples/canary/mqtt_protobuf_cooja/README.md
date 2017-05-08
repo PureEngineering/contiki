@@ -6,9 +6,10 @@ Do the following from within the VM:
 sudo apt-get update
 sudo apt-get install mosquitto bridge-utils libncurses5-dev
 ```
-#### Clone the [6lbr fork with canary example code](https://github.com/puredaniel/6lbr).
+#### Clone the [6lbr](https://github.com/cetic/6lbr) and [contiki](https://github.com/PureEngineering/contiki) repos.
 ```
-git clone --recursive -j8 https://github.com/puredaniel/6lbr.git
+git clone --recursive -j8 https://github.com/cetic/6lbr.git
+git clone --recursive -j8 https://github.com/PureEngineering/contiki.git
 ```
 #### [Build, install, and run 6lbr](https://github.com/cetic/6lbr/wiki/Other-Linux-Software-Configuration)
 ```
@@ -21,13 +22,13 @@ As root:
 ```
 make install
 make plugins-install
+cp contiki/examples/canary/mqtt_protobuf_cooja/6lbr.conf /etc/6lbr/6lbr.conf
 update-rc.d 6lbr defaults
 service 6lbr start
 ```
 #### Configure and run the mqtt broker
 ```
-cd 6lbr/canary/mqtt_protobuf_cooja
-sudo cp mosquitto.conf /etc/mosquitto/mosquitto.conf
+sudo cp contiki/examples/canary/mqtt_protobuf_cooja/mosquitto.conf /etc/mosquitto/mosquitto.conf
 mosquitto
 ```
 #### Launch Cooja and start simulation
@@ -35,12 +36,12 @@ mosquitto
 cd 6lbr/tools/cooja
 ant run
 ```
-  1. Open 6lbr/examples/canary/mqtt_protobuf_cooja/example.csc
+  1. Open contiki/examples/canary/mqtt_protobuf_cooja/example.csc
   2. Press start or Ctrl+s
 
 #### Add the broker IP to the network bridge
 ```
-sudo ip -6 addr add bbbb::100 dev br0
+sudo ip -6 addr add bbbb::101 dev br0
 ```
 It's possible the bridge has not yet been created by 6lbr, in that case just run the command again
 
@@ -48,7 +49,6 @@ It's possible the bridge has not yet been created by 6lbr, in that case just run
 ```
 sudo apt-get install python-pip
 pip install paho-mqtt
-cd /6lbr/examples/canary/mqtt_protobuf_cooja/
-python sub.py
+python contiki/examples/canary/mqtt_protobuf_cooja/sub.py
 ```
 
