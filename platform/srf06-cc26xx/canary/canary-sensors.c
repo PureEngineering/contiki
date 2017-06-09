@@ -42,11 +42,13 @@
 #include "bme-280-sensor.h"
 #include "lis2de12-accel-sensor.h"
 #include "lis3mdl-mag-sensor.h"
+#include "mag-sensor.h"
 #include "gas-sensor.h"
+#include "gps-sensor.h"
 #include <string.h>
 /*---------------------------------------------------------------------------*/
 /** \brief Exports a global symbol to be used by the sensor API */
 SENSORS(&opt_3001_sensor, &bme_280_sensor, &lis2de12_accel_sensor, &lis3mdl_mag_sensor,
-        &gas_sensor);
+        &gas_sensor, &mag_sensor, &gps_sensor);
 /*---------------------------------------------------------------------------*/
 /** @} */

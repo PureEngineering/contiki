@@ -275,7 +275,7 @@
 #endif
 
 #ifndef CC26XX_UART_CONF_BAUD_RATE
-#define CC26XX_UART_CONF_BAUD_RATE    115200 /**< Default UART0 baud rate */
+#define CC26XX_UART_CONF_BAUD_RATE    4800 /**< Default UART0 baud rate */
 #endif
 
 /* Enable I/O over the Debugger Devpack - Only relevant for the SensorTag */

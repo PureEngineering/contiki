@@ -68,11 +68,11 @@ static void enable_sensor(bool enable){
     board_i2c_select(BOARD_I2C_INTERFACE_0, LIS3MDL_I2C_ADDRESS);
     sensor_common_read_reg(WHO_AM_I_ADDR, &whoami, sizeof(whoami));
     dbg_mag("LIS3MDL - who am i %x\n", whoami);
-    reg1_config = 0x10; // 0001 0000 - normal mode 10hz, low power mode
+    reg1_config = 0x14; // 0001 0100 - normal mode 20hz, low power mode
     sensor_common_write_reg(CTRL_REG1_ADDR, &reg1_config, sizeof(reg1_config));
     reg2_config = 0x00; // 0000 0000 - +- 4 gauss
     sensor_common_write_reg(CTRL_REG2_ADDR, &reg2_config, sizeof(reg2_config));
-    reg3_config = 0x20; // 0010 0000 - low power mode **overides ctrl reg1 10hz to .625hz**
+    reg3_config = 0x21; // 0010 0000 - low power mode **overides ctrl reg1 10hz to .625hz**  single
     sensor_common_write_reg(CTRL_REG3_ADDR, &reg3_config, sizeof(reg3_config));
     reg4_config = 0x00; // 0000 0000 - z low power mode, lsb in lower address
     sensor_common_write_reg(CTRL_REG4_ADDR, &reg4_config, sizeof(reg4_config));

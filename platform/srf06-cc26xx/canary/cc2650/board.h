@@ -104,7 +104,7 @@
 
 #define BOARD_IOID_LIGHT_MAGNET_WAKEUP IOID_0
 #define BOARD_IOID_AUDIO_VCC           IOID_1
-#define BOARD_IOID_UART_RX             IOID_2
+#define BOARD_IOID_UART_RX             IOID_28
 #define BOARD_IOID_UART_TX             IOID_3
 #define BOARD_IOID_UART_CTS            IOID_UNUSED //must be defined but doesnt have to be used
 #define BOARD_IOID_UART_RTS            IOID_UNUSED //must be defined but doesnt have to be used
