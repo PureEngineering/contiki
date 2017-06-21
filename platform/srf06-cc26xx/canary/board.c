@@ -76,6 +76,7 @@ shutdown_handler(uint8_t mode)
     SENSORS_DEACTIVATE(gas_sensor);
     SENSORS_DEACTIVATE(lis2de12_accel_sensor);
     SENSORS_DEACTIVATE(lis3mdl_mag_sensor);
+    SENSORS_DEACTIVATE(mag_sensor);
   }
 
   /* In all cases, stop the I2C */
@@ -100,8 +101,7 @@ configure_unused_pins(void)
 
   //GPS MODULE EVERY PIN PULLDOWN
   ti_lib_ioc_pin_type_gpio_input(BOARD_IOID_GPS_WAKEUP);
-  ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_WAKEUP,IOC_PORT_GPIO, IOC_IOPULL_DOWN);
-
+  ti_lib_ioc_io_port_pull_set(BOARD_IOID_GPS_WAKEUP, IOC_IOPULL_DOWN);
 
   ti_lib_ioc_pin_type_gpio_output(BOARD_IOID_GPS_RESET); //output
   ti_lib_gpio_write_dio(BOARD_IOID_GPS_RESET, 1); //high
@@ -117,8 +117,8 @@ configure_unused_pins(void)
 
   ti_lib_ioc_pin_type_gpio_output(BOARD_IOID_GPS_ON_OFF); //output
   ti_lib_gpio_write_dio(BOARD_IOID_GPS_ON_OFF, 0); //low
-  ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_ON_OFF, IOC_PORT_GPIO,
-                              IOC_CURRENT_2MA |  IOC_STRENGTH_MIN);
+  //ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_ON_OFF, IOC_PORT_GPIO,
+    //                          IOC_CURRENT_2MA |  IOC_STRENGTH_MIN);
 
   ti_lib_ioc_pin_type_gpio_input(BOARD_IOID_GPS_1PPS);
   ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_1PPS, IOC_PORT_GPIO, IOC_IOPULL_DOWN);
@@ -161,7 +161,8 @@ board_init()
   lpm_register_module(&canary_module);
 
   /* For unsupported peripherals, select a default pin configuration */
-  configure_unused_pins();
+  //configure_unused_pins();
+    ti_lib_ioc_pin_type_gpio_input(IOID_2);
 
   /* Re-enable interrupt if initially enabled. */
   if(!int_disabled) {

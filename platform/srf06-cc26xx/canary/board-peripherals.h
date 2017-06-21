@@ -45,7 +45,9 @@
 #include "bme-280-sensor.h"
 #include "lis2de12-accel-sensor.h"
 #include "lis3mdl-mag-sensor.h"
+#include "mag-sensor.h"
 #include "gas-sensor.h"
+#include "gps-sensor.h"
 #include "buzzer.h"
 /*---------------------------------------------------------------------------*/
 #endif /* BOARD_PERIPHERALS_H_ */
