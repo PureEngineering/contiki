@@ -35,14 +35,11 @@
  */
 
 #include "sensors.h"
+
 #include <string.h>
 
-#ifdef GAS_SENSOR
 #include "gas_sensor.h"
-#endif
 
 SENSORS(
-  #ifdef GAS_SENSOR
   &gas_sensor
-  #endif
 )

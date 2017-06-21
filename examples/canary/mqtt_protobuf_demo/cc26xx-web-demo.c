@@ -52,8 +52,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lora-radio.h"
-#include "lora-sx1276-board.h"
+// #include "lora-radio.h"
+// #include "lora-sx1276-board.h"
+
 /*---------------------------------------------------------------------------*/
 PROCESS_NAME(cetic_6lbr_client_process);
 PROCESS(cc26xx_web_demo_process, "CC26XX Web Demo");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Pure Engineering LLC.
+ * Copyright (c) 2016, National Security Technologies, LLC.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,20 +29,18 @@
 
 /**
  * \file
- *         Includes sensors based on project level defines
+ *         BME280 driver for cc2650
  * \author
  *         Jon Steelsmith, Sashi Ono <info@pureengineering.com>
  */
-
-#include "lib/sensors.h"
-#include <string.h>
-
-#ifdef GAS_SENSOR
-#include "gas_sensor.h"
-#endif
-
-SENSORS(
-    #ifdef GAS_SENSOR
-
-
-)
+/*---------------------------------------------------------------------------*/
+#ifndef BME_280_SENSOR_H_
+#define BME_280_SENSOR_H_
+/*---------------------------------------------------------------------------*/
+#define BME_280_SENSOR_TYPE_TEMP 1
+#define BME_280_SENSOR_TYPE_PRESS 2
+#define BME_280_SENSOR_TYPE_HUM 3
+/*---------------------------------------------------------------------------*/
+extern const struct sensors_sensor bme_280_sensor;
+/*---------------------------------------------------------------------------*/
+#endif /* BMP_280_SENSOR_H_ */

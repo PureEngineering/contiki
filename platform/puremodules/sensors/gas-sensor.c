@@ -36,11 +36,12 @@
 /*---------------------------------------------------------------------------*/
 #include "contiki-conf.h"
 #include "lib/sensors.h"
-#include "gas-sensor.h"
 #include "sys/ctimer.h"
 #include "ti-lib.h"
 #include "board-i2c.h"
 #include "sensor-common.h"
+
+#include "gas-sensor.h"
 
 #include <stdint.h>
 #include <stdbool.h>
