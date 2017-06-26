@@ -28,24 +28,52 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*---------------------------------------------------------------------------*/
-/** \addtogroup cc26xx-srf-tag
+/**
+ * \addtogroup sensortag-cc26xx-sensor-common
  * @{
  *
  * \file
- * Header file with definitions related to the sensors on the Sensortag-CC26xx
- *
- * \note   Do not include this file directly.
+ * Utilities common among SensorTag sensors
  */
 /*---------------------------------------------------------------------------*/
-#ifndef BOARD_PERIPHERALS_H_
-#define BOARD_PERIPHERALS_H_
+#include "sensor-common.h"
+#include "board-i2c.h"
 /*---------------------------------------------------------------------------*/
+/* Data to use when an error occurs */
+#define ERROR_DATA                         0xCC
+/*---------------------------------------------------------------------------*/
+static uint8_t buffer[32];
+/*---------------------------------------------------------------------------*/
+bool
+sensor_common_read_reg(uint8_t addr, uint8_t *buf, uint8_t len)
+{
+  return board_i2c_write_read(&addr, 1, buf, len);
+}
+/*---------------------------------------------------------------------------*/
+bool
+sensor_common_write_reg(uint8_t addr, uint8_t *buf, uint8_t len)
+{
+  uint8_t i;
+  uint8_t *p = buffer;
 
-#include "gas-sensor.h"
-#include "bme-280-sensor.h"
+  /* Copy address and data to local buffer for burst write */
+  *p++ = addr;
+  for(i = 0; i < len; i++) {
+    *p++ = *buf++;
+  }
+  len++;
+
+  /* Send data */
+  return board_i2c_write(buffer, len);
+}
 /*---------------------------------------------------------------------------*/
-#endif /* BOARD_PERIPHERALS_H_ */
+void
+sensor_common_set_error_data(uint8_t *buf, uint8_t len)
+{
+  while(len > 0) {
+    len--;
+    buf[len] = ERROR_DATA;
+  }
+}
 /*---------------------------------------------------------------------------*/
-/**
- * @}
- */
+/** @} */

@@ -28,24 +28,58 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*---------------------------------------------------------------------------*/
-/** \addtogroup cc26xx-srf-tag
+/**
+ * \addtogroup sensortag-cc26xx-peripherals
+ * @{
+ *
+ * \defgroup sensortag-cc26xx-sensor-common SensorTag 2.0 Sensors
  * @{
  *
  * \file
- * Header file with definitions related to the sensors on the Sensortag-CC26xx
- *
- * \note   Do not include this file directly.
+ * Header file for the Sensortag-CC26xx Common sensor utilities
  */
 /*---------------------------------------------------------------------------*/
-#ifndef BOARD_PERIPHERALS_H_
-#define BOARD_PERIPHERALS_H_
+#ifndef SENSOR_H
+#define SENSOR_H
 /*---------------------------------------------------------------------------*/
+#include "board-i2c.h"
 
-#include "gas-sensor.h"
-#include "bme-280-sensor.h"
-/*---------------------------------------------------------------------------*/
-#endif /* BOARD_PERIPHERALS_H_ */
+#include <stdbool.h>
+#include <stdint.h>
 /*---------------------------------------------------------------------------*/
 /**
+ * \brief Reads a sensor's register over I2C
+ * \param addr The address of the register to read
+ * \param buf Pointer to buffer to place data
+ * \param len Number of bytes to read
+ * \return TRUE if the required number of bytes are received
+ *
+ * The sensor must be selected before this routine is called.
+ */
+bool sensor_common_read_reg(uint8_t addr, uint8_t *buf, uint8_t len);
+
+/**
+ * \brief Write to a sensor's register over I2C
+ * \param addr The address of the register to read
+ * \param buf Pointer to buffer containing data to be written
+ * \param len Number of bytes to write
+ * \return TRUE if successful write
+ *
+ * The sensor must be selected before this routine is called.
+ */
+bool sensor_common_write_reg(uint8_t addr, uint8_t *buf, uint8_t len);
+
+/**
+ * \brief Fill a result buffer with dummy error data
+ * \param buf Pointer to the buffer where to write the data
+ * \param len Number of bytes to fill
+ * \return bitmask of error flags
+ */
+void sensor_common_set_error_data(uint8_t *buf, uint8_t len);
+/*---------------------------------------------------------------------------*/
+#endif /* SENSOR_H */
+/*---------------------------------------------------------------------------*/
+/**
+ * @}
  * @}
  */

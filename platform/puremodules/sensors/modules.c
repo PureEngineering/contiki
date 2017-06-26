@@ -28,24 +28,21 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*---------------------------------------------------------------------------*/
-/** \addtogroup cc26xx-srf-tag
+/**
+ * \addtogroup sensortag-cc26xx-peripherals
  * @{
  *
  * \file
- * Header file with definitions related to the sensors on the Sensortag-CC26xx
- *
- * \note   Do not include this file directly.
+ * Generic module controlling sensors on CC26XX Sensortag
  */
 /*---------------------------------------------------------------------------*/
-#ifndef BOARD_PERIPHERALS_H_
-#define BOARD_PERIPHERALS_H_
-/*---------------------------------------------------------------------------*/
-
-#include "gas-sensor.h"
+#include "contiki.h"
+#include "lib/sensors.h"
 #include "bme-280-sensor.h"
+#include "gas-sensor.h"
+#include <string.h>
 /*---------------------------------------------------------------------------*/
-#endif /* BOARD_PERIPHERALS_H_ */
+/** \brief Exports a global symbol to be used by the sensor API */
+SENSORS(&bme_280_sensor, &gas_sensor);
 /*---------------------------------------------------------------------------*/
-/**
- * @}
- */
+/** @} */
