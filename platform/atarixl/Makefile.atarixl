@@ -52,6 +52,9 @@ disk: all
 	cp $(CONTIKI)/tools/$(TARGET)/dos25/dos.sys atr/dos.sys
 	cp $(CONTIKI)/tools/$(TARGET)/dos25/dup.sys atr/dup.sys
 	cp $(CONTIKI_PROJECT).$(TARGET)             atr/autorun.sys
+ifdef SLIP
+	cp $(CONTIKI)/tools/6502/sample.cfg         atr/contiki.cfg
+else
 	cp $(CONTIKI)/tools/$(TARGET)/sample.cfg    atr/contiki.cfg
 	cp cs8900a.eth                              atr/cs8900a.eth
 ifeq ($(findstring WITH_MOUSE,$(DEFINES)),WITH_MOUSE)

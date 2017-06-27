@@ -1,0 +1,4 @@
+### Add .c files to this makefile
+
+CONTIKI_SOURCEFILES += gas-sensor.c sensor-common.c bme-280-sensor.c
+CONTIKI_SOURCEFILES += modules.c

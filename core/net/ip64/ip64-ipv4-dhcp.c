@@ -55,7 +55,7 @@ uip_ipaddr_t uip_hostaddr; /* Needed because it is referenced by dhcpc.c */
 void
 ip64_ipv4_dhcp_init(void)
 {
-  printf("Starting DHCPv4\n");
+  printf("IP64: Starting DHCPv4\n");
   process_start(&ip64_ipv4_dhcp_process, NULL);
 }
 /*---------------------------------------------------------------------------*/
@@ -104,6 +104,7 @@ ip64_dhcpc_configured(const struct ip64_dhcpc_state *s)
 #if CETIC_6LBR
   cetic_6lbr_ip64_dhcpc_configured(s);
 #endif
+      uip_nameserver_update(&ip6dnsaddr, uip_ntohs(s->lease_time[0])*65536ul + uip_ntohs(s->lease_time[1]));
 }
 /*---------------------------------------------------------------------------*/
 void

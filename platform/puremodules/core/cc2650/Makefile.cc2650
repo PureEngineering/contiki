@@ -1,8 +1,14 @@
-CONTIKI_TARGET_DIRS += .
+CONTIKI_TARGET_DIRS += core/cc2650
+
+CFLAGS += -DBOARD_CANARY=1
+CFLAGS += -DBACKDOOR_IOID=0x00000000
+
+CONTIKI_SOURCEFILES += contiki-main.c board-i2c.c board.c
 
 ### Include our cpu makefile
 CONTIKI_CPU=$(CONTIKI)/cpu/cc26xx-cc13xx
-include $(CONTIKI_CPU)/Makefile.$(cc26xx)
+include $(CONTIKI_CPU)/Makefile.cc26xx
+
+MODULES += core/net core/net/mac core/net/mac/contikimac core/net/llsec
 
 ### Add .c files to our source files
-CONTIKI_SOURCEFILES +=
