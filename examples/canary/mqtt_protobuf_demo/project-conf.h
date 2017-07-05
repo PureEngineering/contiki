@@ -42,19 +42,18 @@
 // Serial/spi bootloader
 #define ROM_BOOTLOADER_ENABLE                 1
 /*---------------------------------------------------------------------------*/
+
+#define NETSTACK_CONF_RDC contikimac_driver
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
+
 /*
  * Shrink the size of the uIP buffer, routing table and ND cache.
  * Set the TCP MSS
  */
 #define UIP_CONF_BUFFER_SIZE                900
-#define NBR_TABLE_CONF_MAX_NEIGHBORS          8
-#define UIP_CONF_MAX_ROUTES                   8
+#define NBR_TABLE_CONF_MAX_NEIGHBORS         10
+#define UIP_CONF_MAX_ROUTES                  10
 #define UIP_CONF_TCP_MSS                    128
 
-
-// #define UIP_DS6_CONF_PERIOD        CLOCK_SECOND
-// #define UIP_CONF_TCP                          0
-#define RPL_CONF_LEAF_ONLY                    1
-/*---------------------------------------------------------------------------*/
 #endif /* PROJECT_CONF_H_ */
 /*---------------------------------------------------------------------------*/

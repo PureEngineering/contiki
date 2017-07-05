@@ -41,7 +41,7 @@
 #include <string.h>
 #include <stdio.h>
 /*---------------------------------------------------------------------------*/
-#define DEBUG 1
+#define DEBUG 0
 #include "net/ip/uip-debug.h"
 /*---------------------------------------------------------------------------*/
 #ifndef CETIC_6LBR_NODE_INFO_PORT
@@ -49,7 +49,7 @@
 #endif
 
 #define MAX_PAYLOAD_LEN    40
-#define MSG_INTERVAL       (CLOCK_SECOND)
+#define MSG_INTERVAL       (CLOCK_SECOND * 30 )
 /*---------------------------------------------------------------------------*/
 static struct uip_udp_conn *client_conn = NULL;
 static struct etimer et;
