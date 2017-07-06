@@ -28,30 +28,39 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*---------------------------------------------------------------------------*/
-/** \addtogroup cc26xx-srf-tag
+/**
+ * \addtogroup sensortag-cc26xx-peripherals
+ * @{
+ *
+ * \defgroup sensortag-cc26xx-reed-relay SensorTag 2.0 Reed Relay
+ *
+ * The reed relay acts like a button without a button. To trigger the reed,
+ * approach a magnet to the sensortag and a sensors_changed event will be
+ * generated, in a fashion similar to as if a button had been pressed
+ *
  * @{
  *
  * \file
- * Header file with definitions related to the sensors on the Sensortag-CC26xx
- *
- * \note   Do not include this file directly.
+ * Header file for the Sensortag Reed Relay
  */
 /*---------------------------------------------------------------------------*/
-#ifndef BOARD_PERIPHERALS_H_
-#define BOARD_PERIPHERALS_H_
+#ifndef REED_RELAY_H
+#define REED_RELAY_H
+
+#define debug_pir 0
+#if debug_pir
+#define dbg_pir(...) printf(__VA_ARGS__)
+#else
+#define dbg_pir(...)
+#endif
 /*---------------------------------------------------------------------------*/
-#include "pir-sensor.h"
-#include "opt-3001-sensor.h"
-#include "bme-280-sensor.h"
-#include "lis2de12-accel-sensor.h"
-#include "lis3mdl-mag-sensor.h"
-#include "mag-sensor.h"
-#include "gas-sensor.h"
-#include "gps-sensor.h"
-#include "buzzer.h"
+#include "lib/sensors.h"
 /*---------------------------------------------------------------------------*/
-#endif /* BOARD_PERIPHERALS_H_ */
+extern const struct sensors_sensor pir_sensor;
+/*---------------------------------------------------------------------------*/
+#endif /* REED_RELAY_H */
 /*---------------------------------------------------------------------------*/
 /**
+ * @}
  * @}
  */

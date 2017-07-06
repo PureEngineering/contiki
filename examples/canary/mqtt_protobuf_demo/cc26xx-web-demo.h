@@ -73,7 +73,7 @@
 #define CC26XX_WEB_DEMO_DEFAULT_EVENT_TYPE_ID       "status"
 #define CC26XX_WEB_DEMO_DEFAULT_SUBSCRIBE_CMD_TYPE  "+"
 #define CC26XX_WEB_DEMO_DEFAULT_BROKER_PORT         1883
-#define CC26XX_WEB_DEMO_DEFAULT_PUBLISH_INTERVAL    (CLOCK_SECOND * 5)
+#define CC26XX_WEB_DEMO_DEFAULT_PUBLISH_INTERVAL    (CLOCK_SECOND * 10)
 #define CC26XX_WEB_DEMO_DEFAULT_KEEP_ALIVE_TIMER    60
 #define CC26XX_WEB_DEMO_DEFAULT_RSSI_MEAS_INTERVAL  (CLOCK_SECOND)
 /*---------------------------------------------------------------------------*/
@@ -98,6 +98,7 @@
 #define CC26XX_WEB_DEMO_SENSOR_GAS_OX        12
 #define CC26XX_WEB_DEMO_SENSOR_GAS_NH3       13
 #define CC26XX_WEB_DEMO_SENSOR_GAS_RED       14
+#define CC26XX_WEB_DEMO_SENSOR_PIR           15
 
 /*---------------------------------------------------------------------------*/
 extern process_event_t cc26xx_web_demo_publish_event;

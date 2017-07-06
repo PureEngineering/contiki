@@ -416,6 +416,8 @@ static void publish(void) {
   message.has_lis3mdl_z = true;
   message.lis3mdl_z = cc26xx_web_demo_sensor_lookup(11)->raw;
 
+  message.has_pir = true;
+  message.pir = cc26xx_web_demo_sensor_lookup(15)->raw;
 
   //stream used to encode to buffer
   pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
