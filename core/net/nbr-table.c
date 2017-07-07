@@ -40,7 +40,7 @@
 #include "lib/list.h"
 #include "net/nbr-table.h"
 
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #include <stdio.h>
 #include "sys/ctimer.h"

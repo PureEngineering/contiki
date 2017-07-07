@@ -52,7 +52,7 @@
 #include "net/packetbuf.h"
 #include "net/ipv6/uip-ds6-nbr.h"
 
-#define DEBUG DEBUG_NONE
+#define DEBUG 0 
 #include "net/ip/uip-debug.h"
 
 #ifdef UIP_CONF_DS6_NEIGHBOR_STATE_CHANGED
