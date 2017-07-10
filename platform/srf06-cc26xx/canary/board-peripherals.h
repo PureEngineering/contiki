@@ -40,7 +40,7 @@
 #ifndef BOARD_PERIPHERALS_H_
 #define BOARD_PERIPHERALS_H_
 /*---------------------------------------------------------------------------*/
-
+#include "pir-sensor.h"
 #include "opt-3001-sensor.h"
 #include "bme-280-sensor.h"
 #include "lis2de12-accel-sensor.h"

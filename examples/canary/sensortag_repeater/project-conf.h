@@ -35,68 +35,22 @@
 #define IEEE802154_CONF_PANID            0xABCD
 #define RF_CORE_CONF_CHANNEL                 25
 #define RF_BLE_CONF_ENABLED                   0
-/*---------------------------------------------------------------------------*/
-/* Enable/Disable Components of this Demo */
-#define CC26XX_WEB_DEMO_CONF_MQTT_CLIENT      1
 
 // Serial/spi bootloader
 #define ROM_BOOTLOADER_ENABLE                 1
 /*---------------------------------------------------------------------------*/
+
+#define NETSTACK_CONF_RDC contikimac_driver
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
+#define CONTIKIMAC_CONF_WITH_PHASE_OPTIMIZATION 1
 /*
  * Shrink the size of the uIP buffer, routing table and ND cache.
  * Set the TCP MSS
  */
 #define UIP_CONF_BUFFER_SIZE                900
-#define NBR_TABLE_CONF_MAX_NEIGHBORS          100 
-#define UIP_CONF_MAX_ROUTES                   100
+#define NBR_TABLE_CONF_MAX_NEIGHBORS         10
+#define UIP_CONF_MAX_ROUTES                  10
 #define UIP_CONF_TCP_MSS                    128
 
-
-// #define UIP_DS6_CONF_PERIOD        CLOCK_SECOND
-// #define UIP_CONF_TCP                          0
-#define RPL_CONF_LEAF_ONLY                    0
-#ifndef UIP_CONF_IPV6_RPL
-#define UIP_CONF_IPV6_RPL               1
-#endif /* UIP_CONF_IPV6_RPL */
-/*---------------------------------------------------------------------------*/
-
-#ifndef WITH_NON_STORING
-#define WITH_NON_STORING 0 /* Set this to run with non-storing mode */
-#endif /* WITH_NON_STORING */
-
-#undef NBR_TABLE_CONF_MAX_NEIGHBORS
-#undef UIP_CONF_MAX_ROUTES
-
-#ifdef TEST_MORE_ROUTES
-/* configure number of neighbors and routes */
-#define NBR_TABLE_CONF_MAX_NEIGHBORS     100
-#define UIP_CONF_MAX_ROUTES   100
-#else
-/* configure number of neighbors and routes */
-#define NBR_TABLE_CONF_MAX_NEIGHBORS     100
-#define UIP_CONF_MAX_ROUTES   100
-#endif /* TEST_MORE_ROUTES */
-
-#undef NETSTACK_CONF_RDC
-#define NETSTACK_CONF_RDC     nullrdc_driver
-#undef NULLRDC_CONF_802154_AUTOACK
-#define NULLRDC_CONF_802154_AUTOACK       1
-
-/* Define as minutes */
-#define RPL_CONF_DEFAULT_LIFETIME_UNIT   60
-
-/* 10 minutes lifetime of routes */
-#define RPL_CONF_DEFAULT_LIFETIME        10
-
-#define RPL_CONF_DEFAULT_ROUTE_INFINITE_LIFETIME 1
-
-#if WITH_NON_STORING
-#undef RPL_NS_CONF_LINK_NUM
-#define RPL_NS_CONF_LINK_NUM 40 /* Number of links maintained at the root. Can be set to 0 at non-root nodes. */
-#undef UIP_CONF_MAX_ROUTES
-#define UIP_CONF_MAX_ROUTES 0 /* No need for routes */
-#undef RPL_CONF_MOP
-#define RPL_CONF_MOP RPL_MOP_NON_STORING /* Mode of operation*/
-#endif /* WITH_NON_STORING */
 #endif /* PROJECT_CONF_H_ */
 /*---------------------------------------------------------------------------*/

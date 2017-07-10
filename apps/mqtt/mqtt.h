@@ -122,7 +122,7 @@
  * Debug configuration, this is similar but not exactly like the Debugging
  * System discussion at https://github.com/contiki-os/contiki/wiki.
  */
-#define DEBUG_MQTT 1
+#define DEBUG_MQTT 0
 
 #if DEBUG_MQTT == 1
 #define DBG(...) printf(__VA_ARGS__)

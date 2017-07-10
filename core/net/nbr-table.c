@@ -480,4 +480,3 @@ handle_periodic_timer(void *ptr)
   ctimer_reset(&periodic_timer);
 }
 #endif
-

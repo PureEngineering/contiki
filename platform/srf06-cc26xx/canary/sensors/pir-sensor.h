@@ -28,32 +28,39 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 /*---------------------------------------------------------------------------*/
-#ifndef PROJECT_CONF_H_
-#define PROJECT_CONF_H_
-/*---------------------------------------------------------------------------*/
-/* Change to match your configuration */
-#define IEEE802154_CONF_PANID            0xABCD
-#define RF_CORE_CONF_CHANNEL                 25
-#define RF_BLE_CONF_ENABLED                   0
-/*---------------------------------------------------------------------------*/
-/* Enable/Disable Components of this Demo */
-#define CC26XX_WEB_DEMO_CONF_MQTT_CLIENT      1
-
-// Serial/spi bootloader
-#define ROM_BOOTLOADER_ENABLE                 1
-/*---------------------------------------------------------------------------*/
-
-#define NETSTACK_CONF_RDC contikimac_driver
-#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
-
-/*
- * Shrink the size of the uIP buffer, routing table and ND cache.
- * Set the TCP MSS
+/**
+ * \addtogroup sensortag-cc26xx-peripherals
+ * @{
+ *
+ * \defgroup sensortag-cc26xx-reed-relay SensorTag 2.0 Reed Relay
+ *
+ * The reed relay acts like a button without a button. To trigger the reed,
+ * approach a magnet to the sensortag and a sensors_changed event will be
+ * generated, in a fashion similar to as if a button had been pressed
+ *
+ * @{
+ *
+ * \file
+ * Header file for the Sensortag Reed Relay
  */
-#define UIP_CONF_BUFFER_SIZE                900
-#define NBR_TABLE_CONF_MAX_NEIGHBORS         10
-#define UIP_CONF_MAX_ROUTES                  10
-#define UIP_CONF_TCP_MSS                    128
-
-#endif /* PROJECT_CONF_H_ */
 /*---------------------------------------------------------------------------*/
+#ifndef REED_RELAY_H
+#define REED_RELAY_H
+
+#define debug_pir 0
+#if debug_pir
+#define dbg_pir(...) printf(__VA_ARGS__)
+#else
+#define dbg_pir(...)
+#endif
+/*---------------------------------------------------------------------------*/
+#include "lib/sensors.h"
+/*---------------------------------------------------------------------------*/
+extern const struct sensors_sensor pir_sensor;
+/*---------------------------------------------------------------------------*/
+#endif /* REED_RELAY_H */
+/*---------------------------------------------------------------------------*/
+/**
+ * @}
+ * @}
+ */

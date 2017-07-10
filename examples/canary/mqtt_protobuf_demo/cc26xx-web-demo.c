@@ -65,7 +65,7 @@ PROCESS(cc26xx_web_demo_process, "CC26XX Web Demo");
 #define SENSOR_READING_PERIOD (CLOCK_SECOND)
 
 struct ctimer batmon_timer, opt_timer, bme_timer, accel_timer, mag_timer,
-              gas_timer;
+              gas_timer, pir_timer;
 
 /*---------------------------------------------------------------------------*/
 process_event_t cc26xx_web_demo_publish_event;
@@ -93,14 +93,22 @@ DEMO_SENSOR(mag_z, CC26XX_WEB_DEMO_SENSOR_MAG_Z);
 DEMO_SENSOR(gas_ox, CC26XX_WEB_DEMO_SENSOR_GAS_OX);
 DEMO_SENSOR(gas_nh3, CC26XX_WEB_DEMO_SENSOR_GAS_NH3);
 DEMO_SENSOR(gas_red, CC26XX_WEB_DEMO_SENSOR_GAS_RED);
+DEMO_SENSOR(pir, CC26XX_WEB_DEMO_SENSOR_PIR);
 
 static void init_light_reading(void *data);
 static void init_bme_reading(void *data);
 static void init_accel_reading(void *data);
 static void init_mag_reading(void *data);
 static void init_gas_reading(void *data);
+static void init_pir_reading(void *data);
 
+static void get_pir_reading() {
 
+  pir_reading.raw = pir_sensor.value(0);
+  SENSORS_DEACTIVATE(pir_sensor);
+  ctimer_set(&pir_timer, SENSOR_READING_PERIOD, init_pir_reading, NULL);
+
+}
 static void get_bme_reading() {
   int value;
   clock_time_t next = SENSOR_READING_PERIOD;
@@ -184,6 +192,7 @@ static void get_mag_reading(){
   ctimer_set(&mag_timer, next, init_mag_reading, NULL);
 }
 
+/* Gas sensor currently not working */
 static void get_gas_reading(){
   int value;
   clock_time_t next = SENSOR_READING_PERIOD;
@@ -206,6 +215,10 @@ static void get_gas_reading(){
   SENSORS_DEACTIVATE(gas_sensor);
   ctimer_set(&gas_timer,next,init_gas_reading,NULL);
 
+}
+
+static void init_pir_reading(void *data){
+  SENSORS_ACTIVATE(pir_sensor);
 }
 
 static void init_bme_reading(void *data) {
@@ -288,7 +301,6 @@ static void get_batmon_reading(void *data) {
 
   ctimer_set(&batmon_timer, next, get_batmon_reading, NULL);
 }
-/*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 static void init_sensor_readings(void) {
@@ -302,6 +314,7 @@ static void init_sensor_readings(void) {
   init_accel_reading(NULL);
   init_mag_reading(NULL);
   init_gas_reading(NULL);
+  init_pir_reading(NULL);
 
   return;
 }
@@ -312,8 +325,8 @@ static void init_sensors(void) {
   list_add(sensor_list, &batmon_volt_reading);
   SENSORS_ACTIVATE(batmon_sensor);
   list_add(sensor_list, &opt_reading);
-  list_add(sensor_list, &bme_pres_reading);
   list_add(sensor_list, &bme_temp_reading);
+  list_add(sensor_list, &bme_pres_reading);
   list_add(sensor_list, &bme_hum_reading);
   list_add(sensor_list, &accel_x_reading);
   list_add(sensor_list, &accel_y_reading);
@@ -324,16 +337,19 @@ static void init_sensors(void) {
   list_add(sensor_list, &gas_ox_reading);
   list_add(sensor_list, &gas_nh3_reading);
   list_add(sensor_list, &gas_red_reading);
+  list_add(sensor_list, &pir_reading);
 }
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(cc26xx_web_demo_process, ev, data) {
   PROCESS_BEGIN();
 
+  /* Initialize LoRa radio and put it to sleep to save power */
   SX1276IoInit();
   Radio.Sleep();
 
   printf("CC26XX Web Demo Process\n");
-  // add sensors to linked list
+
+  /* Add sensors to linked list */
   init_sensors();
 
   cc26xx_web_demo_publish_event = process_alloc_event();
@@ -364,6 +380,8 @@ PROCESS_THREAD(cc26xx_web_demo_process, ev, data) {
       get_mag_reading();
     } else if (ev ==sensors_event && data == &gas_sensor){
       get_gas_reading();
+    } else if (ev == sensors_event && data == &pir_sensor){
+      get_pir_reading();
     }
 
     PROCESS_YIELD();

@@ -49,13 +49,15 @@
 #endif
 
 #define MAX_PAYLOAD_LEN    40
-#define MSG_INTERVAL       (CLOCK_SECOND * 60)
+#define MSG_INTERVAL       (CLOCK_SECOND * 60 )
 /*---------------------------------------------------------------------------*/
 static struct uip_udp_conn *client_conn = NULL;
 static struct etimer et;
 static uip_ip6addr_t dest_addr;
 /*---------------------------------------------------------------------------*/
 PROCESS(cetic_6lbr_client_process, "6LBR Client Process");
+AUTOSTART_PROCESSES(&cetic_6lbr_client_process);
+
 /*---------------------------------------------------------------------------*/
 static void
 tcpip_handler(void)

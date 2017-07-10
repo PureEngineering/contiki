@@ -35,6 +35,8 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 import java.util.Vector;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.swing.JOptionPane;
 
@@ -273,9 +275,16 @@ public class Simulation extends Observable implements Runnable {
       while (isRunning) {
 
         /* Handle all poll requests */
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        int count = 0;
         while (hasPollRequests) {
-          popSimulationInvokes().run();
+          executor.execute(popSimulationInvokes());
+          count++;
+          System.out.println("" + count);
+          //popSimulationInvokes().run();
         }
+
+        executor.shutdown();
 
         /* Handle one simulation event, and update simulation time */
         nextEvent = eventQueue.popFirst();

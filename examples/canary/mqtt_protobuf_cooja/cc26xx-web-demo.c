@@ -20,9 +20,9 @@
 //#include "lora-sx1276-board.h"
 char data_id[8] = "";
 char *ids[8] = {"20357", "33794", "49541", "51072", "55428"};
-enum {BATMON_TEMP, BATMON_VOLT, OPT_LIGHT, BME_HUM, BME_PRES, BME_TEMP, ACCEL_X, ACCEL_Y, ACCEL_Z, MAG_X, MAG_Y, MAG_Z};
-char *sensor_names[16] = {"batmon_temp", "batmon_volt", "opt_3001", "bme_280_hum", "bme_280_pres", "bme_280_temp", "LIS2DE12_x", "LIS2DE12_y", "LIS2DE12_z", "lis3mdl_x", "lis3mdl_y", "lis3mdl_z"};
-char sensor_data[100][256][56];
+enum {BATMON_TEMP, BATMON_VOLT, OPT_LIGHT, BME_TEMP, BME_PRES, BMEHUM, ACCEL_X, ACCEL_Y, ACCEL_Z, MAG_X, MAG_Y, MAG_Z};
+char *sensor_names[16] = {"batmon_temp", "batmon_volt", "opt_3001", "bme_280_temp", "bme_280_pres", "bme_280_hum", "LIS2DE12_x", "LIS2DE12_y", "LIS2DE12_z", "lis3mdl_x", "lis3mdl_y", "lis3mdl_z"};
+long sensor_data[100][256];
 int lens[100];
 /*---------------------------------------------------------------------------*/
 PROCESS_NAME(cetic_6lbr_client_process);
@@ -66,9 +66,9 @@ AUTOSTART_PROCESSES(&cc26xx_web_demo_process);
 static void get_bme_reading() {
   clock_time_t next = SENSOR_READING_PERIOD;
 
-  bme_temp_reading.raw = strtol(sensor_data[3][clock_time()%lens[3]], NULL, 10);
-  bme_pres_reading.raw = strtol(sensor_data[4][clock_time()%lens[4]], NULL, 10);
-  bme_hum_reading.raw = strtol(sensor_data[5][clock_time()%lens[5]], NULL, 10);
+  bme_temp_reading.raw = sensor_data[3][clock_time()%lens[3]];
+  bme_pres_reading.raw = sensor_data[4][clock_time()%lens[4]];
+  bme_hum_reading.raw = sensor_data[5][clock_time()%lens[5]];
 
   ctimer_set(&bme_timer, next, init_bme_reading, NULL);
 }
@@ -76,7 +76,7 @@ static void get_bme_reading() {
 static void get_light_reading() {
   clock_time_t next = SENSOR_READING_PERIOD;
 
-  opt_reading.raw = strtol(sensor_data[2][clock_time()%lens[2]], NULL, 10);
+  opt_reading.raw = sensor_data[2][clock_time()%lens[2]];
 
   ctimer_set(&opt_timer, next, init_light_reading, NULL);
 }
@@ -84,9 +84,9 @@ static void get_light_reading() {
 static void get_accel_reading(){
   clock_time_t next = SENSOR_READING_PERIOD;
 
-  accel_x_reading.raw = strtol(sensor_data[6][clock_time()%lens[6]], NULL, 10);
-  accel_y_reading.raw = strtol(sensor_data[7][clock_time()%lens[7]], NULL, 10);
-  accel_z_reading.raw = strtol(sensor_data[8][clock_time()%lens[8]], NULL, 10);
+  accel_x_reading.raw = sensor_data[6][clock_time()%lens[6]];
+  accel_y_reading.raw = sensor_data[7][clock_time()%lens[7]];
+  accel_z_reading.raw = sensor_data[8][clock_time()%lens[8]];
 
   ctimer_set(&accel_timer, next, init_accel_reading, NULL);
 }
@@ -94,9 +94,9 @@ static void get_accel_reading(){
 static void get_mag_reading(){
   clock_time_t next = SENSOR_READING_PERIOD;
 
-  mag_x_reading.raw = strtol(sensor_data[9][clock_time()%lens[9]], NULL, 10);
-  mag_y_reading.raw = strtol(sensor_data[10][clock_time()%lens[10]], NULL, 10);
-  mag_z_reading.raw = strtol(sensor_data[11][clock_time()%lens[11]], NULL, 10);
+  mag_x_reading.raw = sensor_data[9][clock_time()%lens[9]];
+  mag_y_reading.raw = sensor_data[10][clock_time()%lens[10]];
+  mag_z_reading.raw = sensor_data[11][clock_time()%lens[11]];
 
   ctimer_set(&mag_timer, next, init_mag_reading, NULL);
 }
@@ -166,8 +166,8 @@ const cc26xx_web_demo_sensor_reading_t *cc26xx_web_demo_sensor_first() {
 static void get_batmon_reading(void *data) {
   clock_time_t next = SENSOR_READING_PERIOD;
 
-  batmon_temp_reading.raw = strtol(sensor_data[0][clock_time()%lens[0]], NULL, 10);
-  batmon_volt_reading.raw = strtol(sensor_data[0][clock_time()%lens[0]], NULL, 10);
+  batmon_temp_reading.raw = sensor_data[0][clock_time()%lens[0]];
+  batmon_volt_reading.raw = sensor_data[1][clock_time()%lens[1]];
 
   ctimer_set(&batmon_timer, next, get_batmon_reading, NULL);
 }
@@ -207,12 +207,12 @@ static void init_sensors(void) {
         return 1;
     }
     unsigned int j = 0;
-    while (fgets(sensor_data[i][j], 255, data_file) != NULL) {
+    while ((fgets(buff, 255, data_file) != NULL) && (j<100)) {
+        sensor_data[i][j] = strtol(buff, NULL, 10);
         j++;
         //printf("%d\n", strtol(buff, NULL, 10));
     }
     lens[i] = j;
-    printf("%d\n", j);
     fclose(data_file);
   }
 
@@ -220,8 +220,8 @@ static void init_sensors(void) {
   list_add(sensor_list, &batmon_temp_reading);
   list_add(sensor_list, &batmon_volt_reading);
   list_add(sensor_list, &opt_reading);
-  list_add(sensor_list, &bme_pres_reading);
   list_add(sensor_list, &bme_temp_reading);
+  list_add(sensor_list, &bme_pres_reading);
   list_add(sensor_list, &bme_hum_reading);
   list_add(sensor_list, &accel_x_reading);
   list_add(sensor_list, &accel_y_reading);
