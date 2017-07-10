@@ -55,7 +55,7 @@
 #include "log-6lbr.h"
 #endif
 
-#define DEBUG DEBUG_NONE
+#define DEBUG 0
 #include "net/ip/uip-debug.h"
 
 struct etimer uip_ds6_timer_periodic;                           /**< Timer for maintenance of data structures */

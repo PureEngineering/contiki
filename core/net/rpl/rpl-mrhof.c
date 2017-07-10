@@ -51,7 +51,7 @@
 #include "net/nbr-table.h"
 #include "net/link-stats.h"
 
-#define DEBUG DEBUG_NONE
+#define DEBUG 0 
 #include "net/ip/uip-debug.h"
 
 /* RFC6551 and RFC6719 do not mandate the use of a specific formula to

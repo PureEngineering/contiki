@@ -47,8 +47,8 @@
  * Set the TCP MSS
  */
 #define UIP_CONF_BUFFER_SIZE                900
-#define NBR_TABLE_CONF_MAX_NEIGHBORS          8
-#define UIP_CONF_MAX_ROUTES                   8
+#define NBR_TABLE_CONF_MAX_NEIGHBORS          100 
+#define UIP_CONF_MAX_ROUTES                   100
 #define UIP_CONF_TCP_MSS                    128
 
 
@@ -69,12 +69,12 @@
 
 #ifdef TEST_MORE_ROUTES
 /* configure number of neighbors and routes */
-#define NBR_TABLE_CONF_MAX_NEIGHBORS     10
-#define UIP_CONF_MAX_ROUTES   30
+#define NBR_TABLE_CONF_MAX_NEIGHBORS     100
+#define UIP_CONF_MAX_ROUTES   100
 #else
 /* configure number of neighbors and routes */
-#define NBR_TABLE_CONF_MAX_NEIGHBORS     10
-#define UIP_CONF_MAX_ROUTES   10
+#define NBR_TABLE_CONF_MAX_NEIGHBORS     100
+#define UIP_CONF_MAX_ROUTES   100
 #endif /* TEST_MORE_ROUTES */
 
 #undef NETSTACK_CONF_RDC
