@@ -45,74 +45,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-/*---------------------------------------------------------------------------*/
-#define DEBUG 0
-#if DEBUG
-#define PRINTF(...) printf(__VA_ARGS__)
-#else
-#define PRINTF(...)
-#endif
 
-#define BME280_S32_t int32_t
-#define BME280_U32_t uint32_t
-
-/*---------------------------------------------------------------------------*/
-#define BME280_I2C_ADDRESS 0x76
-/*---------------------------------------------------------------------------*/
-/* Registers */
-
-// calibration data is stored in two seperate locations
-#define ADDR_CALIB 0x88
-#define ADDR_CALIB_HUM 0xA1
-
-#define ADDR_PROD_ID 0xD0
-#define ADDR_RESET 0xE0
-#define ADDR_CTRL_HUM 0xF2
-#define ADDR_STATUS 0xF3
-#define ADDR_CTRL_MEAS 0xF4
-#define ADDR_CONFIG 0xF5
-#define ADDR_PRESS_MSB 0xF7
-#define ADDR_PRESS_LSB 0xF8
-#define ADDR_PRESS_XLSB 0xF9
-#define ADDR_TEMP_MSB 0xFA
-#define ADDR_TEMP_LSB 0xFB
-#define ADDR_TEMP_XLSB 0xFC
-#define ADDR_HUM_MSB 0xFD
-#define ADDR_HUM_LSB 0xFE
-/*---------------------------------------------------------------------------*/
-/* Reset values */
-#define VAL_PROD_ID 0x58
-#define VAL_RESET 0x00
-#define VAL_STATUS 0x00
-#define VAL_CTRL_MEAS 0x00
-#define VAL_CONFIG 0x00
-#define VAL_PRESS_MSB 0x80
-#define VAL_PRESS_LSB 0x00
-#define VAL_TEMP_MSB 0x80
-#define VAL_TEMP_LSB 0x00
-/*---------------------------------------------------------------------------*/
-/* Test values */
-#define VAL_RESET_EXECUTE 0xB6
-#define VAL_CTRL_MEAS_TEST 0x55
-/*---------------------------------------------------------------------------*/
-/* Misc. */
-#define MEAS_DATA_SIZE 8
-
-// calibration data is stores in two seperate locations
-#define CALIB_DATA_SIZE 24
-#define CALIB_DATA_SIZE_HUM 9
-/*---------------------------------------------------------------------------*/
-#define RES_OFF 0
-#define RES_ULTRA_LOW_POWER 1
-#define RES_LOW_POWER 2
-#define RES_STANDARD 3
-#define RES_HIGH 5
-#define RES_ULTRA_HIGH 6
-/*---------------------------------------------------------------------------*/
-/* Bit fields in CTRL_MEAS register */
-#define PM_OFF 0
-#define PM_FORCED 1
-#define PM_NORMAL 3
 /*---------------------------------------------------------------------------*/
 #define OSRST(v) ((v) << 5)
 #define OSRSP(v) ((v) << 2)
@@ -231,10 +164,11 @@ static void enable_sensor(bool enable) {
   select_on_bus();
 
 
+
   if (enable) {
-    ctrl_hum = 0x07; // 0000 0001 - oversampling humidty x1
+    ctrl_hum = 0x01; // 0000 0001 - oversampling humidty x1
     sensor_common_write_reg(ADDR_CTRL_HUM, &ctrl_hum, sizeof(ctrl_hum));
-    ctrl_meas = 0xFD; // 0010 0101 - oversampling temp/pres x1 forced mode
+    ctrl_meas = 0x25; // 0010 0101 - oversmapling press/temp x1 forced mode
     sensor_common_write_reg(ADDR_CTRL_MEAS, &ctrl_meas, sizeof(ctrl_meas));
     config = 0x00; // 0000 0000 - filter off
     sensor_common_write_reg(ADDR_CONFIG, &config, sizeof(config));
@@ -346,13 +280,13 @@ static int value(int type) {
   uint32_t hum = 0;
 
   if (enabled != SENSOR_STATUS_READY) {
-    PRINTF("Sensor disabled or starting up (%d)\n", enabled);
+    DBG_BME("Sensor disabled or starting up (%d)\n", enabled);
     return CC26XX_SENSOR_READING_ERROR;
   }
 
   if ((type != BME_280_SENSOR_TYPE_TEMP) && type != BME_280_SENSOR_TYPE_PRESS &&
       type != BME_280_SENSOR_TYPE_HUM) {
-    PRINTF("Invalid type\n");
+    DBG_BME("Invalid type\n");
     return CC26XX_SENSOR_READING_ERROR;
   } else {
     memset(sensor_value, 0, SENSOR_DATA_BUF_SIZE);
@@ -360,31 +294,25 @@ static int value(int type) {
     rv = read_data(sensor_value, type);
 
     if (rv == 0) {
-      PRINTF("exiting with reading error\n");
+      DBG_BME("exiting with reading error\n");
       return CC26XX_SENSOR_READING_ERROR;
     }
 
     if (type == BME_280_SENSOR_TYPE_TEMP) {
-
       int32_t t = (int32_t)((((uint32_t)(sensor_value[0])) << 12) |
                             ((uint32_t)(sensor_value[1]) << 4 ) | (uint32_t)sensor_value[2] >> 4);
-      // calculate temperature
-
       temp = BME280_compensate_T_int32(t);
-
       rv = (int)temp;
 
     } else if (type == BME_280_SENSOR_TYPE_PRESS) {
-
       int32_t p = (int32_t)((((uint32_t)(sensor_value[0])) << 12) |
                             ((uint32_t)(sensor_value[1]) << 4 ) | (uint32_t)sensor_value[2]>>4);
-
       pres = BME280_compensate_P_int32(p);
       rv = (int)pres;
+
     } else if (type == BME_280_SENSOR_TYPE_HUM) {
       int32_t h = (int32_t)((((uint32_t)(sensor_value[0])) << 8) |
                             ((uint32_t)(sensor_value[1])));
-
       hum = bme280_compensate_H_int32(h);
       rv = (int)hum;
     }

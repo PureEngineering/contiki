@@ -419,6 +419,12 @@ static void publish(void) {
   message.has_pir = true;
   message.pir = cc26xx_web_demo_sensor_lookup(15)->raw;
 
+  message.has_latitude = false;
+
+  message.has_longitude = false;
+
+  message.has_height = false;
+
   //stream used to encode to buffer
   pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
 
@@ -445,7 +451,7 @@ static void publish(void) {
   mqtt_publish(&conn, NULL, pub_topic, buffer, message_length, MQTT_QOS_LEVEL_0,
                MQTT_RETAIN_OFF);
 
-  //all of decoding message (error handling)
+  // all of decoding message (error handling)
   // sensors inmessage = sensors_init_zero;
   // pb_istream_t instream = pb_istream_from_buffer(buffer, message_length);
   //

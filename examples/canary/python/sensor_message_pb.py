@@ -18,9 +18,9 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='sensor_message.proto',
   package='',
-  serialized_pb=_b('\n\x14sensor_message.proto\"\x94\x02\n\x07sensors\x12\n\n\x02id\x18\x01 \x02(\x05\x12\x13\n\x0b\x62\x61tmon_temp\x18\x02 \x01(\x05\x12\x13\n\x0b\x62\x61tmon_volt\x18\x03 \x01(\x05\x12\x10\n\x08opt_3001\x18\x04 \x01(\x05\x12\x14\n\x0c\x62me_280_temp\x18\x05 \x01(\x05\x12\x14\n\x0c\x62me_280_pres\x18\x06 \x01(\x05\x12\x13\n\x0b\x62me_280_hum\x18\x07 \x01(\x05\x12\x12\n\nLIS2DE12_x\x18\x08 \x01(\x05\x12\x12\n\nLIS2DE12_y\x18\t \x01(\x05\x12\x12\n\nLIS2DE12_z\x18\n \x01(\x05\x12\x11\n\tlis3mdl_x\x18\x0b \x01(\x05\x12\x11\n\tlis3mdl_y\x18\x0c \x01(\x05\x12\x11\n\tlis3mdl_z\x18\r \x01(\x05\x12\x0b\n\x03pir\x18\x0e \x01(\x08')
+  syntax='proto2',
+  serialized_pb=_b('\n\x14sensor_message.proto\"\xc9\x02\n\x07sensors\x12\n\n\x02id\x18\x01 \x02(\x05\x12\x13\n\x0b\x62\x61tmon_temp\x18\x02 \x01(\x05\x12\x13\n\x0b\x62\x61tmon_volt\x18\x03 \x01(\x05\x12\x10\n\x08opt_3001\x18\x04 \x01(\x05\x12\x14\n\x0c\x62me_280_temp\x18\x05 \x01(\x11\x12\x14\n\x0c\x62me_280_pres\x18\x06 \x01(\x05\x12\x13\n\x0b\x62me_280_hum\x18\x07 \x01(\x05\x12\x12\n\nLIS2DE12_x\x18\x08 \x01(\x11\x12\x12\n\nLIS2DE12_y\x18\t \x01(\x11\x12\x12\n\nLIS2DE12_z\x18\n \x01(\x11\x12\x11\n\tlis3mdl_x\x18\x0b \x01(\x11\x12\x11\n\tlis3mdl_y\x18\x0c \x01(\x11\x12\x11\n\tlis3mdl_z\x18\r \x01(\x11\x12\x0b\n\x03pir\x18\x0e \x01(\x08\x12\x11\n\tlongitude\x18\x0f \x01(\x11\x12\x10\n\x08latitude\x18\x10 \x01(\x11\x12\x0e\n\x06height\x18\x11 \x01(\x05')
 )
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
 
@@ -62,7 +62,7 @@ _SENSORS = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='bme_280_temp', full_name='sensors.bme_280_temp', index=4,
-      number=5, type=5, cpp_type=1, label=1,
+      number=5, type=17, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -83,42 +83,42 @@ _SENSORS = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='LIS2DE12_x', full_name='sensors.LIS2DE12_x', index=7,
-      number=8, type=5, cpp_type=1, label=1,
+      number=8, type=17, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='LIS2DE12_y', full_name='sensors.LIS2DE12_y', index=8,
-      number=9, type=5, cpp_type=1, label=1,
+      number=9, type=17, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='LIS2DE12_z', full_name='sensors.LIS2DE12_z', index=9,
-      number=10, type=5, cpp_type=1, label=1,
+      number=10, type=17, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='lis3mdl_x', full_name='sensors.lis3mdl_x', index=10,
-      number=11, type=5, cpp_type=1, label=1,
+      number=11, type=17, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='lis3mdl_y', full_name='sensors.lis3mdl_y', index=11,
-      number=12, type=5, cpp_type=1, label=1,
+      number=12, type=17, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='lis3mdl_z', full_name='sensors.lis3mdl_z', index=12,
-      number=13, type=5, cpp_type=1, label=1,
+      number=13, type=17, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -130,6 +130,27 @@ _SENSORS = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='longitude', full_name='sensors.longitude', index=14,
+      number=15, type=17, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='latitude', full_name='sensors.latitude', index=15,
+      number=16, type=17, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='height', full_name='sensors.height', index=16,
+      number=17, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -138,25 +159,23 @@ _SENSORS = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
+  syntax='proto2',
   extension_ranges=[],
   oneofs=[
   ],
   serialized_start=25,
-  serialized_end=301,
+  serialized_end=354,
 )
 
 DESCRIPTOR.message_types_by_name['sensors'] = _SENSORS
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 sensors = _reflection.GeneratedProtocolMessageType('sensors', (_message.Message,), dict(
   DESCRIPTOR = _SENSORS,
-  __module__ = 'sensor_message_pb'
+  __module__ = 'sensor_message_pb2'
   # @@protoc_insertion_point(class_scope:sensors)
   ))
 _sym_db.RegisterMessage(sensors)
 
 
 # @@protoc_insertion_point(module_scope)
-
-
-
-

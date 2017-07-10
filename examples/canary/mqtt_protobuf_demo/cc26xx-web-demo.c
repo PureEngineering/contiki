@@ -105,7 +105,6 @@ static void init_pir_reading(void *data);
 static void get_pir_reading() {
 
   pir_reading.raw = pir_sensor.value(0);
-  printf("pir reading %d\n",pir_reading.raw);
   SENSORS_DEACTIVATE(pir_sensor);
   ctimer_set(&pir_timer, SENSOR_READING_PERIOD, init_pir_reading, NULL);
 
@@ -326,8 +325,8 @@ static void init_sensors(void) {
   list_add(sensor_list, &batmon_volt_reading);
   SENSORS_ACTIVATE(batmon_sensor);
   list_add(sensor_list, &opt_reading);
-  list_add(sensor_list, &bme_pres_reading);
   list_add(sensor_list, &bme_temp_reading);
+  list_add(sensor_list, &bme_pres_reading);
   list_add(sensor_list, &bme_hum_reading);
   list_add(sensor_list, &accel_x_reading);
   list_add(sensor_list, &accel_y_reading);
