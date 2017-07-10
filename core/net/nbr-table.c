@@ -40,7 +40,7 @@
 #include "lib/list.h"
 #include "net/nbr-table.h"
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #include "sys/ctimer.h"
@@ -480,4 +480,3 @@ handle_periodic_timer(void *ptr)
   ctimer_reset(&periodic_timer);
 }
 #endif
-
