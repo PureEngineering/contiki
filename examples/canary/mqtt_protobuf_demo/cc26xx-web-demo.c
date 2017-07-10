@@ -338,6 +338,7 @@ PROCESS_THREAD(cc26xx_web_demo_process, ev, data) {
 
   cc26xx_web_demo_publish_event = process_alloc_event();
 
+
   // start 6lbr process
   process_start(&cetic_6lbr_client_process, NULL);
   // start mqtt process

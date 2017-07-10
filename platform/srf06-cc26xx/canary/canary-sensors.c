@@ -44,7 +44,7 @@
 #include "lis3mdl-mag-sensor.h"
 #include "mag-sensor.h"
 #include "gas-sensor.h"
-#include "gps-sensor.h"
+#include "gps/gps-sensor.h"
 #include <string.h>
 /*---------------------------------------------------------------------------*/
 /** \brief Exports a global symbol to be used by the sensor API */

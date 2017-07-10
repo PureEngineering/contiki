@@ -47,7 +47,7 @@
 #include "lis3mdl-mag-sensor.h"
 #include "mag-sensor.h"
 #include "gas-sensor.h"
-#include "gps-sensor.h"
+#include "gps/gps-sensor.h"
 #include "buzzer.h"
 /*---------------------------------------------------------------------------*/
 #endif /* BOARD_PERIPHERALS_H_ */

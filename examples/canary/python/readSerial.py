@@ -4,6 +4,18 @@ from database import Database
 import sys
 import time
 #import thread
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+import matplotlib.animation as animation
+
+myCount = []
+mag = []
+fig = plt.figure()
+ax = fig.add_subplot(1,1,1)
+#ln, = plt.plot([], [], 'ro', animated=True)
+#ax.set_xlim(0, 1000)
+#ax.set_ylim(0, 20000)
 
 def readSerial(db, message, ser, one):
 	while ser.is_open:
@@ -21,12 +33,25 @@ def readSerial(db, message, ser, one):
 				milli = (int(round(time.time()*1000)))
 				db.insert(message.id, milli, "Canary", payload)
 				if (one):
+					mag.append(math.sqrt(math.pow(message.lis3mdl_x, 2) + math.pow(message.lis3mdl_y, 2) + math.pow(message.lis3mdl_z, 2)))
+					myCount.append(len(myCount)+1)
 					break
 
+def animate(i, db, message, ser):
+	readSerial(db, message, ser, 1)
+	ax.clear()
+	ax.plot(myCount, mag)
+	#ln.set_data(myCount, mag)
+	#return ln,
+
 def main():
+	live = 0
 	if(len(sys.argv) == 1):
 		print "Please Enter Database Name"
 		return
+	elif(len(sys.argv) == 3):
+		live = 1
+	
 	db = Database("newuser", "secretpassword", str(sys.argv[1]))
 	message = sensor_message_pb.sensors()
 	try:
@@ -37,7 +62,11 @@ def main():
 		print "Error: could not open serial port"
 		return
 
-	readSerial(db, message, ser, 0)
+	if(live == 0):
+		readSerial(db, message, ser, live)
+	else:
+		ani =  animation.FuncAnimation(fig, animate, fargs = (db, message, ser), interval = 1)
+		plt.show()
 	#readSerial()
 	#try:
 		#thread.start_new_thread(readSerial, (ser,))

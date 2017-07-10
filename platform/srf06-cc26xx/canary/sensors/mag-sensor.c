@@ -47,15 +47,19 @@ static int getZ(void) {
 }
 
 static int value(mag_field field) {
+    int val = 0;
     switch (field) {
-        case X:
-            return getX();
-        case Y:
-            return getY();
-        case Z:
-            return getZ();
+        case M_X:
+            val = getX();
+            break;
+        case M_Y:
+            val = getY();
+            break;
+        case M_Z:
+            val = getZ();
+            break;
     }
-    return 0;
+    return val;
 }
 
 static int configure(int type, int enable){

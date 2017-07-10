@@ -6,7 +6,7 @@ import sys
 
 message = sensor_message_pb.sensors()
 # Initialize a Database object
-db = Database("root", "user", str(sys.argv[1]))
+db = Database("newuser", "secretpassword", str(sys.argv[1]))
 
 # This callback is triggered when successfully connected
 def on_connect(client, userdata, flags, rc):
@@ -15,7 +15,8 @@ def on_connect(client, userdata, flags, rc):
 
 # This callback is triggered when a new message is received
 def on_message(client, userdata, msg):
-	print("Encoded Message: " + str(msg.payload) + "\n")
+	print("Encoded Message: {}").format(str(msg.payload))
+	#print(str(msg.payload) + "\n")
         message.ParseFromString(msg.payload)
 	db.insert(message.id, time.time(), "Canary", msg.payload)
 
