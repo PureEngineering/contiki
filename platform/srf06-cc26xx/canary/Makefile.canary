@@ -8,3 +8,4 @@ BOARD_SOURCEFILES += board-spi.c buzzer.c lis2de12-accel-sensor.c
 BOARD_SOURCEFILES += canary-sensors.c lis3mdl-mag-sensor.c mag-sensor.c gas-sensor.c gps-sensor.c
 BOARD_SOURCEFILES += lora-sx1276.c lora-sx1276-board.c
 BOARD_SOURCEFILES += lora-support.c lora-radio-arch.c
+BOARD_SOURCEFILES += minmea.c

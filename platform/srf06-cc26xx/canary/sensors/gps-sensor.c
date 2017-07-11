@@ -1,6 +1,12 @@
 #include "gps-sensor.h"
 #include "lib/sensors.h"
 #include "board-i2c.h"
+#include "ti-lib.h"
+#include "dev/cc26xx-uart.h"
+#include "minmea.h"
+
+static char line[MINMEA_MAX_LENGTH];
+static int line_index = 0;
 
 static int fix = 0;
 static int lon = 0;
@@ -12,14 +18,10 @@ static void parse_gga(const char *line) {
         case MINMEA_SENTENCE_GGA: {
             struct minmea_sentence_gga frame;
             if (minmea_parse_gga(&frame, line)) {
-                printf(INDENT_SPACES "$xxGGA: fix quality: %d\n", frame.fix_quality);
                 fix = frame.fix_quality;
                 lon = (int) frame.longitude.value;
                 lat = (int) frame.latitude.value;
                 height = (int) frame.height.value;
-            }
-            else {
-                printf(INDENT_SPACES "$xxGGA sentence is not parsed\n");
             }
         }
     }
@@ -58,7 +60,7 @@ static void turnOn(void) {
 }
 
 static void shutDown(void) {
-    //ti_lib_gpio_write_dio(IOID_10, 0);
+    ti_lib_gpio_write_dio(IOID_16, 0);
     cc26xx_uart_set_input(NULL);
 }
 
