@@ -20,7 +20,7 @@ extern "C" {
 #include <time.h>
 #include <math.h>
 
-#define MINMEA_MAX_LENGTH 80
+#define MINMEA_MAX_LENGTH 120
 
 enum minmea_sentence_id {
     MINMEA_INVALID = -1,

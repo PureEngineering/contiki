@@ -94,6 +94,9 @@ DEMO_SENSOR(gas_ox, CC26XX_WEB_DEMO_SENSOR_GAS_OX);
 DEMO_SENSOR(gas_nh3, CC26XX_WEB_DEMO_SENSOR_GAS_NH3);
 DEMO_SENSOR(gas_red, CC26XX_WEB_DEMO_SENSOR_GAS_RED);
 DEMO_SENSOR(pir, CC26XX_WEB_DEMO_SENSOR_PIR);
+DEMO_SENSOR(gps_lon, CC26XX_WEB_DEMO_SENSOR_GPS_LON);
+DEMO_SENSOR(gps_lat, CC26XX_WEB_DEMO_SENSOR_GPS_LAT);
+DEMO_SENSOR(gps_h, CC26XX_WEB_DEMO_SENSOR_GPS_H);
 
 static void init_light_reading(void *data);
 static void init_bme_reading(void *data);
@@ -101,7 +104,15 @@ static void init_accel_reading(void *data);
 static void init_mag_reading(void *data);
 static void init_gas_reading(void *data);
 static void init_pir_reading(void *data);
+static void init_gps_reading(void *data);
 
+static void get_gps_reading(){
+  printf("reading gps\n");
+  gps_lon_reading.raw = gps_sensor.value(1);
+  gps_lat_reading.raw = gps_sensor.value(2);
+  gps_h_reading.raw = gps_sensor.value(3);
+  //deactivate is done in gps-sensor.c
+}
 static void get_pir_reading() {
 
   pir_reading.raw = pir_sensor.value(0);
@@ -217,29 +228,6 @@ static void get_gas_reading(){
 
 }
 
-static void init_pir_reading(void *data){
-  SENSORS_ACTIVATE(pir_sensor);
-}
-
-static void init_bme_reading(void *data) {
-  SENSORS_ACTIVATE(bme_280_sensor);
-}
-
-static void init_light_reading(void *data) {
-  SENSORS_ACTIVATE(opt_3001_sensor);
-}
-
-static void init_accel_reading(void *data) {
-  SENSORS_ACTIVATE(lis2de12_accel_sensor);
-}
-
-static void init_mag_reading(void *data){
-  SENSORS_ACTIVATE(lis3mdl_mag_sensor);
-}
-
-static void init_gas_reading(void *data){
-  SENSORS_ACTIVATE(gas_sensor);
-}
 // sets up this process to be autostarted
 AUTOSTART_PROCESSES(&cc26xx_web_demo_process);
 /*---------------------------------------------------------------------------*/
@@ -302,6 +290,33 @@ static void get_batmon_reading(void *data) {
   ctimer_set(&batmon_timer, next, get_batmon_reading, NULL);
 }
 
+static void init_gps_reading(void *data){
+  SENSORS_ACTIVATE(gps_sensor);
+}
+static void init_pir_reading(void *data){
+  SENSORS_ACTIVATE(pir_sensor);
+}
+
+static void init_bme_reading(void *data) {
+  SENSORS_ACTIVATE(bme_280_sensor);
+}
+
+static void init_light_reading(void *data) {
+  SENSORS_ACTIVATE(opt_3001_sensor);
+}
+
+static void init_accel_reading(void *data) {
+  SENSORS_ACTIVATE(lis2de12_accel_sensor);
+}
+
+static void init_mag_reading(void *data){
+  SENSORS_ACTIVATE(lis3mdl_mag_sensor);
+}
+
+static void init_gas_reading(void *data){
+  SENSORS_ACTIVATE(gas_sensor);
+}
+
 /*---------------------------------------------------------------------------*/
 static void init_sensor_readings(void) {
   /*
@@ -315,11 +330,12 @@ static void init_sensor_readings(void) {
   init_mag_reading(NULL);
   init_gas_reading(NULL);
   init_pir_reading(NULL);
-
+  init_gps_reading(NULL);
   return;
 }
 /*---------------------------------------------------------------------------*/
 static void init_sensors(void) {
+
 
   list_add(sensor_list, &batmon_temp_reading);
   list_add(sensor_list, &batmon_volt_reading);
@@ -338,6 +354,9 @@ static void init_sensors(void) {
   list_add(sensor_list, &gas_nh3_reading);
   list_add(sensor_list, &gas_red_reading);
   list_add(sensor_list, &pir_reading);
+  list_add(sensor_list, &gps_lon_reading);
+  list_add(sensor_list, &gps_lat_reading);
+  list_add(sensor_list, &gps_h_reading);
 }
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(cc26xx_web_demo_process, ev, data) {
@@ -382,6 +401,8 @@ PROCESS_THREAD(cc26xx_web_demo_process, ev, data) {
       get_gas_reading();
     } else if (ev == sensors_event && data == &pir_sensor){
       get_pir_reading();
+    } else if (ev == sensors_event && data == &gps_sensor){
+      get_gps_reading();
     }
 
     PROCESS_YIELD();
