@@ -419,11 +419,14 @@ static void publish(void) {
   message.has_pir = true;
   message.pir = cc26xx_web_demo_sensor_lookup(15)->raw;
 
-  message.has_latitude = false;
+  message.has_latitude = true;
+  message.longitude = cc26xx_web_demo_sensor_lookup(16)->raw;
 
-  message.has_longitude = false;
+  message.has_longitude = true;
+  message.latitude = cc26xx_web_demo_sensor_lookup(17)->raw;
 
-  message.has_height = false;
+  message.has_height = true;
+  message.height = cc26xx_web_demo_sensor_lookup(18)->raw;
 
   //stream used to encode to buffer
   pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));

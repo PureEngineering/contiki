@@ -99,6 +99,9 @@
 #define CC26XX_WEB_DEMO_SENSOR_GAS_NH3       13
 #define CC26XX_WEB_DEMO_SENSOR_GAS_RED       14
 #define CC26XX_WEB_DEMO_SENSOR_PIR           15
+#define CC26XX_WEB_DEMO_SENSOR_GPS_LON       16
+#define CC26XX_WEB_DEMO_SENSOR_GPS_LAT       17
+#define CC26XX_WEB_DEMO_SENSOR_GPS_H         18
 
 /*---------------------------------------------------------------------------*/
 extern process_event_t cc26xx_web_demo_publish_event;
