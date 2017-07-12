@@ -35,12 +35,12 @@ static void notify_ready(void *not_used){
   sensors_changed(&gps_sensor);
 }
 
-static void parse_gga(const char *line) {
+static void parse_line(const char *line) {
     switch (minmea_sentence_id(line, false)) {
         case MINMEA_SENTENCE_GGA: {
             struct minmea_sentence_gga frame;
             if (minmea_parse_gga(&frame, line)) {
-                if(fix > 0){
+                if(frame.fix_quality > 0){
                   DBG_GPS("fix >0\n");
                   fix = frame.fix_quality;
                   lon = (int) frame.longitude.value;
@@ -52,7 +52,26 @@ static void parse_gga(const char *line) {
                   notify_ready(NULL);
                 }
             }
+            break;
         }
+        case MINMEA_SENTENCE_GLL:
+            break;
+        case MINMEA_SENTENCE_GST:
+            break;
+        case MINMEA_SENTENCE_GSV:
+            break;
+        case MINMEA_SENTENCE_GSA:
+            break;
+        case MINMEA_SENTENCE_RMC:
+            break;
+        case MINMEA_SENTENCE_VTG:
+            break;
+        case MINMEA_INVALID:
+            break;
+        case MINMEA_UNKNOWN:
+            break;
+        default:
+            break;
     }
 }
 
@@ -66,7 +85,7 @@ static int serial_line_input_byte(unsigned char ch) {
     if(line[line_index - 2] == '\r' && line[line_index - 1] == '\n') {
         line[line_index++] = '\0';
         line_index = 0;
-        parse_gga(line);
+        parse_line(line);
         DBG_GPS("%s\n",line);
     }
     return 1;
