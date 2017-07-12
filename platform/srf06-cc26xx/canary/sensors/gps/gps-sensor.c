@@ -5,7 +5,6 @@
 #include "minmea.h"
 #include "sys/ctimer.h"
 
-
 static char line[MINMEA_MAX_LENGTH];
 static int line_index = 0;
 
