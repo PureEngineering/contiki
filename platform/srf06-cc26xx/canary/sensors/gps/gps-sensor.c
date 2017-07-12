@@ -45,7 +45,6 @@ static void parse_line(const char *line) {
                   lon = (int) frame.longitude.value;
                   lat = (int) frame.latitude.value;
                   height = (int) frame.height.value;
-                  printf("fix %d\nlon %d\nlat %d\n height %d\n",fix,lon,lat,height);
                   ctimer_stop(&nofix_timer);
                   shutDown(NULL);
                   notify_ready(NULL);
