@@ -329,7 +329,7 @@ static void init_sensor_readings(void) {
   init_mag_reading(NULL);
   init_gas_reading(NULL);
   init_pir_reading(NULL);
-  //init_gps_reading(NULL);
+  init_gps_reading(NULL);
   return;
 }
 /*---------------------------------------------------------------------------*/
