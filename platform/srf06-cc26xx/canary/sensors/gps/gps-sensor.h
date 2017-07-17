@@ -12,7 +12,7 @@
 #define GPS_LAT     2
 #define GPS_H       3
 
-#define DEBUG_GPS   1
+#define DEBUG_GPS   0
 #if DEBUG_GPS
 #define DBG_GPS(...) printf(__VA_ARGS__)
 #else

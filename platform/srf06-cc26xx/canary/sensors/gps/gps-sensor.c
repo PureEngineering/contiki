@@ -34,7 +34,7 @@ static void notify_ready(void *not_used){
   sensors_changed(&gps_sensor);
 }
 
-static void parse_line(const char *line) {
+static void parse_line() {
     switch (minmea_sentence_id(line, false)) {
         case MINMEA_SENTENCE_GGA: {
             struct minmea_sentence_gga frame;
@@ -45,7 +45,6 @@ static void parse_line(const char *line) {
                   lon = (int) frame.longitude.value;
                   lat = (int) frame.latitude.value;
                   height = (int) frame.height.value;
-                  printf("fix %d\nlon %d\nlat %d\n height %d\n",fix,lon,lat,height);
                   ctimer_stop(&nofix_timer);
                   shutDown(NULL);
                   notify_ready(NULL);
@@ -78,13 +77,13 @@ static int serial_line_input_byte(unsigned char ch) {
     if(line_index == MINMEA_MAX_LENGTH){
       DBG_GPS("GPS-SESNOR -- Line reached end of array\n");
       DBG_GPS("%s\n",line);
-      line_index =0;
+      line_index = 0;
     }
     line[line_index++] = ch;
     if(line[line_index - 2] == '\r' && line[line_index - 1] == '\n') {
         line[line_index++] = '\0';
         line_index = 0;
-        parse_line(line);
+        parse_line();
         DBG_GPS("%s\n",line);
     }
     return 1;
