@@ -281,6 +281,8 @@ configure(int type, int enable)
 
   switch(type) {
   case SENSORS_HW_INIT:
+    ti_lib_ioc_pin_type_gpio_input(BOARD_IOID_LIGHT_INT);
+    ti_lib_ioc_port_configure_set(BOARD_IOID_LIGHT_INT, IOC_PORT_GPIO, IOC_IOPULL_DOWN);
     /*
      * Device reset won't reset the sensor, so we put it to sleep here
      * explicitly

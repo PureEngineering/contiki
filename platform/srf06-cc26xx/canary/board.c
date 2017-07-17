@@ -93,51 +93,11 @@ shutdown_handler(uint8_t mode)
 LPM_MODULE(canary_module, NULL, shutdown_handler, lpm_wakeup_handler,
            LPM_DOMAIN_NONE);
 /*---------------------------------------------------------------------------*/
-static void
-configure_unused_pins(void)
-{
-  ti_lib_ioc_pin_type_gpio_input(BOARD_IOID_DIO4);
-  ti_lib_ioc_io_port_pull_set(BOARD_IOID_DIO4, IOC_IOPULL_DOWN);
-
-  //GPS MODULE EVERY PIN PULLDOWN
-  ti_lib_ioc_pin_type_gpio_input(BOARD_IOID_GPS_WAKEUP);
-  ti_lib_ioc_io_port_pull_set(BOARD_IOID_GPS_WAKEUP, IOC_IOPULL_DOWN);
-
-  ti_lib_ioc_pin_type_gpio_output(BOARD_IOID_GPS_RESET); //output
-  ti_lib_gpio_write_dio(BOARD_IOID_GPS_RESET, 1); //high
-  ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_RESET,IOC_PORT_GPIO, IOC_IOPULL_DOWN|
-                                                  IOC_IOMODE_OPEN_DRAIN_NORMAL|
-                                                  IOC_CURRENT_2MA | IOC_STRENGTH_MIN  );
-
-  ti_lib_ioc_pin_type_gpio_input(BOARD_IOID_GPS_RX); //input
-  ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_RX, IOC_PORT_GPIO, IOC_IOPULL_UP); //pull up
-
-  ti_lib_ioc_pin_type_gpio_input(BOARD_IOID_GPS_TX); //input
-  ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_TX, IOC_PORT_GPIO, IOC_IOPULL_UP); //pull up
-
-  ti_lib_ioc_pin_type_gpio_output(BOARD_IOID_GPS_ON_OFF); //output
-  ti_lib_gpio_write_dio(BOARD_IOID_GPS_ON_OFF, 0); //low
-  //ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_ON_OFF, IOC_PORT_GPIO,
-    //                          IOC_CURRENT_2MA |  IOC_STRENGTH_MIN);
-
-  ti_lib_ioc_pin_type_gpio_input(BOARD_IOID_GPS_1PPS);
-  ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_1PPS, IOC_PORT_GPIO, IOC_IOPULL_DOWN);
-
-  ti_lib_ioc_pin_type_gpio_output(BOARD_IOID_GPS_ENABLE); //output
-  ti_lib_gpio_write_dio(BOARD_IOID_GPS_ENABLE, 0); //low
-  ti_lib_ioc_port_configure_set(BOARD_IOID_GPS_ENABLE, IOC_PORT_GPIO,
-                                  IOC_CURRENT_2MA | IOC_STRENGTH_MIN);
-  //end gps
-
-  //pir
-  ti_lib_ioc_pin_type_gpio_input(BOARD_IOID_PIR_OUT);
-  ti_lib_ioc_port_configure_set(BOARD_IOID_PIR_OUT, IOC_PORT_GPIO, IOC_IOPULL_DOWN);
-
-
-
-
-
-}
+// static void
+// configure_unused_pins(void)
+// {
+//
+// }
 /*---------------------------------------------------------------------------*/
 void
 board_init()

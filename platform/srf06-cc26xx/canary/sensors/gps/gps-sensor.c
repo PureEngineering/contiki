@@ -93,7 +93,10 @@ static int serial_line_input_byte(unsigned char ch) {
 static void init(void) {
     DBG_GPS("gps init\n");
     ti_lib_ioc_pin_type_gpio_output(BOARD_IOID_GPS_ENABLE);
-    ti_lib_gpio_write_dio(BOARD_IOID_GPS_ENABLE, 1);
+    ti_lib_gpio_write_dio(BOARD_IOID_GPS_ENABLE, 0);
+
+    ti_lib_ioc_pin_type_gpio_input(BOARD_IOID_GPS_1PPS);
+    ti_lib_ioc_io_port_pull_set(BOARD_IOID_GPS_1PPS, IOC_IOPULL_DOWN);
 
     ti_lib_ioc_pin_type_gpio_input(BOARD_IOID_GPS_WAKEUP);
     ti_lib_ioc_io_port_pull_set(BOARD_IOID_GPS_WAKEUP, IOC_IOPULL_DOWN);
@@ -104,6 +107,7 @@ static void init(void) {
 }
 
 static void turnOn(void *not_used) {
+  ti_lib_gpio_write_dio(BOARD_IOID_GPS_ENABLE, 1);
     uint8_t val = 0;
     while(1) {
         ti_lib_gpio_write_dio(BOARD_IOID_GPS_ON_OFF, 1);
@@ -117,7 +121,7 @@ static void turnOn(void *not_used) {
     }
     enabled = SENSOR_STATUS_NOT_READY;
     cc26xx_uart_set_input(serial_line_input_byte);
-    //ctimer_set(&nofix_timer,NOFIX_TIME,shutDown,NULL);
+    ctimer_set(&nofix_timer,NOFIX_TIME,shutDown,NULL);
 }
 
 static void shutDown(void *not_used){

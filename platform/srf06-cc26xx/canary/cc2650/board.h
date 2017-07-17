@@ -102,13 +102,13 @@
   IOID defined in contiki/cpu/cc26xx-cc13xx/lib/cc26xxware/driverlib/ioc.h
 */
 
-#define BOARD_IOID_LIGHT_MAGNET_WAKEUP IOID_0
+#define BOARD_IOID_LIGHT_INT           IOID_0
 #define BOARD_IOID_AUDIO_VCC           IOID_1
 #define BOARD_IOID_UART_RX             IOID_28
 #define BOARD_IOID_UART_TX             IOID_3
 #define BOARD_IOID_UART_CTS            IOID_UNUSED //must be defined but doesnt have to be used
 #define BOARD_IOID_UART_RTS            IOID_UNUSED //must be defined but doesnt have to be used
-#define BOARD_IOID_DIO4                IOID_4 //UNUSED
+#define BOARD_IOID_MAG_INT             IOID_4
 #define BOARD_IOID_SDA                 IOID_5
 #define BOARD_IOID_SCL                 IOID_6
 #define BOARD_IOID_SDA_HP              IOID_UNUSED //TI has two interfaces for I2C

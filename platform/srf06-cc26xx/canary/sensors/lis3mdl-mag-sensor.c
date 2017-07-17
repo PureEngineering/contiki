@@ -153,8 +153,8 @@ static int configure(int type, int enable){
   switch (type){
     case SENSORS_HW_INIT:
       sensor_status = SENSOR_STATUS_INITIALISED;
-      //initialize();
-      //enable_sensor(0);
+      ti_lib_ioc_pin_type_gpio_input(BOARD_IOID_MAG_INT);
+      ti_lib_ioc_port_configure_set(BOARD_IOID_MAG_INT,IOC_PORT_GPIO,IOC_IOPULL_DOWN);
       break;
     case SENSORS_ACTIVE:
       if (sensor_status == SENSOR_STATUS_DISABLED){ //check to see if sensors is initalized

@@ -107,7 +107,6 @@ static void init_pir_reading(void *data);
 static void init_gps_reading(void *data);
 
 static void get_gps_reading(){
-  printf("reading gps\n");
   gps_lon_reading.raw = gps_sensor.value(1);
   gps_lat_reading.raw = gps_sensor.value(2);
   gps_h_reading.raw = gps_sensor.value(3);
@@ -330,7 +329,7 @@ static void init_sensor_readings(void) {
   init_mag_reading(NULL);
   init_gas_reading(NULL);
   init_pir_reading(NULL);
-  init_gps_reading(NULL);
+  //init_gps_reading(NULL);
   return;
 }
 /*---------------------------------------------------------------------------*/

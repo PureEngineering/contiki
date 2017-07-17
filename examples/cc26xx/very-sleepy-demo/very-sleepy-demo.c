@@ -34,7 +34,7 @@
 #include "sys/process.h"
 #include "dev/leds.h"
 #include "dev/watchdog.h"
-#include "button-sensor.h"
+// #include "button-sensor.h"
 #include "batmon-sensor.h"
 #include "board-peripherals.h"
 #include "net/netstack.h"
@@ -46,6 +46,9 @@
 #include "er-coap.h"
 
 #include "ti-lib.h"
+
+#include "lora-radio.h"
+#include "lora-sx1276-board.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -333,6 +336,9 @@ PROCESS_THREAD(very_sleepy_demo_process, ev, data)
 
   PROCESS_BEGIN();
 
+  SX1276IoInit();
+  Radio.Sleep();
+
   SENSORS_ACTIVATE(batmon_sensor);
 
   config.mode = VERY_SLEEPY_MODE_OFF;
@@ -359,9 +365,9 @@ PROCESS_THREAD(very_sleepy_demo_process, ev, data)
 
     PROCESS_YIELD();
 
-    if(ev == sensors_event && data == &button_left_sensor) {
-      switch_to_normal();
-    }
+    // if(ev == sensors_event && data == &button_left_sensor) {
+    //   switch_to_normal();
+    // }
 
     if(ev == event_new_config) {
       stimer_set(&st_interval, config.interval);
@@ -369,7 +375,7 @@ PROCESS_THREAD(very_sleepy_demo_process, ev, data)
     }
 
     if((ev == PROCESS_EVENT_TIMER && data == &et_periodic) ||
-       (ev == sensors_event && data == &button_left_sensor) ||
+  //     (ev == sensors_event && data == &button_left_sensor) ||
        (ev == event_new_config)) {
 
       /*
